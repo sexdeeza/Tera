@@ -24,11 +24,21 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Hunter {
-    public static final int BOW_MASTERY = 3100000;
-    public static final int FINAL_ATTACK = 3100001;
-    public static final int BOW_BOOSTER = 3101002;
-    public static final int POWER_KNOCKBACK = 3101003;
-    public static final int SOUL_ARROW = 3101004;
-    public static final int ARROW_BOMB = 3101005;
+public enum Hunter {
+    BOW_MASTERY(3100000),
+    FINAL_ATTACK(3100001),
+    BOW_BOOSTER(3101002),
+    POWER_KNOCKBACK(3101003),
+    SOUL_ARROW(3101004),
+    ARROW_BOMB(3101005);
+
+    private final int skillId;
+
+    Hunter(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

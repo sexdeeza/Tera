@@ -24,11 +24,21 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Archer {
-    public static final int BLESSING_OF_AMAZON = 3000000;
-    public static final int EYE_OF_AMAZON = 3000002;
-    public static final int CRITICAL_SHOT = 3000001;
-    public static final int FOCUS = 3001003;
-    public static final int DOUBLE_SHOT = 3001005;
-    public static final int ARROW_BLOW = 3001004;
+public enum Archer {
+    BLESSING_OF_AMAZON(3000000),
+    EYE_OF_AMAZON(3000002),
+    CRITICAL_SHOT(3000001),
+    FOCUS(3001003),
+    DOUBLE_SHOT(3001005),
+    ARROW_BLOW(3001004);
+
+    private final int skillId;
+
+    Archer(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

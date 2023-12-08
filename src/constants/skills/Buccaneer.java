@@ -24,15 +24,25 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Buccaneer {
-    public static final int MAPLE_WARRIOR = 5121000;
-    public static final int ENERGY_ORB = 5121002;
-    public static final int SUPER_TRANSFORMATION = 5121003;
-    public static final int DEMOLITION = 5121004;
-    public static final int SNATCH = 5121005;
-    public static final int BARRAGE = 5121007;
-    public static final int PIRATES_RAGE = 5121008;
-    public static final int SPEED_INFUSION = 5121009;
-    public static final int TIME_LEAP = 5121010;
-    public static final int DRAGON_STRIKE = 5121001;
+public enum Buccaneer {
+    MAPLE_WARRIOR(5121000),
+    ENERGY_ORB(5121002),
+    SUPER_TRANSFORMATION(5121003),
+    DEMOLITION(5121004),
+    SNATCH(5121005),
+    BARRAGE(5121007),
+    PIRATES_RAGE(5121008),
+    SPEED_INFUSION(5121009),
+    TIME_LEAP(5121010),
+    DRAGON_STRIKE(5121001);
+
+    private final int skillId;
+
+    Buccaneer(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

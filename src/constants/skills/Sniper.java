@@ -24,12 +24,23 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Sniper {
-    public static final int THRUST = 3210000;
-    public static final int MORTAL_BLOW = 3210001;
-    public static final int PUPPET = 3211002;
-    public static final int BLIZZARD = 3211003;
-    public static final int ARROW_ERUPTION = 3211004;
-    public static final int GOLDEN_EAGLE = 3211005;
-    public static final int STRAFE = 3211006;
+public enum Sniper {
+    THRUST(3210000),
+    MORTAL_BLOW(3210001),
+    PUPPET(3211002),
+    BLIZZARD(3211003),
+    ARROW_ERUPTION(3211004),
+    GOLDEN_EAGLE(3211005),
+    STRAFE(3211006);
+
+    private final int skillId;
+
+    Sniper(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }
+

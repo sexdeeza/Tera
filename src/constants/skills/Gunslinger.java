@@ -24,12 +24,22 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Gunslinger {
-    public static final int GUN_MASTERY = 5200000;
-    public static final int INVISIBLE_SHOT = 5201001;
-    public static final int GRENADE = 5201002;
-    public static final int GUN_BOOSTER = 5201003;
-    public static final int BLANK_SHOT = 5201004;
-    public static final int WINGS = 5201005;
-    public static final int RECOIL_SHOT = 5201006;
+public enum Gunslinger {
+    GUN_MASTERY(5200000),
+    INVISIBLE_SHOT(5201001),
+    GRENADE(5201002),
+    GUN_BOOSTER(5201003),
+    BLANK_SHOT(5201004),
+    WINGS(5201005),
+    RECOIL_SHOT(5201006);
+
+    private final int skillId;
+
+    Gunslinger(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

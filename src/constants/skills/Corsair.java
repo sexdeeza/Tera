@@ -24,16 +24,26 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Corsair {
-    public static final int MAPLE_WARRIOR = 5221000;
-    public static final int ELEMENTAL_BOOST = 5220001;
-    public static final int WRATH_OF_THE_OCTOPI = 5220002;
-    public static final int AERIAL_STRIKE = 5221003;
-    public static final int RAPID_FIRE = 5221004;
-    public static final int BATTLE_SHIP = 5221006;
-    public static final int BATTLESHIP_CANNON = 5221007;
-    public static final int BATTLESHIP_TORPEDO = 5221008;
-    public static final int HYPNOTIZE = 5221009;
-    public static final int SPEED_INFUSION = 5221010;
-    public static final int BULLSEYE = 5220011;
+public enum Corsair {
+    MAPLE_WARRIOR(5221000),
+    ELEMENTAL_BOOST(5220001),
+    WRATH_OF_THE_OCTOPI(5220002),
+    AERIAL_STRIKE(5221003),
+    RAPID_FIRE(5221004),
+    BATTLE_SHIP(5221006),
+    BATTLESHIP_CANNON(5221007),
+    BATTLESHIP_TORPEDO(5221008),
+    HYPNOTIZE(5221009),
+    SPEED_INFUSION(5221010),
+    BULLSEYE(5220011);
+
+    private final int skillId;
+
+    Corsair(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

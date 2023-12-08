@@ -24,22 +24,32 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Noblesse {
-    public static final int BLESSING_OF_THE_FAIRY = 10000012;
-    public static final int MAP_CHAIR = 10000100;
-    public static final int THREE_SNAILS = 10001000;
-    public static final int RECOVERY = 10001001;
-    public static final int NIMBLE_FEET = 10001002;
-    public static final int MONSTER_RIDER = 10001004;
-    public static final int ECHO_OF_HERO = 10001005;
-    public static final int MAKER = 10001007;
-    public static final int BAMBOO_RAIN = 10001009;
-    public static final int INVINCIBLE_BARRIER = 10001010;
-    public static final int POWER_EXPLOSION = 10001011;
-    public static final int SPACESHIP = 1001014;
-    public static final int SPACE_DASH = 1001015;
-    public static final int YETI_MOUNT1 = 10001019;
-    public static final int YETI_MOUNT2 = 10001022;
-    public static final int WITCH_BROOMSTICK = 10001023;
-    public static final int BALROG_MOUNT = 10001031;
+public enum Noblesse {
+    BLESSING_OF_THE_FAIRY(10000012),
+    MAP_CHAIR(10000100),
+    THREE_SNAILS(10001000),
+    RECOVERY(10001001),
+    NIMBLE_FEET(10001002),
+    MONSTER_RIDER(10001004),
+    ECHO_OF_HERO(10001005),
+    MAKER(10001007),
+    BAMBOO_RAIN(10001009),
+    INVINCIBLE_BARRIER(10001010),
+    POWER_EXPLOSION(10001011),
+    SPACESHIP(1001014),
+    SPACE_DASH(1001015),
+    YETI_MOUNT1(10001019),
+    YETI_MOUNT2(10001022),
+    WITCH_BROOMSTICK(10001023),
+    BALROG_MOUNT(10001031);
+
+    private final int skillId;
+
+    Noblesse(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }
