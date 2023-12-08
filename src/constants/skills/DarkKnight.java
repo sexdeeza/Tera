@@ -24,17 +24,28 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class DarkKnight {
-    public static final int ACHILLES = 1320005;
-    public static final int BERSERK = 1320006;
-    public static final int BEHOLDER = 1321007;
-    public static final int AURA_OF_BEHOLDER = 1320008;
-    public static final int HEX_OF_BEHOLDER = 1320009;
-    public static final int REVENGE_BEHOLDER = 1320011;
-    public static final int MAPLE_WARRIOR = 1321000;
-    public static final int MONSTER_MAGNET = 1321001;
-    public static final int STANCE = 1321002;
-    public static final int RUSH = 1321003;
-    public static final int HEROS_WILL = 1321010;
-    public static final int DARK_IMPALE = 1321012;
+public enum DarkKnight {
+    ACHILLES(1320005),
+    BERSERK(1320006),
+    BEHOLDER(1321007),
+    AURA_OF_BEHOLDER(1320008),
+    HEX_OF_BEHOLDER(1320009),
+    REVENGE_BEHOLDER(1320011),
+    MAPLE_WARRIOR(1321000),
+    MONSTER_MAGNET(1321001),
+    STANCE(1321002),
+    RUSH(1321003),
+    HEROS_WILL(1321010),
+    DARK_IMPALE(1321012);
+
+    private final int skillId;
+
+    DarkKnight(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }
+

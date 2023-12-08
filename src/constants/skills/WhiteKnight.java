@@ -24,14 +24,25 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class WhiteKnight {
-    public static final int IMPROVING_MP_RECOVERY = 1210000;
-    public static final int SHIELD_MASTERY = 1210001;
-    public static final int CHARGE_BLOW = 1211002;
-    public static final int FIRE_CHARGE = 1211004;
-    public static final int ICE_CHARGE = 1211006;
-    public static final int LIT_CHARGE = 1211008;
-    public static final int MAGIC_CRASH = 1211009;
-    public static final int HP_RECOVERY = 1211010;
-    public static final int COMBAT_ORDERS = 1211011;
+public enum WhiteKnight {
+    IMPROVING_MP_RECOVERY(1210000),
+    SHIELD_MASTERY(1210001),
+    CHARGE_BLOW(1211002),
+    FIRE_CHARGE(1211004),
+    ICE_CHARGE(1211006),
+    LIT_CHARGE(1211008),
+    MAGIC_CRASH(1211009),
+    HP_RECOVERY(1211010),
+    COMBAT_ORDERS(1211011);
+
+    private final int skillId;
+
+    WhiteKnight(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }
+

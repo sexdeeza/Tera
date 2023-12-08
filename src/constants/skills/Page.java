@@ -24,13 +24,23 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Page {
-    public static final int WEAPON_MASTERY = 1200000;
-    public static final int FINAL_ATTACK = 1200002;
-    public static final int PHYSICAL_TRAINING = 1200009;
-    public static final int WEAPON_BOOSTER = 1201004;
-    public static final int THREATEN = 1201006;
-    public static final int POWER_GUARD = 1201007;
-    public static final int GROUND_SMASH = 1201008;
-    public static final int SLIPSTREAM = 1201010;
+public enum Page {
+    WEAPON_MASTERY(1200000),
+    FINAL_ATTACK(1200002),
+    PHYSICAL_TRAINING(1200009),
+    WEAPON_BOOSTER(1201004),
+    THREATEN(1201006),
+    POWER_GUARD(1201007),
+    GROUND_SMASH(1201008),
+    SLIPSTREAM(1201010);
+
+    private final int skillId;
+
+    Page(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

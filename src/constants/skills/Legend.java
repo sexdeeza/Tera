@@ -24,28 +24,38 @@ package constants.skills;
 /**
  * @author kevintjuh93
  */
-public class Legend {
-    public static final int THREE_SNAILS = 20001000;
-    public static final int RECOVERY = 20001001;
-    public static final int AGILE_BODY = 20001002;
-    public static final int LEGENDARY_SPIRIT = 20001003;
-    public static final int MONSTER_RIDER = 20001004;
-    public static final int ECHO_OF_HERO = 20001005;
-    public static final int JUMP_DOWN = 20001006;
-    public static final int MAKER = 20001007;
-    public static final int BAMBOO_THRUST = 20001009;
-    public static final int INVICIBLE_BARRIER = 20001010;
-    public static final int POWER_EXPLOSION = 20001011;
-    public static final int METEO_SHOWER = 20001011;
-    public static final int BLESSING_OF_THE_FAIRY = 20000012;
-    public static final int TUTORIAL_SKILL1 = 20000014;
-    public static final int TUTORIAL_SKILL2 = 20000015;
-    public static final int TUTORIAL_SKILL3 = 20000016;
-    public static final int TUTORIAL_SKILL4 = 20000017; //combo
-    public static final int TUTORIAL_SKILL5 = 20000018; //critical
-    public static final int MAP_CHAIR = 20000100;
-    public static final int YETI_MOUNT1 = 20001019;
-    public static final int YETI_MOUNT2 = 20001022;
-    public static final int WITCH_BROOMSTICK = 20001023;
-    public static final int BALROG_MOUNT = 20001031;
+public enum Legend {
+    THREE_SNAILS(20001000),
+    RECOVERY(20001001),
+    AGILE_BODY(20001002),
+    LEGENDARY_SPIRIT(20001003),
+    MONSTER_RIDER(20001004),
+    ECHO_OF_HERO(20001005),
+    JUMP_DOWN(20001006),
+    MAKER(20001007),
+    BAMBOO_THRUST(20001009),
+    INVICIBLE_BARRIER(20001010),
+    POWER_EXPLOSION(20001011),
+    METEO_SHOWER(20001011), // Duplicate entry; please verify the correct skill ID
+    BLESSING_OF_THE_FAIRY(20000012),
+    TUTORIAL_SKILL1(20000014),
+    TUTORIAL_SKILL2(20000015),
+    TUTORIAL_SKILL3(20000016),
+    TUTORIAL_SKILL4(20000017), //combo
+    TUTORIAL_SKILL5(20000018), //critical
+    MAP_CHAIR(20000100),
+    YETI_MOUNT1(20001019),
+    YETI_MOUNT2(20001022),
+    WITCH_BROOMSTICK(20001023),
+    BALROG_MOUNT(20001031);
+
+    private final int skillId;
+
+    Legend(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

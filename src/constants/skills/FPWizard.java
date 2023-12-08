@@ -24,13 +24,24 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class FPWizard {
-    public static final int MP_EATER = 2100000;
-    public static final int SPELL_MASTERY = 2100006;
-    public static final int HIGH_WISDOM = 2100007;
-    public static final int MEDITATION = 2101001;
-    public static final int TELEPORT = 2101002;
-    public static final int SLOW = 2101003;
-    public static final int FIRE_ARROW = 2101004;
-    public static final int POISON_BREATH = 2101005;
+public enum FPWizard {
+    MP_EATER(2100000),
+    SPELL_MASTERY(2100006),
+    HIGH_WISDOM(2100007),
+    MEDITATION(2101001),
+    TELEPORT(2101002),
+    SLOW(2101003),
+    FIRE_ARROW(2101004),
+    POISON_BREATH(2101005);
+
+    private final int skillId;
+
+    FPWizard(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }
+

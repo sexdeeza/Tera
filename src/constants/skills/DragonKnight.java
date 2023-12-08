@@ -24,13 +24,23 @@ package constants.skills;
 /**
  * @author David
  */
-public class DragonKnight {
-    public static final int ELEMENTAL_RESISTANCE = 1310000;
-    public static final int DRAGON_WISDOM = 1310009;
-    public static final int CRUSHER = 1311001;
-    public static final int DRAGON_FURY = 1311003;
-    public static final int SACRIFICE = 1311005;
-    public static final int DRAGON_ROAR = 1311006;
-    public static final int MAGIC_CRASH = 1311007;
-    public static final int DRAGON_STRENGTH = 1311008;
+public enum DragonKnight {
+    ELEMENTAL_RESISTANCE(1310000),
+    DRAGON_WISDOM(1310009),
+    CRUSHER(1311001),
+    DRAGON_FURY(1311003),
+    SACRIFICE(1311005),
+    DRAGON_ROAR(1311006),
+    MAGIC_CRASH(1311007),
+    DRAGON_STRENGTH(1311008);
+
+    private final int skillId;
+
+    DragonKnight(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }

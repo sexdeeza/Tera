@@ -24,16 +24,26 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public class Hero {
-    public static final int COMBAT_MASTERY = 1120012;
-    public static final int MAPLE_WARRIOR = 1121000;
-    public static final int MONSTER_MAGNET = 1121001;
-    public static final int STANCE = 1121002;
-    public static final int ADVANCED_COMBO = 1120003;
-    public static final int ACHILLES = 1120004;
-    public static final int GUARDIAN = 1120005;
-    public static final int RUSH = 1121006;
-    public static final int INTREPID_SLASH = 1121008;
-    public static final int ENRAGE = 1121010;
-    public static final int HEROS_WILL = 1121011;
+public enum Hero {
+    COMBAT_MASTERY(1120012),
+    MAPLE_WARRIOR(1121000),
+    MONSTER_MAGNET(1121001),
+    STANCE(1121002),
+    ADVANCED_COMBO(1120003),
+    ACHILLES(1120004),
+    GUARDIAN(1120005),
+    RUSH(1121006),
+    INTREPID_SLASH(1121008),
+    ENRAGE(1121010),
+    HEROS_WILL(1121011);
+
+    private final int skillId;
+
+    Hero(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
 }
