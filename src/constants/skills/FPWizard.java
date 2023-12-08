@@ -26,6 +26,8 @@ package constants.skills;
  */
 public class FPWizard {
     public static final int MP_EATER = 2100000;
+    public static final int SPELL_MASTERY = 2100006;
+    public static final int HIGH_WISDOM = 2100007;
     public static final int MEDITATION = 2101001;
     public static final int TELEPORT = 2101002;
     public static final int SLOW = 2101003;

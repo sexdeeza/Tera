@@ -37,5 +37,5 @@ public class Paladin {
     public static final int BLAST = 1221009;
     public static final int HEAVENS_HAMMER = 1221011;
     public static final int HEROS_WILL = 1221012;
-    
+
 }
