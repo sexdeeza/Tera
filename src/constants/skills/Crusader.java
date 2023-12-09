@@ -24,23 +24,13 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Crusader {
-    IMPROVING_MPREC(1110000),
-    SHIELD_MASTERY(1110001),
-    COMBO(1111002),
-    PANIC(1111003),
-    COMA(1111005),
-    MAGIC_CRASH(1111007),
-    SHOUT(1111008),
-    BRANDISH(1111010);
-
-    private final int skillId;
-
-    Crusader(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Crusader {
+    public static final int IMPROVING_MPREC = 1110000;
+    public static final int SHIELD_MASTERY = 1110001;
+    public static final int COMBO = 1111002;
+    public static final int PANIC = 1111003;
+    public static final int COMA = 1111005;
+    public static final int MAGIC_CRASH = 1111007;
+    public static final int SHOUT = 1111008;
+    public static final int BRANDISH = 1111010;
 }

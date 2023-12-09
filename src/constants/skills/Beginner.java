@@ -24,85 +24,75 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Beginner {
-    FOLLOW_THE_LEADER(8),
-    BLESSING_OF_THE_FAIRY(12),
-    EMPRESS_BLESSING(73),
-    EMPRESS_MIGHT1(74),
-    EMPRESS_MIGHT2(80),
-    ARCHANGELIC_BLESSING(86),
-    DARK_ANGELIC_BLESSING(88),
-    WHITE_ANGELIC_BLESSING(91),
-    HIDDEN_POTENTIAL_EXPLORER(93),
-    FREEZING_AXE(97),
-    ICE_SMASH(99),
-    MAP_CHAIR(100),
-    THREE_SNAILS(1001),
-    RECOVERY(1001),
-    NIMBLE_FEET(1002),
-    LEGENDARY_SPIRIT(1003),
-    MONSTER_RIDER(1004),
-    ECHO_OF_HERO(1005),
-    BAMBOO_RAIN(1009),
-    INVINCIBLE_BARRIER(1010),
-    POWER_EXPLOSION(1011),
-    SPACESHIP1(1013),
-    SPACE_DASH1(1014),
-    SPACE_BEAM1(1015),
-    YETI_MOUNT1(1017),
-    YETI_MOUNT2(1018),
-    WITCH_BROOMSTICK(1019),
-    RAGE_PHARAOH(1020),
-    WOODEN_PONY(1025),
-    SOARING(1026),
-    CROCO(1027),
-    BLACK_SCOOTER(1028),
-    PINK_SCOOTER(1029),
-    NIMBUS_CLOUD(1030),
-    BALROG_MOUNT(1031),
-    ZD_TIGER(1034),
-    MIST_BALROG(1035),
-    LION(1036),
-    UNICORN(1037),
-    LOW_RIDER(1038),
-    RED_TRUCK(1039),
-    GARGOYLE(1040),
-    SHINJO(1042),
-    ORANGE_MUSHROOM(1044),
-    HELICOPTER(1045),
-    SPACESHIP2(1046),
-    SPACE_DASH2(1047),
-    SPACE_BEAM2(1048),
-    NIGHTMARE(1049),
-    YETI(1050),
-    OSTRICH(1051),
-    PINK_BEAR(1052),
-    TRANSFOR_ROBOT(1053),
-    CHICKEN(1054),
-    OS4_SHUTTLE(1065),
-    VISITOR_MELEE(1066),
-    VISITOR_RANGED(1067),
-    OWL(1069),
-    MOTHERSHIP(1070),
-    OS3A_MACHINE(1071),
-    GIANT_BUNNY(1096),
-    TINY_BUNNY(1101),
-    BUNNY_RICKSHAW(1102),
-    DECENT_HASTE(8000),
-    DECENT_MYSTIC_DOOR(8001),
-    DECENT_SHARP_EYES(8002),
-    DECENT_HYPER_BODY(8003),
-    PIG_WEAKNESS(9000),
-    STUMP_WEAKNESS(9001),
-    SLIME_WEAKNESS(9002);
-
-    private final int skillId;
-
-    Beginner(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Beginner {
+    public static final int FOLLOW_THE_LEADER = 8;
+    public static final int BLESSING_OF_THE_FAIRY = 12;
+    public static final int EMPRESS_BLESSING = 73;
+    public static final int EMPRESS_MIGHT1 = 74;
+    public static final int EMPRESS_MIGHT2 = 80;
+    public static final int ARCHANGELIC_BLESSING = 86;
+    public static final int DARK_ANGELIC_BLESSING = 88;
+    public static final int WHITE_ANGELIC_BLESSING = 91;
+    public static final int HIDDEN_POTENTIAL_EXPLORER = 93;
+    public static final int FREEZING_AXE = 97;
+    public static final int ICE_SMASH = 99;
+    public static final int MAP_CHAIR = 100;
+    public static final int THREE_SNAILS = 1001;
+    public static final int RECOVERY = 1001;
+    public static final int NIMBLE_FEET = 1002;
+    public static final int LEGENDARY_SPIRIT = 1003;
+    public static final int MONSTER_RIDER = 1004;
+    public static final int ECHO_OF_HERO = 1005;
+    public static final int BAMBOO_RAIN = 1009;
+    public static final int INVINCIBLE_BARRIER = 1010;
+    public static final int POWER_EXPLOSION = 1011;
+    public static final int SPACESHIP1 = 1013;
+    public static final int SPACE_DASH1 = 1014;
+    public static final int SPACE_BEAM1 = 1015;
+    public static final int YETI_MOUNT1 = 1017;
+    public static final int YETI_MOUNT2 = 1018;
+    public static final int WITCH_BROOMSTICK = 1019;
+    public static final int RAGE_PHARAOH = 1020;
+    public static final int WOODEN_PONY = 1025;
+    public static final int SOARING = 1026;
+    public static final int CROCO = 1027;
+    public static final int BLACK_SCOOTER = 1028;
+    public static final int PINK_SCOOTER = 1029;
+    public static final int NIMBUS_CLOUD = 1030;
+    public static final int BALROG_MOUNT = 1031;
+    public static final int ZD_TIGER = 1034;
+    public static final int MIST_BALROG = 1035;
+    public static final int LION = 1036;
+    public static final int UNICORN = 1037;
+    public static final int LOW_RIDER = 1038;
+    public static final int RED_TRUCK = 1039;
+    public static final int GARGOYLE = 1040;
+    public static final int SHINJO = 1042;
+    public static final int ORANGE_MUSHROOM = 1044;
+    public static final int HELICOPTER = 1045;
+    public static final int SPACESHIP2 = 1046;
+    public static final int SPACE_DASH2 = 1047;
+    public static final int SPACE_BEAM2 = 1048;
+    public static final int NIGHTMARE = 1049;
+    public static final int YETI = 1050;
+    public static final int OSTRICH = 1051;
+    public static final int PINK_BEAR = 1052;
+    public static final int TRANSFOR_ROBOT = 1053;
+    public static final int CHICKEN = 1054;
+    public static final int OS4_SHUTTLE = 1065;
+    public static final int VISITOR_MELEE = 1066;
+    public static final int VISITOR_RANGED = 1067;
+    public static final int OWL = 1069;
+    public static final int MOTHERSHIP = 1070;
+    public static final int OS3A_MACHINE = 1071;
+    public static final int GIANT_BUNNY = 1096;
+    public static final int TINY_BUNNY = 1101;
+    public static final int BUNNY_RICKSHAW = 1102;
+    public static final int DECENT_HASTE = 8000;
+    public static final int DECENT_MYSTIC_DOOR = 8001;
+    public static final int DECENT_SHARP_EYES = 8002;
+    public static final int DECENT_HYPER_BODY = 8003;
+    public static final int PIG_WEAKNESS = 9000;
+    public static final int STUMP_WEAKNESS = 9001;
+    public static final int SLIME_WEAKNESS = 9002;
 }

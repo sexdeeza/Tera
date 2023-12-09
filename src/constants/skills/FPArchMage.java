@@ -24,25 +24,15 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum FPArchMage {
-    ARCANE_AIM(2120010),
-    MAPLE_WARRIOR(2121000),
-    BIG_BANG(2121001),
-    MANA_REFLECTION(2121002),
-    INFINITY(2121004),
-    IFRIT(2121005),
-    PARALYZE(2121006),
-    METEOR_SHOWER(2121007),
-    HEROS_WILL(2121008),
-    BUFF_MASTERY(2121009);
-
-    private final int skillId;
-
-    FPArchMage(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class FPArchMage {
+    public static final int ARCANE_AIM = 2120010;
+    public static final int MAPLE_WARRIOR = 2121000;
+    public static final int BIG_BANG = 2121001;
+    public static final int MANA_REFLECTION = 2121002;
+    public static final int INFINITY = 2121004;
+    public static final int IFRIT = 2121005;
+    public static final int PARALYZE = 2121006;
+    public static final int METEOR_SHOWER = 2121007;
+    public static final int HEROS_WILL = 2121008;
+    public static final int BUFF_MASTERY = 2121009;
 }

@@ -24,23 +24,13 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Spearman {
-    WEAPON_MASTERY(1300000),
-    FINAL_ATTACK(1300002),
-    PHYSICAL_TRAINING(1300009),
-    WEAPON_BOOSTER(1301004),
-    IRON_WILL(1301006),
-    HYPER_BODY(1301007),
-    GROUND_SMASH(1301008),
-    SLIPSTREAM(1301010);
-
-    private final int skillId;
-
-    Spearman(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Spearman {
+    public static final int WEAPON_MASTERY = 1300000;
+    public static final int FINAL_ATTACK = 1300002;
+    public static final int PHYSICAL_TRAINING = 1300009;
+    public static final int WEAPON_BOOSTER = 1301004;
+    public static final int IRON_WILL = 1301006;
+    public static final int HYPER_BODY = 1301007;
+    public static final int GROUND_SMASH = 1301008;
+    public static final int SLIPSTREAM = 1301010;
 }

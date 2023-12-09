@@ -24,22 +24,12 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Fighter {
-    WEAPON_MASTERY(1100000),
-    FINAL_ATTACK(1100002),
-    WEAPON_BOOSTER(1101004),
-    RAGE(1101006),
-    POWER_GUARD(1101007),
-    GROUND_SMASH(1101008),
-    SLIPSTREAM(1101010);
-
-    private final int skillId;
-
-    Fighter(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Fighter {
+    public static final int WEAPON_MASTERY = 1100000;
+    public static final int FINAL_ATTACK = 1100002;
+    public static final int WEAPON_BOOSTER = 1101004;
+    public static final int RAGE = 1101006;
+    public static final int POWER_GUARD = 1101007;
+    public static final int GROUND_SMASH = 1101008;
+    public static final int SLIPSTREAM = 1101010;
 }
