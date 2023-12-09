@@ -24,39 +24,27 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum BlazeWizard {
+public class BlazeWizard {
     // 1st job
-    INCREASING_MAX_MP(12000000),
-    MAGIC_GUARD(12001001),
-    MAGIC_ARMOR(12001002),
-    MAGIC_CLAW(12001003),
-    FLAME(12001004),
-
+    public static final int INCREASING_MAX_MP = 12000000;
+    public static final int MAGIC_GUARD = 12001001;
+    public static final int MAGIC_ARMOR = 12001002;
+    public static final int MAGIC_CLAW = 12001003;
+    public static final int FLAME = 12001004;
     // 2nd job
-    MEDITATION(12101000),
-    SLOW(12101001),
-    FIRE_ARROW(12101002),
-    TELEPORT(12101003),
-    SPELL_BOOSTER(12101004),
-    ELEMENTAL_RESET(12101005),
-    FIRE_PILLAR(12101006),
-
+    public static final int MEDITATION = 12101000;
+    public static final int SLOW = 12101001;
+    public static final int FIRE_ARROW = 12101002;
+    public static final int TELEPORT = 12101003;
+    public static final int SPELL_BOOSTER = 12101004;
+    public static final int ELEMENTAL_RESET = 12101005;
+    public static final int FIRE_PILLAR = 12101006;
     // 3rd job
-    ELEMENTAL_RESISTANCE(12110000),
-    ELEMENT_AMPLIFICATION(12110001),
-    SEAL(12111002),
-    METEOR_SHOWER(12111003),
-    IFRIT(12111004),
-    FLAME_GEAR(12111005),
-    FIRE_STRIKE(12111006);
-
-    private final int skillId;
-
-    BlazeWizard(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+    public static final int ELEMENTAL_RESISTANCE = 12110000;
+    public static final int ELEMENT_AMPLIFICATION = 12110001;
+    public static final int SEAL = 12111002;
+    public static final int METEOR_SHOWER = 12111003;
+    public static final int IFRIT = 12111004;
+    public static final int FLAME_GEAR = 12111005;
+    public static final int FIRE_STRIKE = 12111006;
 }

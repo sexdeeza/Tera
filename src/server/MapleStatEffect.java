@@ -27,6 +27,7 @@ import client.inventory.MapleInventoryType;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import constants.GameConstants;
+import constants.skills.*;
 import handling.channel.ChannelServer;
 import handling.world.MaplePartyCharacter;
 import provider.MapleData;
@@ -198,7 +199,10 @@ public class MapleStatEffect implements Serializable {
 
         if (ret.skill) {
             switch (sourceid) {
-                case 1100002, 1200002, 1300002, 3100001, 3200001, 11101002, 13101002, 2111007, 2211007, 2311007, 32111010, 33100009, 22150004, 22181004, 1120013, 3120008, 23100006, 23120012, 24100003 -> // TODO: for now, or could it be card stack? (1 count)
+                case 1100002, 1200002, 1300002, 3100001, 3200001,
+                        11101002, 13101002, 2111007, 2211007, 2311007,
+                        32111010, 33100009, 22150004, 22181004, 1120013,
+                        3120008, 23100006, 23120012, 24100003 -> // TODO: for now, or could it be card stack? (1 count)
                     ret.mobCount = 6;
                 case 35121005, 35111004, 35121013 -> {
                     ret.attackCount = 6;
@@ -464,12 +468,12 @@ public class MapleStatEffect implements Serializable {
         }
         if (ret.skill) { // hack because we can't get from the datafile...
             switch (sourceid) {
-                case 2001002: // magic guard
-                case 12001001:
-                case 22111001:
+                case Magician.MAGIC_GUARD:
+                case BlazeWizard.MAGIC_GUARD:
+                case Evan.MAGIC_GUARD:
                     ret.statups.put(MapleBuffStat.MAGIC_GUARD, ret.x);
                     break;
-                case 2301003: // invincible
+                case Cleric.INVINCIBLE: // invincible
                     ret.statups.put(MapleBuffStat.INVINCIBLE, ret.x);
                     break;
                 case 35120000:
