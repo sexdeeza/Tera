@@ -24,21 +24,11 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Outlaw {
-    BURST_FIRE(5210000),
-    OCTOPUS(5211001),
-    GAVIOTA(5211002),
-    FLAME_THROWER(5211004),
-    HOMING_BEACON(5211006),
-    ICE_SPLITTER(5211005);
-
-    private final int skillId;
-
-    Outlaw(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Outlaw {
+    public static final int BURST_FIRE = 5210000;
+    public static final int OCTOPUS = 5211001;
+    public static final int GAVIOTA = 5211002;
+    public static final int FLAME_THROWER = 5211004;
+    public static final int HOMING_BEACON = 5211006;
+    public static final int ICE_SPLITTER = 5211005;
 }

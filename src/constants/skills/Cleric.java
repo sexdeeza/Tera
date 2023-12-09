@@ -28,5 +28,4 @@ public class Cleric {
     public static final int TELEPORT = 2301001;
     public static final int BLESS = 2301004;
     public static final int HOLY_ARROW = 2301005;
-
 }

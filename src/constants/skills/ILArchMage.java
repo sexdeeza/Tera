@@ -24,25 +24,14 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum ILArchMage {
-    MAPLE_WARRIOR(2221000),
-    BIG_BANG(2221001),
-    MANA_REFLECTION(2221002),
-    ICE_DEMON(2221003),
-    INFINITY(2221004),
-    IFRIT(2221005),
-    BLIZZARD(2221007),
-    HEROS_WILL(2221008),
-    CHAIN_LIGHTNING(2221006);
-
-    private final int skillId;
-
-    ILArchMage(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class ILArchMage {
+    public static final int MAPLE_WARRIOR = 2221000;
+    public static final int BIG_BANG = 2221001;
+    public static final int MANA_REFLECTION = 2221002;
+    public static final int ICE_DEMON = 2221003;
+    public static final int INFINITY = 2221004;
+    public static final int IFRIT = 2221005;
+    public static final int BLIZZARD = 2221007;
+    public static final int HEROS_WILL = 2221008;
+    public static final int CHAIN_LIGHTNING = 2221006;
 }
-

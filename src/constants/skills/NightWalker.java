@@ -24,39 +24,28 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum NightWalker {
+public class NightWalker {
     // 1st job
-    NIMBLE_BODY(14000000),
-    KEEN_EYES(14000001),
-    DISORDER(14000002),
-    DARK_SIGHT(14001003),
-    LUCKY_SEVEN(14001004),
-    DARKNESS(14001005),
+    public static final int NIMBLE_BODY = 14000000;
+    public static final int KEEN_EYES = 14000001;
+    public static final int DISORDER = 14000002;
+    public static final int DARK_SIGHT = 14001003;
+    public static final int LUCKY_SEVEN = 14001004;
+    public static final int DARKNESS = 14001005;
     // 2nd job
-    CLAW_MASTERY(14100000),
-    CRITICAL_THROW(14100001),
-    CLAW_BOOSTER(14101002),
-    HASTE(14101003),
-    FLASH_JUMP(14101004),
-    VANISH(14100005),
-    VAMPIRE(14101006),
+    public static final int CLAW_MASTERY = 14100000;
+    public static final int CRITICAL_THROW = 14100001;
+    public static final int CLAW_BOOSTER = 14101002;
+    public static final int HASTE = 14101003;
+    public static final int FLASH_JUMP = 14101004;
+    public static final int VANISH = 14100005;
+    public static final int VAMPIRE = 14101006;
     // 3rd job
-    SHADOW_PARTNER(14111000),
-    SHADOW_WEB(14111001),
-    AVENGER(14111002),
-    ALCHEMIST(14110003),
-    VENOM(14110004),
-    TRIPLE_THROW(14110005),
-    POISON_BOMB(14111006);
-
-    private final int skillId;
-
-    NightWalker(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+    public static final int SHADOW_PARTNER = 14111000;
+    public static final int SHADOW_WEB = 14111001;
+    public static final int AVENGER = 14111002;
+    public static final int ALCHEMIST = 14110003;
+    public static final int VENOM = 14110004;
+    public static final int TRIPLE_THROW = 14110005;
+    public static final int POISON_BOMB = 14111006;
 }
-

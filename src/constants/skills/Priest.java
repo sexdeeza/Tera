@@ -24,23 +24,12 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Priest {
-    ELEMENTAL_RESISTANCE(2310000),
-    DISPEL(2311001),
-    MYSTIC_DOOR(2311002),
-    HOLY_SYMBOL(2311003),
-    SHINING_RAY(2311004),
-    DOOM(2311005),
-    SUMMON_DRAGON(2311006);
-
-    private final int skillId;
-
-    Priest(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Priest {
+    public static final int ELEMENTAL_RESISTANCE = 2310000;
+    public static final int DISPEL = 2311001;
+    public static final int MYSTIC_DOOR = 2311002;
+    public static final int HOLY_SYMBOL = 2311003;
+    public static final int SHINING_RAY = 2311004;
+    public static final int DOOM = 2311005;
+    public static final int SUMMON_DRAGON = 2311006;
 }
-

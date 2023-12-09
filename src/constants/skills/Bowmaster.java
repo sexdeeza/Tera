@@ -24,24 +24,14 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum Bowmaster {
-    MAPLE_WARRIOR(3121000),
-    SHARP_EYES(3121002),
-    DRAGONS_BREATH(3121003),
-    HURRICANE(3121004),
-    BOW_EXPERT(3120005),
-    PHOENIX(3121006),
-    HAMSTRING(3121007),
-    CONCENTRATE(3121008),
-    HEROS_WILL(3121009);
-
-    private final int skillId;
-
-    Bowmaster(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class Bowmaster {
+    public static final int MAPLE_WARRIOR = 3121000;
+    public static final int SHARP_EYES = 3121002;
+    public static final int DRAGONS_BREATH = 3121003;
+    public static final int HURRICANE = 3121004;
+    public static final int BOW_EXPERT = 3120005;
+    public static final int PHOENIX = 3121006;
+    public static final int HAMSTRING = 3121007;
+    public static final int CONCENTRATE = 3121008;
+    public static final int HEROS_WILL = 3121009;
 }

@@ -24,24 +24,14 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum NightLord {
-    MAPLE_WARRIOR(4121000),
-    SHADOW_SHIFTER(4120002),
-    TAUNT(4121003),
-    NINJA_AMBUSH(4121004),
-    VENOMOUS_STAR(4120005),
-    SHADOW_STARS(4121006),
-    TRIPLE_THROW(4121007),
-    NINJA_STORM(4121008),
-    HEROS_WILL(4121009);
-
-    private final int skillId;
-
-    NightLord(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class NightLord {
+    public static final int MAPLE_WARRIOR = 4121000;
+    public static final int SHADOW_SHIFTER = 4120002;
+    public static final int TAUNT = 4121003;
+    public static final int NINJA_AMBUSH = 4121004;
+    public static final int VENOMOUS_STAR = 4120005;
+    public static final int SHADOW_STARS = 4121006;
+    public static final int TRIPLE_THROW = 4121007;
+    public static final int NINJA_STORM = 4121008;
+    public static final int HEROS_WILL = 4121009;
 }

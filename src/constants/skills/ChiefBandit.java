@@ -24,22 +24,12 @@ package constants.skills;
 /**
  * @author BubblesDev
  */
-public enum ChiefBandit {
-    SHIELD_MASTERY(4210000),
-    CHAKRA(4211001),
-    ASSAULTER(4211002),
-    PICKPOCKET(4211003),
-    BAND_OF_THIEVES(4211004),
-    MESO_GUARD(4211005),
-    MESO_EXPLOSION(4211006);
-
-    private final int skillId;
-
-    ChiefBandit(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public int getSkillId() {
-        return skillId;
-    }
+public class ChiefBandit {
+    public static final int SHIELD_MASTERY = 4210000;
+    public static final int CHAKRA = 4211001;
+    public static final int ASSAULTER = 4211002;
+    public static final int PICKPOCKET = 4211003;
+    public static final int BAND_OF_THIEVES = 4211004;
+    public static final int MESO_GUARD = 4211005;
+    public static final int MESO_EXPLOSION = 4211006;
 }
