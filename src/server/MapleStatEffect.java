@@ -199,7 +199,7 @@ public class MapleStatEffect implements Serializable {
 
         if (ret.skill) {
             switch (sourceid) {
-                case 1100002, 1200002, 1300002, 3100001, 3200001,
+                case 1100002, 1200002, 12111007, 1300002, 3100001, 3200001,
                         11101002, 13101002, 2111007, 2211007, 2311007,
                        22161005, 32111010, 33100009, 22150004, 22181004,
                         1120013, 3120008, 23100006, 23120012, 24100003 -> // TODO: for now, or could it be card stack? (1 count)
@@ -667,6 +667,8 @@ public class MapleStatEffect implements Serializable {
                 case 2211007:
                 case 2311007:
                 case 32111010:
+                case 22161005:
+                case 12111007:
                     ret.mpCon = (short) ret.y;
                     ret.duration = 2100000000;
                     ret.statups.put(MapleBuffStat.TELEPORT_MASTERY, ret.x);
@@ -1222,6 +1224,7 @@ public class MapleStatEffect implements Serializable {
             switch (sourceid) {
                 case 2022746: // angel bless
                 case 2022747: // d.angel bless
+                case 2022823: // w.angel bless
                     ret.statups.clear(); // no atk/matk
                     ret.statups.put(MapleBuffStat.PYRAMID_PQ, 1); // ITEM_EFFECT buff
                     break;

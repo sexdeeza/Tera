@@ -943,6 +943,7 @@ public class PlayerHandler {
                 case 4221003:
                 case 3111004: // arrow rain
                 case 3211004: // arrow eruption
+                case 13111000: // wa arrow rain
                     AOE = true;
                     bulletCount = effect.getAttackCount();
                     break;

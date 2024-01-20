@@ -430,7 +430,7 @@ public class PlayerStats implements Serializable {
                 case 1112586:
                     equippedSummon = 1087;
                     break;
-                case 1112594:
+                case 1112663:
                     equippedSummon = 1179;
                     break;
                 default:

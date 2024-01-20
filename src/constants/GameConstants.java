@@ -2873,7 +2873,12 @@ public class GameConstants {
     }
 
     public static boolean isNoDelaySkill(int skillId) {
-        return skillId == 5110001 || skillId == 21101003 || skillId == 15100004 || skillId == 33101004 || skillId == 32111010 || skillId == 2111007 || skillId == 2211007 || skillId == 2311007 || skillId == 32121003 || skillId == 35121005 || skillId == 35111004 || skillId == 35121013 || skillId == 35121003 || skillId == 22150004 || skillId == 22181004 || skillId == 11101002 || skillId == 13101002 || skillId == 24121000;
+        return skillId == 5110001 || skillId == 21101003 ||
+                skillId == 15100004 || skillId == 33101004 || skillId == 32111010 || skillId == 2111007 ||
+                skillId == 2211007 || skillId == 2311007 || skillId == 32121003 || skillId == 35121005 ||
+                skillId == 35111004 || skillId == 35121013 || skillId == 35121003 || skillId == 22150004 ||
+                skillId == 22181004 || skillId == 11101002 || skillId == 13101002 || skillId == 24121000 ||
+                skillId == 22161005 || skillId == 12111007;
     }
 
     public static boolean isNoSpawn(int mapID) {

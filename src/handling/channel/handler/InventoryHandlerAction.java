@@ -1023,7 +1023,7 @@ public class InventoryHandlerAction {
                 return false;
             }
         } else if (GameConstants.isSpecialScroll(scroll.getItemId())) {
-            if (ii.isCash(toScroll.getItemId()) || toScroll.getEnhance() >= 8) {
+            if (ii.isCash(toScroll.getItemId()) || toScroll.getEnhance() >= 15) {
                 c.getSession().write(InventoryPacket.getInventoryFull());
                 c.getSession().write(CWvsContext.enableActions());
                 return false;
@@ -1379,7 +1379,7 @@ public class InventoryHandlerAction {
         // another int here, lock = 5A E5 F2 0A, 7 day = D2 30 F3 0A
         if (item != null && item.getType() == 1) {
             // equip
-            if (((Equip) item).getEnhance() >= 8) {
+            if (((Equip) item).getEnhance() >= 10) {
                 // cannot be used
 
             }
