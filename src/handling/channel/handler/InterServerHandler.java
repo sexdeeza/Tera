@@ -103,11 +103,11 @@ public class InterServerHandler {
 
     public static final void EnterMTS(final MapleClient c, final MapleCharacter chr) {
         int targetMapId = 910000000; // The target map ID where you want to restrict access
-        if (c.getPlayer().getLevel() >= 10) {
+        if (c.getPlayer().getLevel() < 10 || c.getPlayer().getMapId() == targetMapId) {
+            c.getPlayer().dropMessage(5, "You cannot use this command in this map.");
+        } else if (c.getPlayer().getLevel() >= 10) {
             c.getPlayer().saveLocation(SavedLocationType.FREE_MARKET, c.getPlayer().getMap().getReturnMap().getId());
             c.getPlayer().changeMap(targetMapId, 0);
-        } else if (c.getPlayer().getLevel() < 10 || c.getPlayer().getMapId() == targetMapId) {
-            c.getPlayer().dropMessage(5, "You cannot use this command in this map.");
         }
     }
 
