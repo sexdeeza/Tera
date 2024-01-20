@@ -73,7 +73,7 @@ public class PlayerStats implements Serializable {
             incAllskill, combatOrders, ignoreTargetDEF, defRange, BuffUP_Summon, dodgeChance, speed, jump, harvestingTool,
             equipmentBonusExp, dropMod, cashMod, levelBonus, ASR, TER, pickRate, decreaseDebuff, equippedFairy, equippedSummon,
             percent_hp, percent_mp, percent_str, percent_dex, percent_int, percent_luk, percent_acc, percent_atk, percent_matk, percent_wdef, percent_mdef,
-            pvpDamage, hpRecoverTime = 0, mpRecoverTime = 0, dot, dotTime, questBonus, pvpRank, pvpExp, wdef, mdef, trueMastery;
+            pvpDamage, hpRecoverTime = 0, mpRecoverTime = 0, dot, dotTime, pvpRank, pvpExp, wdef, mdef, trueMastery;
     private transient float localmaxbasedamage, localmaxbasepvpdamage, localmaxbasepvpdamageL;
     public transient int def, element_ice, element_fire, element_light, element_psn;
 
@@ -276,7 +276,6 @@ public class PlayerStats implements Serializable {
         ASR = 0;
         TER = 0;
         dot = 0;
-        questBonus = 1;
         dotTime = 0;
         trueMastery = 0;
         percent_wdef = 0;
@@ -609,8 +608,6 @@ public class PlayerStats implements Serializable {
                 levelBonus = 10;
             } else if (levelBonus == 0 && item.getItemId() == 5590000) {
                 levelBonus = 5;
-            } else if (item.getItemId() == 5710000) {
-                questBonus = 2;
             } else if (item.getItemId() == 5340000) {
                 canFish = true;
             } else if (item.getItemId() == 5340001) {

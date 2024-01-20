@@ -21,12 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package handling.channel.handler;
 
 import client.MapleClient;
-import client.MapleCharacterUtil;
-import constants.ServerConstants;
-import static handling.world.World.Broadcast.broadcastMessage;
 import scripting.NPCScriptManager;
-import scripting.EventManager;
-import tools.packet.CField;
 import tools.data.LittleEndianAccessor;
 
 public class UserInterfaceHandler {

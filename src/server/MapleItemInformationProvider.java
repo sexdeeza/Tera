@@ -1244,6 +1244,31 @@ public class MapleItemInformationProvider {
     }
     private ItemInformation tmpInfo = null;
 
+    public class ScriptedItem {
+
+        private final boolean runOnPickup;
+        private final int npc;
+        private final String script;
+
+        public ScriptedItem(int npc, String script, boolean rop) {
+            this.npc = npc;
+            this.script = script;
+            this.runOnPickup = rop;
+        }
+
+        public int getNpc() {
+            return npc;
+        }
+
+        public String getScript() {
+            return script;
+        }
+
+        public boolean runOnPickup() {
+            return runOnPickup;
+        }
+    }
+
     public void initItemRewardData(ResultSet sqlRewardData) throws SQLException {
         final int itemID = sqlRewardData.getInt("itemid");
         if (tmpInfo == null || tmpInfo.itemId != itemID) {

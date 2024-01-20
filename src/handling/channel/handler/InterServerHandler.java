@@ -101,7 +101,13 @@ public class InterServerHandler {
     }
 
     public static final void EnterMTS(final MapleClient c, final MapleCharacter chr) {
-        c.getSession().write(CWvsContext.enableActions());
+        if(c.getPlayer().getLevel() >= 10) {
+            c.getPlayer().saveLocation(SavedLocationType.FREE_MARKET, c.getPlayer().getMap().getReturnMap().getId());
+            MapleMap map = c.getChannelServer().getMapFactory().getMap(910000000);
+            c.getPlayer().changeMap(map, map.getPortal(0));
+        } else if(c.getPlayer().getLevel() < 10) {
+            c.getPlayer().dropMessage(5, "You must be over level 10 to access the Free Market");
+        }
     }
 
     public static final void Loggedin(final int playerid, final MapleClient c) {

@@ -178,7 +178,7 @@ public class MapScriptMethods {
                         c.getPlayer().getMap().startMapEffect("Find the correct combination!", 5120019);
                         break;
                     case 920010600:
-                        c.getPlayer().getMap().startMapEffect("Destroy the monsters and gather Statue Pieces!",
+                        c.getPlayer().getMap().startMapEffect("Destroy the monsters and collect Statue Pieces!",
                                 5120019);
                         break;
                     case 920010700:

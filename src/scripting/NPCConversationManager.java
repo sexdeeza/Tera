@@ -43,6 +43,9 @@ import client.SkillFactory;
 import client.SkillEntry;
 import client.MapleStat;
 
+import scripting.AbstractPlayerInteraction;
+import scripting.NPCScriptManager;
+import scripting.EventInstanceManager;
 import server.MapleCarnivalParty;
 import server.Randomizer;
 import server.MapleInventoryManipulator;

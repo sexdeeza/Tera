@@ -34,13 +34,20 @@ public class StatDexCommand extends Command{
             player.blueMessage("You must specify the amount of AP you want to allocate.");
             return;
         }
+
+        int total = player.getStat().getDex() + amount;
+
+        if (total < player.getStat().getDex()) {
+            player.blueMessage("You cannot decrease your stats.");
+            return;
+        }
         
         if((player.getStat().getDex() + amount) > 32000){
             player.blueMessage("You can't go over 32000 base stat.");
             return;
         }
         
-        int total = player.getStat().getDex() + amount;
+
         player.getStat().setDex((short) total, player);
         player.updateSingleStat(MapleStat.DEX, player.getStat().getDex());
         c.getPlayer().setRemainingAp((short) (c.getPlayer().getRemainingAp() - amount));

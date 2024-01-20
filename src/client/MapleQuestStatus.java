@@ -22,6 +22,8 @@ package client;
 
 import constants.GameConstants;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.io.Serializable;
 
@@ -35,6 +37,8 @@ public class MapleQuestStatus implements Serializable {
     private transient MapleQuest quest;
     private byte status;
     private Map<Integer, Integer> killedMobs = null;
+
+    private final List<Integer> medalProgress = new LinkedList<>();
     private int npc;
     private long completionTime;
     private int forfeited = 0;
@@ -135,6 +139,22 @@ public class MapleQuestStatus implements Serializable {
             }
         } //i doubt this
         return false;
+    }
+
+    public boolean addMedalMap(int mapid) {
+        if (medalProgress.contains(mapid)) {
+            return false;
+        }
+        medalProgress.add(mapid);
+        return true;
+    }
+
+    public int getMedalProgress() {
+        return medalProgress.size();
+    }
+
+    public List<Integer> getMedalMaps() {
+        return medalProgress;
     }
 
     private final boolean questCount(final int mo, final int id) {

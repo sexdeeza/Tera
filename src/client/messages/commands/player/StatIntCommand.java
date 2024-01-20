@@ -31,13 +31,20 @@ public class StatIntCommand extends Command{
             player.blueMessage("You must specify the amount of AP you want to allocate.");
             return;
         }
+
+        int total = player.getStat().getInt() + amount;
+
+        // Check if the calculated total is less than the current INT stat
+        if (total < player.getStat().getInt()) {
+            player.blueMessage("You cannot decrease your stats.");
+            return;
+        }
         
         if((player.getStat().getInt() + amount) > 32000){
             player.blueMessage("You can't go over 32000 base stat.");
             return;
         }
-        
-        int total = player.getStat().getInt() + amount;
+
         player.getStat().setInt((short) total, player);
         player.updateSingleStat(MapleStat.INT, player.getStat().getInt());
         c.getPlayer().setRemainingAp((short) (c.getPlayer().getRemainingAp() - amount));

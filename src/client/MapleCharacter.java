@@ -366,10 +366,10 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         ret.stats.dex = 5;
         ret.stats.int_ = 4;
         ret.stats.luk = 4;
-        ret.stats.maxhp = 50;
-        ret.stats.hp = 50;
-        ret.stats.maxmp = 50;
-        ret.stats.mp = 50;
+        ret.stats.maxhp = 250;
+        ret.stats.hp = 250;
+        ret.stats.maxmp = 150;
+        ret.stats.mp = 150;
         ret.gachexp = 0;
 
         Connection con = DatabaseConnection.getConnection();

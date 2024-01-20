@@ -201,8 +201,8 @@ public class MapleStatEffect implements Serializable {
             switch (sourceid) {
                 case 1100002, 1200002, 1300002, 3100001, 3200001,
                         11101002, 13101002, 2111007, 2211007, 2311007,
-                        32111010, 33100009, 22150004, 22181004, 1120013,
-                        3120008, 23100006, 23120012, 24100003 -> // TODO: for now, or could it be card stack? (1 count)
+                       22161005, 32111010, 33100009, 22150004, 22181004,
+                        1120013, 3120008, 23100006, 23120012, 24100003 -> // TODO: for now, or could it be card stack? (1 count)
                     ret.mobCount = 6;
                 case 35121005, 35111004, 35121013 -> {
                     ret.attackCount = 6;
@@ -896,6 +896,7 @@ public class MapleStatEffect implements Serializable {
                 case 1121010: // enrage
                     ret.statups.put(MapleBuffStat.ENRAGE, ret.x * 100 + ret.mobCount);
                     break;
+                case 23111004: // Ignis Roar
                 case 23111002: // TODO LEGEND: damage increase?
                 case 22161002: // phantom imprint
                     ret.monsterStatus.put(MonsterStatus.IMPRINT, ret.x);
@@ -1033,6 +1034,7 @@ public class MapleStatEffect implements Serializable {
                 case 1221002:
                 case 1321002: // Stance
                 case 21121003: // Aran - Freezing Posture
+                case 32111014: // Battle Mage - Stance
                 case 32121005:
                 case 5321010:
                     ret.statups.put(MapleBuffStat.STANCE, (int) ret.prop);

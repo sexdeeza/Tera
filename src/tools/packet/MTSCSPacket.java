@@ -865,7 +865,7 @@ public class MTSCSPacket {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
         mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-        mplew.write(0x7F);
+        mplew.write(Operation_Code + 95);
         mplew.write(err);
 
         return mplew.getPacket();

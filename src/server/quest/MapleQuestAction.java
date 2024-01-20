@@ -65,7 +65,7 @@ public class MapleQuestAction implements Serializable {
     /** Creates a new instance of MapleQuestAction */
     public MapleQuestAction(MapleQuestActionType type, ResultSet rse, MapleQuest quest, PreparedStatement pss, PreparedStatement psq, PreparedStatement psi) throws SQLException {
         this.skill = null;
-        this.questExtraBonus = 4;
+        this.questExtraBonus = 1;
         this.type = type;
         this.quest = quest;
 
@@ -161,7 +161,7 @@ public class MapleQuestAction implements Serializable {
                 if (status.getForfeited() > 0) {
                     break;
                 }
-                c.gainExp((intStore * GameConstants.getExpRate_Quest(c.getLevel()) * (c.getStat().questBonus) * ((c.getTrait(MapleTraitType.sense).getLevel() * 3 / 10) + 100) / 100) * questExtraBonus, true, true, true);
+                c.gainExp((intStore * GameConstants.getExpRate_Quest(c.getLevel()) * ((c.getTrait(MapleTraitType.sense).getLevel() * 3 / 10) + 100) / 100) * questExtraBonus, true, true, true);
             }
             case item -> {
                 // first check for randomness in item selection
@@ -410,9 +410,7 @@ public class MapleQuestAction implements Serializable {
     public void runEnd(MapleCharacter c, Integer extSelection) {
         switch (type) {
             case exp ->  {
-                System.out.println("Quest bonus given.");
-                System.out.println(questExtraBonus);
-                c.gainExp((intStore * GameConstants.getExpRate_Quest(c.getLevel()) * (c.getStat().questBonus) * ((c.getTrait(MapleTraitType.sense).getLevel() * 3 / 10) + 100) / 100) * questExtraBonus, true, true, true);
+                c.gainExp((intStore * GameConstants.getExpRate_Quest(c.getLevel())  * ((c.getTrait(MapleTraitType.sense).getLevel() * 3 / 10) + 100) / 100) * questExtraBonus, true, true, true);
             }
             case item ->  {
                 // first check for randomness in item selection

@@ -2646,7 +2646,7 @@ public class GameConstants {
         //but, sometimes it is possible to get second/third line as well
         //may seem like big chance, but it's not as it grabs random potential ID anyway
         return switch (newstate) {
-            case 20 -> i == 0 || Randomizer.nextInt(10) == 0 ? potentialID >= 40000 : potentialID >= 30000 && potentialID < 60004;
+            case 20 -> i == 0 || Randomizer.nextInt(10) == 0 ? potentialID >= 40000 : potentialID >= 30000 && potentialID < 41007;
             case 19 -> i == 0 || Randomizer.nextInt(10) == 0 ? potentialID >= 30000 : potentialID >= 20000 && potentialID < 30000;
             case 18 -> i == 0 || Randomizer.nextInt(10) == 0 ? potentialID >= 20000 && potentialID < 30000 : potentialID >= 10000 && potentialID < 20000;
             case 17 -> i == 0 || Randomizer.nextInt(10) == 0 ? potentialID >= 10000 && potentialID < 20000 : potentialID < 10000;
@@ -2769,7 +2769,7 @@ public class GameConstants {
 
     public static float getExpRateByLevel(final int level, final int channel) {
         if (level < 10) {
-            return 10.0f;
+            return 1.0f;
         } else {
             return ChannelServer.getInstance(channel).getExpRate();
         }

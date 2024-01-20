@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import scripting.NPCScriptManager;
-import server.Start;
 import server.ThreadManager;
 import tools.Pair;
 import tools.packet.CField.EffectPacket;
@@ -38,6 +37,7 @@ public class MapleQuest implements Serializable {
     protected String name = "";
 
     protected MapleQuest(final int id) {
+
         this.id = id;
     }
 

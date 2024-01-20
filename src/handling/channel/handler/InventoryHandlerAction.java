@@ -6,16 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import client.MapleCharacter;
-import client.MapleCharacterUtil;
-import client.MapleClient;
-import client.MapleQuestStatus;
-import client.MapleStat;
-import client.MonsterFamiliar;
-import client.PlayerStats;
-import client.Skill;
-import client.SkillEntry;
-import client.SkillFactory;
+import client.*;
 import client.inventory.Equip;
 import client.inventory.Item;
 import client.inventory.ItemFlag;
@@ -708,21 +699,22 @@ public class InventoryHandlerAction {
     public boolean MiracleCube(Item toUse) {
         boolean used = false;
         // miracle cube
-        if (c.getPlayer().getLevel() < 50) {
-            c.getPlayer().dropMessage(1, "You may not use this until level 50.");
+        if (c.getPlayer().getMeso() < 5000) {
+            c.getPlayer().dropMessage(1, "You have less than 5,000 meso.");
         } else {
             final Item item = c.getPlayer().getInventory(MapleInventoryType.EQUIP).getItem((byte) slea.readInt());
             if (item != null && c.getPlayer().getInventory(MapleInventoryType.USE).getNumFreeSlot() >= 1) {
                 final Equip eq = (Equip) item;
                 if (eq.getState() >= 17 && eq.getState() != 20) {
                     eq.renewPotential(0);
-                    c.getPlayer().getMap()
-                            .broadcastMessage(CField.showPotentialReset(false, c.getPlayer().getId(), true, itemId));
+                    c.getPlayer().gainMeso(-5000, true);
+                    c.getPlayer().getMap().broadcastMessage(CField.showPotentialReset(false, c.getPlayer().getId(), true, itemId));
                     c.getSession().write(InventoryPacket.scrolledItem(toUse, item, false, true));
                     c.getPlayer().forceReAddItem_NoUpdate(item, MapleInventoryType.EQUIP);
                     MapleInventoryManipulator.addById(c, 2430112, (short) 1,
                             "Cube" + " on " + FileoutputUtil.CurrentReadable_Date());
                     used = true;
+                    Reveal(item, c, false);
                 } else {
                     c.getPlayer().dropMessage(5, "This item's Potential cannot be reset.");
                 }
@@ -831,6 +823,53 @@ public class InventoryHandlerAction {
             }
         }
         return used;
+    }
+
+    public static final void Reveal(Item id, final MapleClient c, boolean bonus) {
+        final Equip eqq = (Equip) id;
+        final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+        final int reqLevel = ii.getReqLevel(eqq.getItemId()) / 10;
+        final List<List<StructItemOption>> pots = new LinkedList<>(ii.getAllPotentialInfo().values());
+        int new_state = Math.abs(eqq.getPotential1());
+        if (new_state < 17) { // incase overflow
+            new_state = 17;
+        } else if (new_state > 20)
+        {
+            new_state = 20;
+        }
+        int lines = 2; // default
+        if (eqq.getPotential2() != 0) {
+            lines++;
+        }
+        while (eqq.getState() != new_state) {
+            //31001 = haste, 31002 = door, 31003 = se, 31004 = hb, 41005 = combat orders, 41006 = advanced blessing, 41007 = speed infusion
+            for (int i = 0; i < lines; i++) { // minimum 2 lines, max 5
+                boolean rewarded = false;
+                while (!rewarded) {
+                    StructItemOption pot = pots.get(Randomizer.nextInt(pots.size())).get(reqLevel);
+
+                    if (pot != null && pot.reqLevel / 10 <= reqLevel && GameConstants.optionTypeFits(pot.optionType, eqq.getItemId()) && GameConstants.potentialIDFits(pot.opID, new_state, i)) { //optionType
+                        //have to research optionType before making this truely official-like
+                        if (pot.opID < 60001)
+                        {
+                            if (i == 0) {
+                                eqq.setPotential1(pot.opID);
+                            } else if (i == 1) {
+                                eqq.setPotential2(pot.opID);
+                            } else if (i == 2) {
+                                eqq.setPotential3(pot.opID);
+                            }
+                            rewarded = true;
+                        }
+                    }
+                }
+            }
+        }
+        c.getPlayer().getTrait(MapleTrait.MapleTraitType.insight)
+                .addExp(8 , c.getPlayer());
+        c.getPlayer().getMap().broadcastMessage(CField.showMagnifyingEffect(c.getPlayer().getId(), eqq.getPosition()));
+        c.getPlayer().forceReAddItem(id, MapleInventoryType.EQUIP);
+        c.getSession().write(CWvsContext.enableActions());
     }
 
     public boolean NebuliteDiffuser(Item toUse) {

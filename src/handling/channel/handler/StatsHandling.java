@@ -80,21 +80,21 @@ public class StatsHandling {
                         return;
                     }
                     if (GameConstants.isBeginnerJob(job)) { // Beginner
-                        maxhp += Randomizer.rand(8, 12);
+                        maxhp += Randomizer.rand(16, 24);
                     } else if ((job >= 100 && job <= 132) || (job >= 3200 && job <= 3212) || (job >= 1100 && job <= 1112) || (job >= 3100 && job <= 3112)) { // Warrior
-                        maxhp += Randomizer.rand(36, 42);
+                        maxhp += Randomizer.rand(72, 84);
                     } else if ((job >= 200 && job <= 232) || (GameConstants.isEvan(job))) { // Magician
-                        maxhp += Randomizer.rand(10, 20);
+                        maxhp += Randomizer.rand(20, 40);
                     } else if ((job >= 300 && job <= 322) || (job >= 400 && job <= 434) || (job >= 1300 && job <= 1312) || (job >= 1400 && job <= 1412) || (job >= 3300 && job <= 3312) || (job >= 2300 && job <= 2312)) { // Bowman
-                        maxhp += Randomizer.rand(16, 20);
+                        maxhp += Randomizer.rand(32, 40);
                     } else if ((job >= 510 && job <= 512) || (job >= 1510 && job <= 1512)) {
-                        maxhp += Randomizer.rand(28, 32);
+                        maxhp += Randomizer.rand(56, 64);
                     } else if ((job >= 500 && job <= 532) || (job >= 3500 && job <= 3512) || job == 1500) { // Pirate
-                        maxhp += Randomizer.rand(18, 22);
+                        maxhp += Randomizer.rand(36, 44);
                     } else if (job >= 1200 && job <= 1212) { // Flame Wizard
-                        maxhp += Randomizer.rand(15, 21);
+                        maxhp += Randomizer.rand(30, 42);
                     } else if (job >= 2000 && job <= 2112) { // Aran
-                        maxhp += Randomizer.rand(38, 42);
+                        maxhp += Randomizer.rand(76, 84);
                     } else { // GameMaster
                         maxhp += Randomizer.rand(50, 100);
                     }
@@ -109,15 +109,15 @@ public class StatsHandling {
                         return;
                     }
                     if (GameConstants.isBeginnerJob(job)) { // Beginner
-                        maxmp += Randomizer.rand(6, 8);
-                    } else if (job >= 3100 && job <= 3112) { // Warrior
+                        maxmp += Randomizer.rand(20, 40);
+                    } else if (job >= 3100 && job <= 3112) { // Demon Slayer
                         return;
                     } else if ((job >= 200 && job <= 232) || (GameConstants.isEvan(job)) || (job >= 3200 && job <= 3212) || (job >= 1200 && job <= 1212)) { // Magician
-                        maxmp += Randomizer.rand(38, 40);
+                        maxmp += Randomizer.rand(52, 60);
                     } else if ((job >= 300 && job <= 322) || (job >= 400 && job <= 434) || (job >= 500 && job <= 532) || (job >= 3200 && job <= 3212) || (job >= 3500 && job <= 3512) || (job >= 1300 && job <= 1312) || (job >= 1400 && job <= 1412) || (job >= 1500 && job <= 1512) || (job >= 2300 && job <= 2312)) { // Bowman
-                        maxmp += Randomizer.rand(10, 12);
+                        maxmp += Randomizer.rand(20, 24);
                     } else if ((job >= 100 && job <= 132) || (job >= 1100 && job <= 1112) || (job >= 2000 && job <= 2112)) { // Soul Master
-                        maxmp += Randomizer.rand(6, 9);
+                        maxmp += Randomizer.rand(18, 27);
                     } else { // GameMaster
                         maxmp += Randomizer.rand(50, 100);
                     }

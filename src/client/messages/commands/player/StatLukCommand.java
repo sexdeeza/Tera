@@ -31,13 +31,20 @@ public class StatLukCommand extends Command{
             player.blueMessage("You must specify the amount of AP you want to allocate.");
             return;
         }
+
+        int total = player.getStat().getLuk() + amount;
+
+        if (total < player.getStat().getLuk()) {
+            player.blueMessage("You cannot decrease your stats.");
+            return;
+        }
         
         if((player.getStat().getLuk() + amount) > 32000){
             player.blueMessage("You can't go over 32000 base stat.");
             return;
         }
         
-        int total = player.getStat().getLuk() + amount;
+
         player.getStat().setLuk((short) total, player);
         player.updateSingleStat(MapleStat.LUK, player.getStat().getLuk());
         c.getPlayer().setRemainingAp((short) (c.getPlayer().getRemainingAp() - amount));

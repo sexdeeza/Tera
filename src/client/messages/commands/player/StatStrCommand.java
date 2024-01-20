@@ -31,13 +31,20 @@ public class StatStrCommand extends Command{
             player.blueMessage("You must specify the amount of AP you want to allocate.");
             return;
         }
+
+        int total = player.getStat().getStr() + amount;
+
+        if (total < player.getStat().getStr()) {
+            player.blueMessage("You cannot decrease your stats.");
+            return;
+        }
         
         if((player.getStat().getStr() + amount) > 32000){
             player.blueMessage("You can't go over 32000 base stat.");
             return;
         }
         
-        int total = player.getStat().getStr() + amount;
+
         player.getStat().setStr((short) total, player);
         player.updateSingleStat(MapleStat.STR, player.getStat().getStr());
         c.getPlayer().setRemainingAp((short) (c.getPlayer().getRemainingAp() - amount));
