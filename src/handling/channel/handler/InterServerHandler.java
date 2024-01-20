@@ -25,6 +25,7 @@ import client.MapleClient;
 
 import client.MapleQuestStatus;
 import client.SkillFactory;
+import client.messages.commands.player.DisposeCommand;
 import constants.GameConstants;
 import handling.cashshop.CashShopServer;
 import handling.channel.ChannelServer;
@@ -105,6 +106,7 @@ public class InterServerHandler {
 
         if (c.getPlayer().getMapId() == targetMapId) {
             c.getPlayer().dropMessage(5, "You cannot use this command in this map.");
+            new DisposeCommand().execute(c, null);
             return;
         }
 
