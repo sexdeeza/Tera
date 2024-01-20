@@ -236,6 +236,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     private int reborns, apstorage;
     private String commandtext;
     private boolean claimedStarterKit;
+    private long irvinCommandLastUsageTime = 0;
 
     /* End of Custom Feature */
     private MapleCharacter(final boolean ChannelServer) {
@@ -403,6 +404,14 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
             }
         }
         return ret;
+    }
+
+    public long getIrvinCommandLastUsageTime() {
+        return irvinCommandLastUsageTime;
+    }
+
+    public void setIrvinCommandLastUsageTime(long time) {
+        irvinCommandLastUsageTime = time;
     }
 
     public final static MapleCharacter ReconstructChr(final CharacterTransfer ct, final MapleClient client,
