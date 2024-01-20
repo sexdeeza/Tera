@@ -101,10 +101,17 @@ public class InterServerHandler {
     }
 
     public static final void EnterMTS(final MapleClient c, final MapleCharacter chr) {
-        if(c.getPlayer().getLevel() >= 10) {
+        int targetMapId = 910000000; // The target map ID where you want to restrict access
+
+        if (c.getPlayer().getMapId() == targetMapId) {
+            c.getPlayer().dropMessage(5, "You cannot use this command in this map.");
+            return;
+        }
+
+        if (c.getPlayer().getLevel() >= 10) {
             c.getPlayer().saveLocation(SavedLocationType.FREE_MARKET, c.getPlayer().getMap().getReturnMap().getId());
-            c.getPlayer().changeMap(910000000,0);
-        } else if(c.getPlayer().getLevel() < 10) {
+            c.getPlayer().changeMap(targetMapId, 0);
+        } else if (c.getPlayer().getLevel() < 10) {
             c.getPlayer().dropMessage(5, "You must be over level 10 to access the Free Market");
         }
     }
