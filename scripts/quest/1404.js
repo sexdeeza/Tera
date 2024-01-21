@@ -31,7 +31,7 @@ function end(mode, type, selection) {
 	    qm.expandInventory(4, 4);
 	    qm.changeJob(400);
 	    qm.gainItem(1332063,1);
-	    qm.gainItem(1472000,1);
+	    qm.gainItem(1472061,1);
 	    qm.gainItem(2070015, 500);
 		qm.forceCompleteQuest();
 		qm.dispose();

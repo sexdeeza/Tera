@@ -737,6 +737,7 @@ public class DamageParse {
                     defined = true;
                     if (mort.getZ() > 0) {
                         player.addHP((player.getStat().getMaxHp() * mort.getZ()) / 100);
+                        player.addMP((player.getStat().getMaxMp() * mort.getZ()) / 100);
                     }
                 }
             }
