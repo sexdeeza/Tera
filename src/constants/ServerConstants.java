@@ -35,6 +35,7 @@ public class ServerConstants {
      * Specifics which job gives an additional EXP to party returns the percentage
      * of EXP to increase
      */
+    public static final int cashRate = 1;
     public static final byte Class_Bonus_EXP(final int job) {
         switch (job) {
             case 501, 530, 531, 532, 2300, 2310, 2311, 2312, 3100, 3110, 3111, 3112, 800, 900, 910 -> {

@@ -2334,38 +2334,39 @@ public class GameConstants {
 
     public static int getMountItem(final int sourceid, final MapleCharacter chr) {
         switch (sourceid) {
-            case 5221006 -> {
+            case 20021160:
+                return 1932086;
+            case 20021161:
+                return 1932087;
+            case 20031160:
+                return 1932106;
+            case 20031161:
+                return 1932107;
+
+        }
+        switch (sourceid) {
+            case 5221006:
                 return 1932000;
-            }
-            case 33001001 -> {
-                //temp.
+            case 33001001: //temp.
                 if (chr == null) {
                     return 1932015;
                 }
                 switch (chr.getIntNoRecord(JAGUAR)) {
-                    case 20 -> {
+                    case 20:
                         return 1932030;
-                }
-                    case 30 -> {
+                    case 30:
                         return 1932031;
-                }
-                    case 40 -> {
+                    case 40:
                         return 1932032;
-                }
-                    case 50 -> {
+                    case 50:
                         return 1932033;
-                }
-                    case 60 -> {
+                    case 60:
                         return 1932036;
                 }
-                }
                 return 1932015;
-            }
-            case 35001002, 35120000 -> {
+            case 35001002:
+            case 35120000:
                 return 1932016;
-                //case 30011109:
-                //	return 1932085;
-            }
             //case 30011109:
             //	return 1932085;
         }
@@ -2873,12 +2874,7 @@ public class GameConstants {
     }
 
     public static boolean isNoDelaySkill(int skillId) {
-        return skillId == 5110001 || skillId == 21101003 ||
-                skillId == 15100004 || skillId == 33101004 || skillId == 32111010 || skillId == 2111007 ||
-                skillId == 2211007 || skillId == 2311007 || skillId == 32121003 || skillId == 35121005 ||
-                skillId == 35111004 || skillId == 35121013 || skillId == 35121003 || skillId == 22150004 ||
-                skillId == 22181004 || skillId == 11101002 || skillId == 13101002 || skillId == 24121000 ||
-                skillId == 22161005 || skillId == 12111007;
+        return skillId == 5110001 || skillId == 21101003 || skillId == 15100004 || skillId == 33101004 || skillId == 32111010 || skillId == 2111007 || skillId == 2211007 || skillId == 2311007 || skillId == 32121003 || skillId == 35121005 || skillId == 35111004 || skillId == 35121013 || skillId == 35121003 || skillId == 22150004 || skillId == 22181004 || skillId == 11101002 || skillId == 13101002 || skillId == 24121000 || skillId == 22161005 || skillId == 12111007;
     }
 
     public static boolean isNoSpawn(int mapID) {

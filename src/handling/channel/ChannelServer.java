@@ -22,6 +22,7 @@ package handling.channel;
 
 import client.MapleCharacter;
 import constants.GameConstants;
+import constants.ServerConstants;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -66,7 +67,8 @@ import tools.packet.CWvsContext;
 public class ChannelServer {
 
     public static long serverStartTime;
-    private float expRate, mesoRate, dropRate = 1, cashRate = 1, traitRate = 1; // ???????
+    private float expRate, mesoRate, dropRate = 1, traitRate = 1; // ???????
+    private int cashRate = 5;
     private short port = 8585;
     private static final short DEFAULT_PORT = 8585;
     private int channel, running_MerchantID = 0, flags = 0, travelrate;

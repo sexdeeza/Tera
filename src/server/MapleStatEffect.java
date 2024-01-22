@@ -666,9 +666,10 @@ public class MapleStatEffect implements Serializable {
                 case 2111007:
                 case 2211007:
                 case 2311007:
-                case 32111010:
                 case 22161005:
                 case 12111007:
+                case 32111010:
+
                     ret.mpCon = (short) ret.y;
                     ret.duration = 2100000000;
                     ret.statups.put(MapleBuffStat.TELEPORT_MASTERY, ret.x);
@@ -2563,8 +2564,7 @@ public class MapleStatEffect implements Serializable {
                 break;
             case 35001002:
                 if (applyfrom.getTotalSkillLevel(35120000) > 0) {
-                    SkillFactory.getSkill(35120000).getEffect(applyfrom.getTotalSkillLevel(35120000))
-                            .applyBuffEffect(applyfrom, applyto, primary, newDuration);
+                    SkillFactory.getSkill(35120000).getEffect(applyfrom.getTotalSkillLevel(35120000)).applyBuffEffect(applyfrom, applyto, primary, newDuration);
                     return;
                 }
 
