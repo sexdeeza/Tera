@@ -3337,7 +3337,6 @@ public class GameConstants {
             1301007, //Hyper Body
             //Meditation
             2101001, 2201001, 12101000,
-            2301002, //Heal
             2311001, //Dispel
             2311003, //Holy Symbol
             2321005, // Advanced Blessing

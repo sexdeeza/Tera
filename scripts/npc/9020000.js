@@ -33,7 +33,7 @@ function start() {
 		inMap += (cPlayer.getJobId() == 900 ? 4 : 1);
 	    }
 	}
-	if (party.size() > 6 || inMap < 2) {
+	if (party.size() > 4 || inMap < 2) {
 	    next = false;
 	}
 	if (next) {

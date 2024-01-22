@@ -30,4 +30,4 @@ function action(mode, type, selection) {
         cm.sendOk("The boat to Orbis is ready to take off, please be patient for the next one.");
         cm.dispose();
     }
-}	
+}

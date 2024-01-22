@@ -1,108 +1,68 @@
 function init() {
-    em.setProperty("state", "0");
-}
-
-function monsterValue(eim, mobId) {
-    return 1;
-}
-
-function setup(level, leaderid) {
-    em.setProperty("state", "1");
-
-    var eim = em.newInstance("KerningPQ" + leaderid);
-    eim.setInstanceMap(910340100).resetPQ(level);
-    eim.setInstanceMap(910340200).resetPQ(level);
-    eim.setInstanceMap(910340300).resetPQ(level);
-    eim.setInstanceMap(910340400).resetPQ(level);
-    var map = eim.setInstanceMap(910340500);
-	map.resetPQ(level);
-	if (Packages.constants.GameConstants.GMS) {
-		var mob = em.getMonster(9300003);
-		eim.registerMonster(mob);
-		mob.changeLevel(level);
-
-		map.spawnMonsterOnGroundBelow(mob, new java.awt.Point(0, -430));
-		eim.setInstanceMap(910340600).resetPQ(level);
-	}
-    
-    eim.startEventTimer(1200000);
-
-    return eim;
-}
-
-function playerEntry(eim, player) {
-    var map = eim.getMapInstance(0);
-    player.changeMap(map, map.getPortal(0));
-    player.tryPartyQuest(1201);
-}
-
-function playerDead(eim, player) {
-}
-
-function changedMap(eim, player, mapid) {
-    switch (mapid) {
-	case 910340100: // 1st Stage
-	case 910340200: // 2nd Stage
-	case 910340300: // 3rd Stage
-	case 910340400: // 4th Stage
-	case 910340500: // 5th Stage
-	case 910340600: // Bonus stage
-	    return; // Everything is fine
+    em.setProperty("state", 0);
     }
-    eim.unregisterPlayer(player);
 
-    if (eim.disposeIfPlayerBelow(2, 910340000)) {
-	em.setProperty("state", "0");
+    function setup(level, leaderid) {//開始事件，時間
+    	em.setProperty("state", 1);
+    	var eim = em.newInstance("KerningPQ");
+
+    	eim.setInstanceMap(910340100).resetFully();
+    	eim.setInstanceMap(910340200).resetFully();
+    	eim.setInstanceMap(910340300).resetFully();
+    	eim.setInstanceMap(910340400).resetFully();
+    	eim.setInstanceMap(910340500).resetFully();
+
+    	eim.setInstanceMap(910340500).spawnMonsterOnGroundBelow(em.getMonster(9300003), new java.awt.Point(-127, -435));
+
+    	eim.startEventTimer(20 * 60000);
+
+    	return eim;
     }
-}
 
-function playerRevive(eim, player) {
-}
-
-function playerDisconnected(eim, player) {
-    return -2;
-}
-
-function leftParty(eim, player) {			
-    // If only 2 players are left, uncompletable
-    if (eim.disposeIfPlayerBelow(2, 910340000)) {
-	em.setProperty("state", "0");
-    } else {
-	playerExit(eim, player);
+    function playerEntry(eim, player) {//傳送進事件地圖
+    	var map = eim.getMapInstance(910340100);
+    	player.changeMap(map, map.getPortal(0));
+    	player.tryPartyQuest(1201);
     }
-}
 
-function disbandParty(eim) {
-    // Boot whole party and end
-    eim.disposeIfPlayerBelow(100, 910340000);
-
-    em.setProperty("state", "0");
-}
-
-
-function scheduledTimeout(eim) {
-    clearPQ(eim);
-}
-
-function playerExit(eim, player) {
-    eim.unregisterPlayer(player);
-
-    var exit = eim.getMapFactory().getMap(910340000);
-    player.changeMap(exit, exit.getPortal(0));
-    if (eim.disposeIfPlayerBelow(2, 910340000)) {
-	em.setProperty("state", "0");
+    function monsterValue(eim, mobId) {//殺怪後觸發
+    	return 1;
     }
-}
 
-function clearPQ(eim) {
-    // KPQ does nothing special with winners
-    eim.disposeIfPlayerBelow(100, 910340000);
+    function scheduledTimeout(eim) {//規定時間結束
+    	eim.disposeIfPlayerBelow(100, eim.getProperty("stage5") == 1 ? 910340600 : 910340000);
+    }
 
-    em.setProperty("state", "0");
-}
+    function changedMap(eim, player, mapid) {//進入地圖觸發
+    	if (mapid < 910340100 || mapid > 910340500) {
+    		playerExit(eim, player);
+    }
+    }
 
-function allMonstersDead(eim) {
-}
+    function playerDisconnected(eim, player) {//活動中角色斷開連接觸發
+    	playerExit(eim, player);
+    }
 
-function cancelSchedule() {
-}
+    function leftParty(eim, player) {//離開小組觸發
+    	var map = eim.getMapInstance(910340000);
+    	player.changeMap(map, map.getPortal(0));
+    }
+
+    function disbandParty(eim) {//小組退出時觸發
+    	eim.disposeIfPlayerBelow(100, 910340000);
+    }
+
+    function playerExit(eim, player) {//角色退出時觸發
+    	eim.unregisterPlayer(player);
+    	if (eim.disposeIfPlayerBelow(0, 0)) {
+    		em.setProperty("state", 0);
+    }
+    }
+
+    function allMonstersDead(eim) {}//怪物死亡觸發和刪除這個怪在活動中的資訊
+
+    function playerDead(eim, player) {}//玩家死亡時觸發
+
+    function playerRevive(eim, player) {}//玩家角色复時觸發
+
+    function cancelSchedule() {}//清除事件

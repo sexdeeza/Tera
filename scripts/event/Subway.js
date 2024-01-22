@@ -1,51 +1,29 @@
-var KC_Waiting;
-var Subway_to_KC;
-var KC_docked;
-var NLC_Waiting;
-var Subway_to_NLC;
-var NLC_docked;
-
-//Time Setting is in millisecond
-var closeTime =     50 * 1000; //The time to close the gate
-var beginTime = 1 * 60 * 1000; //The time to begin the ride
-var  rideTime = 4 * 60 * 1000; //The time that require move to destination
-
 function init() {
-    closeTime = em.getTransportationTime(closeTime);
-    beginTime = em.getTransportationTime(beginTime);
-     rideTime = em.getTransportationTime(rideTime);
-    
-    KC_Waiting = em.getChannelServer().getMapFactory().getMap(600010004);
-    NLC_Waiting = em.getChannelServer().getMapFactory().getMap(600010002);
-    Subway_to_KC = em.getChannelServer().getMapFactory().getMap(600010003);
-    Subway_to_NLC = em.getChannelServer().getMapFactory().getMap(600010005);
-    KC_docked = em.getChannelServer().getMapFactory().getMap(103000100);
-    NLC_docked = em.getChannelServer().getMapFactory().getMap(600010001);
-    scheduleNew();
+	scheduleNew();
 }
 
 function scheduleNew() {
-    em.setProperty("docked", "true");
-    em.setProperty("entry", "true");
-    em.schedule("stopEntry", closeTime);
-    em.schedule("takeoff", beginTime);
+	em.setProperty("docked", "true");
+	em.setProperty("entry", "true");
+	em.schedule("stopEntry", 240000); //The time to close the gate, 4 min
+	em.schedule("takeoff", 300000); // The time to begin the ride, 5 min
 }
 
 function stopEntry() {
-    em.setProperty("entry","false");
+	em.setProperty("entry", "false");
 }
 
 function takeoff() {
-    em.setProperty("docked","false");
-    KC_Waiting.warpEveryone(Subway_to_NLC.getId());
-    NLC_Waiting.warpEveryone(Subway_to_KC.getId());
-    em.schedule("arrived", rideTime);
+	em.setProperty("docked", "false");
+	em.warpAllPlayer(600010004, 600010005);
+	em.warpAllPlayer(600010002, 600010003);
+	em.schedule("arrived", 60000); //The time that require move to destination
 }
 
 function arrived() {
-    Subway_to_KC.warpEveryone(KC_docked.getId(), 0);
-    Subway_to_NLC.warpEveryone(NLC_docked.getId(), 0);
-    scheduleNew();
+	em.warpAllPlayer(600010005, 600010001);
+	em.warpAllPlayer(600010003, 103020000);
+	scheduleNew();
 }
 
 function cancelSchedule() {}

@@ -2926,15 +2926,14 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         controlledLock.writeLock().lock();
         visibleMapObjectsLock.writeLock().lock();
         try {
-            controlled.stream().filter(mons -> (mons != null)).map(mons -> {
-                mons.setController(null);
-                return mons;
-            }).map(mons -> {
-                mons.setControllerHasAggro(false);
-                return mons;
-            }).forEachOrdered(mons -> {
-                map.updateMonsterController(mons);
-            });
+            for (final MapleMapObject monstermo : map.getAllMonstersThreadsafe()) {
+                final MapleMonster mons = (MapleMonster) monstermo;
+                if (mons != null) {
+                    mons.setController(null);
+                    mons.setControllerHasAggro(false);
+                    map.updateMonsterController(mons);
+                }
+            }
             controlled.clear();
             visibleMapObjects.clear();
         } finally {
