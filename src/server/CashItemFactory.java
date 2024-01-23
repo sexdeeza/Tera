@@ -68,7 +68,7 @@ public class CashItemFactory {
                 final boolean OnSale = MapleDataTool.getIntConvert("OnSale", field, 0) > 0 && Price > 0;
                 if (getBlacklist().contains(ID) || ((Period == 0 && OnSale))) { // Block black listed item from CS
                     if (!itemMods.containsKey(SN)) {
-                        itemMods.put(SN, new CashModInfo(SN, 0, -1, false, ID, 100, false, 0, Gender, 0, 0, 0, 0, 0, 40000));
+                        itemMods.put(SN, new CashModInfo(SN, 0, -1, true, ID, 100, false, 0, Gender, 0, 0, 0, 0, 0, 40000));
                     }
                 }
                 final CashItemInfo stats = new CashItemInfo(ID, Count, Price, SN, Period, Gender, OnSale);
