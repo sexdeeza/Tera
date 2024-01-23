@@ -28,9 +28,9 @@ public class DatabaseConnection {
 
                 return DriverManager.getConnection(
                         ServerProperties.getProperty("database.url",
-                                "jdbc:mysql://localhost:3306/lidium?autoReconnect=true"),
+                                "jdbc:mysql://localhost:3306/ludus?autoReconnect=true"),
                         ServerProperties.getProperty("database.user", "root"),
-                        ServerProperties.getProperty("database.password", ""));
+                        ServerProperties.getProperty("database.password", "Ivyemi1823!"));
             } catch (SQLException sqle) {
                 denies++;
 

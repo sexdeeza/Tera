@@ -107,7 +107,7 @@ public class InterServerHandler {
         int targetMapId = 910000000; // The target map ID where you want to restrict access
         if (c.getPlayer().getLevel() < 10 || c.getPlayer().getMapId() == targetMapId) {
             c.getPlayer().dropMessage(5, "You cannot use this command in this map.");
-            NPCScriptManager.getInstance().dispose(c);
+            new DisposeCommand().execute(c, null);
         } else if (c.getPlayer().getLevel() >= 10) {
             c.getPlayer().saveLocation(SavedLocationType.FREE_MARKET, c.getPlayer().getMap().getReturnMap().getId());
             c.getPlayer().changeMap(targetMapId, 0);

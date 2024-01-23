@@ -1,34 +1,29 @@
-var status = -1;
 
-/*
 function start() {
-    cm.warp(104000000);
-    cm.sendPlayerToNpc("Ah, finally here!");
-    cm.dispose();
+	if (cm.getPlayer().getSubcategory() == 1) {
+		cm.sendOk("��Ҫ��ĕr���ҕ�ϵ��ġ�");
+		cm.dispose();
+		return;
+		}
+	if (cm.getPlayer().getMap().getId() != 10000 || cm.getPlayer().getLevel() > 1) {
+		cm.sendOk("�ߡ����᣿");
+		cm.dispose();
+		return;
+		}
+		var chat = "�٣���߅�ǂ�С���Л]���dȤ�����ҵĽM���ɞ�Ӱ���ߵ�һ�T�������@�e�Ⱥ���þ��ˣ��l�F����Н�����Ҫ��Ҫ���룿#b";
+		chat += "\r\n#L0#��߀���^�m��ð�U��";
+		chat += "\r\n#L1#����ɞ�Ӱ����";
+		cm.sendSimple(chat);
 }
-*/
 
-/*
 function action(mode, type, selection) {
-    if (cm.getPlayer().getLevel() != 1 || cm.getPlayer().getMapId() != 10000) {
-	cm.dispose();
-	return;
-    }
-    if (mode == 1) {
-	status++;
-    } else {
-	if (status == 0) {
-	    cm.dispose();
-	}
-	status--;
-    }
-    if (status == 0) {
-		cm.sendSimple("#b#L3#Head to Lith Harbor#l\r\n#L4#Stay in Maple Island#l");
-    } else if (status == 1) {
-	if (selection == 3) {
-	    cm.warp(104000000);
-	}
-	cm.dispose();
-    }
+	switch (selection) {
+	case 0:
+		cm.sendOk("������x�_���@�e���͛]�п��ܳɞ�Ӱ�����ˣ�������м����롣");
+		break;
+	case 1:
+		cm.getPlayer().setSubcategory(1);
+		cm.getPlayer().fakeRelog();
+		}
+		cm.dispose();
 }
-*/

@@ -13,3 +13,8 @@ Log_Script_Except.rtf
 .vscode/*
 *.iml
 *.rtf
+*.properties
+src/database/DatabaseConnection.java
+worldGMS.properties
+worldGMS.properties
+*.java

@@ -17,6 +17,5 @@ public class DisposeCommand extends Command{
         c.getPlayer().setConversation(0);
         NPCScriptManager.getInstance().dispose(c);
         c.getSession().write(CWvsContext.enableActions());
-        c.getPlayer().blueMessage("You've been disposed.");
     }
 }
