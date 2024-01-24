@@ -344,15 +344,9 @@ public class NPCHandler {
         final byte lastMsg = slea.readByte(); // 00 (last msg type I think)
         final byte action = slea.readByte(); // 00 = end chat, 01 == follow
 
-        //todo legend
-        if (((lastMsg == 0x12 && c.getPlayer().getDirection() >= 0) || (lastMsg == 0x13 && c.getPlayer().getDirection() == -1)) && action == 1 && GameConstants.GMS) {
-            MapScriptMethods.startDirectionInfo(c.getPlayer(), lastMsg == 0x13);
-            return;
-        }
-
         final NPCConversationManager cm = NPCScriptManager.getInstance().getCM(c);
 
-        if (cm == null || c.getPlayer().getConversation() == 0 || cm.getLastMsg() != lastMsg) {
+        if (cm == null || c.getPlayer().getConversation() == 0) {
             return;
         }
         cm.setLastMsg((byte) -1);
