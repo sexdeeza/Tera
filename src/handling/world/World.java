@@ -1793,7 +1793,7 @@ public class World {
                 }
                 int newFullness = pet.getFullness() - PetDataFactory.getHunger(pet.getPetItemId());
                 if (newFullness <= 5) {
-                    pet.setFullness(15);
+                    pet.setFullness(5);
                     chr.unequipPet(pet, true, true);
                 } else {
                     pet.setFullness(newFullness);

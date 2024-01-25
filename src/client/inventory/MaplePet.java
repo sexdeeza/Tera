@@ -40,16 +40,17 @@ import server.movement.LifeMovementFragment;
 public class MaplePet implements Serializable {
 
     public static enum PetFlag {
-	ITEM_PICKUP(0x01, 5190000, 5191000),
-	EXPAND_PICKUP(0x02, 5190002, 5191002), //idk
-	AUTO_PICKUP(0x04, 5190003, 5191003), //idk
-	UNPICKABLE(0x08, 5190005, -1), //not coded
-	LEFTOVER_PICKUP(0x10, 5190004, 5191004), //idk
-	HP_CHARGE(0x20, 5190001, 5191001),
-	MP_CHARGE(0x40, 5190006, -1),
-	PET_BUFF(0x80, -1, -1), //idk
-	PET_DRAW(0x100, 5190007, -1), //nfs
-	PET_DIALOGUE(0x200, 5190008, -1); //nfs
+        ITEM_PICKUP(0x01, 1812000, -1),
+        EXPAND_PICKUP(0x02, 1812005, -1), //idk
+        AUTO_PICKUP(0x04, 1812004, -1), //idk
+        UNPICKABLE(0x08, 1812007, -1), //not coded
+        LEFTOVER_PICKUP(0x10, 1812006, -1), //idk
+        HP_CHARGE(0x20, 1812002, -1),
+        MP_CHARGE(0x40, 1812003, -1),
+        CURE_CHARGE(0x60, 1812009, -1),
+        PET_BUFF(0x80, 1812008, -1), //idk ㅈ
+        PET_DRAW(0x100, 5190007, -1), //nfs
+        PET_DIALOGUE(0x200, 5190008, -1); //nfs
 
 	private final int i, item, remove;
 	private PetFlag(int i, int item, int remove) {
@@ -92,6 +93,7 @@ public class MaplePet implements Serializable {
     private byte fullness = 100, level = 1, summoned = 0;
     private short inventorypos = 0, closeness = 0, flags = 0;
     private boolean changed = false;
+    private int skillid;
 
     private MaplePet(final int petitemid, final int uniqueid) {
         this.petitemid = petitemid;
@@ -125,6 +127,7 @@ public class MaplePet implements Serializable {
             ret.setFullness(rs.getByte("fullness"));
             ret.setSecondsLeft(rs.getInt("seconds"));
 	    ret.setFlags(rs.getShort("flags"));
+            ret.setBuffSkill(rs.getInt("skillid"));
 	    ret.changed = false;
 
             rs.close();
@@ -142,14 +145,15 @@ public class MaplePet implements Serializable {
 	    return;
 	}
         try {
-            final PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE pets SET name = ?, level = ?, closeness = ?, fullness = ?, seconds = ?, flags = ? WHERE petid = ?");
+            final PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE pets SET name = ?, level = ?, closeness = ?, fullness = ?, seconds = ?, flags = ?, skillid = ? WHERE petid = ?");
             ps.setString(1, name); // Set name
             ps.setByte(2, level); // Set Level
             ps.setShort(3, closeness); // Set Closeness
             ps.setByte(4, fullness); // Set Fullness
             ps.setInt(5, secondsLeft);
-	    ps.setShort(6, flags);
-            ps.setInt(7, uniqueid); // Set ID
+	        ps.setShort(6, flags);
+            ps.setInt(7, skillid);
+            ps.setInt(8, uniqueid); // Set ID
             ps.executeUpdate(); // Execute statement
             ps.close();
 	    changed = false;
@@ -158,23 +162,32 @@ public class MaplePet implements Serializable {
         }
     }
 
-    public static final MaplePet createPet(final int itemid, final int uniqueid) {
-        return createPet(itemid, MapleItemInformationProvider.getInstance().getName(itemid), 1, 0, 100, uniqueid, itemid == 5000054 ? 18000 : 0, (short)(itemid == 5000067 && !GameConstants.GMS ? 0x37 : 0));
+    public int getBuffSkill() {
+        return this.skillid;
     }
 
-    public static final MaplePet createPet(int itemid, String name, int level, int closeness, int fullness, int uniqueid, int secondsLeft, short flag) {
+    public void setBuffSkill(int id) {
+        this.skillid = id;
+    }
+
+    public static final MaplePet createPet(final int itemid, final int uniqueid) {
+        return createPet(itemid, MapleItemInformationProvider.getInstance().getName(itemid), 1, 0, 100, uniqueid, itemid == 5000054 ? 18000 : 0, (short)(itemid == 5000067 && !GameConstants.GMS ? 0x37 : 0), 0);
+    }
+
+    public static final MaplePet createPet(int itemid, String name, int level, int closeness, int fullness, int uniqueid, int secondsLeft, short flag, int skillId) {
         if (uniqueid <= -1) { //wah
             uniqueid = MapleInventoryIdentifier.getInstance();
         }
         try { // Commit to db first
-            PreparedStatement pse = DatabaseConnection.getConnection().prepareStatement("INSERT INTO pets (petid, name, level, closeness, fullness, seconds, flags) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement pse = DatabaseConnection.getConnection().prepareStatement("INSERT INTO pets (petid, name, level, closeness, fullness, seconds, flags, skillId) VALUES (?, ?, ?, ?, ?, ?, ?)");
             pse.setInt(1, uniqueid);
             pse.setString(2, name);
             pse.setByte(3, (byte) level);
             pse.setShort(4, (short) closeness);
             pse.setByte(5, (byte) fullness);
             pse.setInt(6, secondsLeft);
-	    pse.setShort(7, flag);
+	        pse.setShort(7, flag);
+            pse.setInt(8, skillId);
             pse.executeUpdate();
             pse.close();
         } catch (final SQLException ex) {
@@ -186,8 +199,9 @@ public class MaplePet implements Serializable {
         pet.setLevel(level);
         pet.setFullness(fullness);
         pet.setCloseness(closeness);
-	pet.setFlags(flag);
+	    pet.setFlags(flag);
         pet.setSecondsLeft(secondsLeft);
+        pet.setBuffSkill(skillId);
 
         return pet;
     }

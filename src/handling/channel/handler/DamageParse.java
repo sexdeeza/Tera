@@ -358,12 +358,63 @@ public class DamageParse {
                                 monster.applyStatus(player, monsterStatusEffect, false, eff.getY() * 1000, true, eff);
                             }
                         }
-                        if (player.getJob() == 121 || player.getJob() == 122) { // WHITEKNIGHT
-                            final Skill skill = SkillFactory.getSkill(1211006);
-                            if (player.isBuffFrom(MapleBuffStat.WK_CHARGE, skill)) {
-                                final MapleStatEffect eff = skill.getEffect(player.getTotalSkillLevel(skill));
-                                final MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.FREEZE, 1, skill.getId(), null, false);
-                                monster.applyStatus(player, monsterStatusEffect, false, eff.getY() * 2000, true, eff);
+                        if (player.getJob() == 531 || player.getJob() == 532) { //
+                            if (player.getBuffedValue(MapleBuffStat.BARREL_ROLL) != null) {
+                                final int zz = player.getBuffedValue(MapleBuffStat.BARREL_ROLL);
+                                //int c = player.getBuffSource(MapleBuffStat.BARREL_ROLL);
+                                MonsterStatusEffect mobEff = null;
+                                final Skill skill = SkillFactory.getSkill(5311004);
+                                MapleStatEffect eff = skill.getEffect(player.getTotalSkillLevel(skill));
+                                if (zz == 1) {//凍結
+                                    mobEff = new MonsterStatusEffect(MonsterStatus.FREEZE, 1, skill.getId(), null, false);
+                                }
+                                if (zz == 2) {//昏迷
+                                    mobEff = new MonsterStatusEffect(MonsterStatus.STUN, 1, skill.getId(), null, false);
+                                }
+                                if (zz == 3) {//減速
+                                    mobEff = new MonsterStatusEffect(MonsterStatus.SPEED, -10, skill.getId(), null, false);
+                                }
+                                if (zz == 4) {//黑暗
+                                    mobEff = new MonsterStatusEffect(MonsterStatus.DARKNESS, 1, skill.getId(), null, false);
+                                }
+                                if (mobEff != null && !monster.getStats().isBoss()) {
+                                    int deleted = (int) Math.floor(Math.random() * 3);
+                                    if (deleted == 0) {
+                                        monster.applyStatus(player, mobEff, false, 4000, true, eff);
+                                    }
+                                }
+                            }
+                        }
+                        if (player.getJob() == 121 || player.getJob() == 122) { // 팔라딘 계열
+                            if (player.getBuffedValue(MapleBuffStat.WK_CHARGE) != null && attack.skill == 1211002) {
+                                // System.out.println("차지 1");
+                                int c = player.getBuffSource(MapleBuffStat.WK_CHARGE);
+                                final Skill skill = SkillFactory.getSkill(c);
+                                if (skill.getEffect(player.getSkillLevel(c)).makeChanceResult()) {
+                                    //   System.out.println("차지 2");
+                                    long time = -1;
+                                    MonsterStatusEffect mobEff = null;
+                                    MapleStatEffect eff = skill.getEffect(player.getTotalSkillLevel(skill));
+                                    if (c == 1211006) { //아이스차지
+                                        mobEff = new MonsterStatusEffect(MonsterStatus.FREEZE, 1, skill.getId(), null, false);
+                                        time = skill.getEffect(player.getSkillLevel(c)).getY();
+                                    }
+                                    if (c == 1211004) { //파이어
+                                        mobEff = new MonsterStatusEffect(MonsterStatus.POISON, 1, skill.getId(), null, false);
+                                        time = skill.getEffect(player.getSkillLevel(c)).getY();
+                                    }
+                                    if (c == 1211008) { //번개
+                                        mobEff = new MonsterStatusEffect(MonsterStatus.STUN, 1, skill.getId(), null, false);
+                                        time = skill.getEffect(player.getSkillLevel(c)).getY();
+                                    }
+                                    if (c == 1221004) { //홀리
+                                        mobEff = new MonsterStatusEffect(MonsterStatus.SEAL, 1, skill.getId(), null, false);
+                                        time = skill.getEffect(player.getSkillLevel(c)).getY();
+                                    }
+                                    if (mobEff != null && !monster.getStats().isBoss()) {
+                                        monster.applyStatus(player, mobEff, false, time * 2000, true, eff);
+                                    }
+                                }
                             }
                         }
                     }

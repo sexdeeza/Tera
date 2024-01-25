@@ -5674,7 +5674,6 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     public void deleteFromHyperRocks(int map) {
         for (int i = 0; i < 13; i++) {
             if (hyperrocks[i] == map) {
-                hyperrocks[i] = 999999999;
                 changed_hyperrocklocations = true;
                 break;
             }
@@ -7012,6 +7011,14 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
             return true;
         }
         return false;
+    }
+
+    public long getLongNoRecord(int questID) {
+        final MapleQuestStatus stat = getQuestNoAdd(MapleQuest.getInstance(questID));
+        if (stat == null || stat.getCustomData() == null) {
+            return 0;
+        }
+        return Long.parseLong(stat.getCustomData());
     }
 
     public int getIntNoRecord(int questID) {

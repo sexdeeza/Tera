@@ -195,7 +195,6 @@ public class CommandsExecutor {
     private void registerLv0Commands() {
         levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
         addCommand("dispose", 0, DisposeCommand.class);
-        addCommand("irvin", 0 , IrvinCommand.class);
         addCommand("checkdrops", 0, CheckDropsCommand.class);
         addCommand("dex", 0, StatDexCommand.class);
         addCommand("int", 0, StatIntCommand.class);
@@ -257,7 +256,7 @@ public class CommandsExecutor {
         addCommand("scheduleevent", 2, ScheduleEventCommand.class);
         addCommand("endevent", 2, EndEventCommand.class);
         addCommand("askox", 2, AskOXCommand.class);
-        addCommand("buffmap", BuffMapCommand.class);
+        addCommand("buffmap", 2, BuffMapCommand.class);
         //addCommand("", 2, Command.class);
         commandsNameDesc.add(levelCommandsCursor);
     }

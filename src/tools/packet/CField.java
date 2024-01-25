@@ -3697,6 +3697,15 @@ public class CField {
         return mplew.getPacket();
     }
 
+    public static byte[] petAutoCURE(int itemId) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+        mplew.writeShort(SendPacketOpcode.PET_AUTO_CURE.getValue());
+        mplew.writeInt(itemId);
+
+        return mplew.getPacket();
+    }
+
     public static void addRingInfo(MaplePacketLittleEndianWriter mplew, List<MapleRing> rings) {
         mplew.write(rings.size());
         rings.stream().map(ring -> {

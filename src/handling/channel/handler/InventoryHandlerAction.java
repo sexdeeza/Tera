@@ -81,43 +81,24 @@ public class InventoryHandlerAction {
 
     public final boolean UseTeleRock() {
         boolean used = false;
-        byte type = slea.readByte();
-        if (type == 0) { // Rocktype
-            slea.readByte(); // useless byte
-
+        if (itemId == 5041001 || itemId == 5040004) {
+            slea.readByte(); //useless
+        }
+        if (slea.readByte() == 0) { // Rocktype
             final MapleMap target = c.getChannelServer().getMapFactory().getMap(slea.readInt());
-            if (target != null && ((itemId == 5041000 && c.getPlayer().isRockMap(target.getId()))
-                    || ((itemId == 5040000 || itemId == 5040001) && c.getPlayer().isRegRockMap(target.getId()))
-                    || ((itemId == 5040004 || itemId == 5041001) && (c.getPlayer().isHyperRockMap(target.getId())
-                    || GameConstants.isHyperTeleMap(target.getId()))))) {
-                // sure this map doesn't have a forced return map
-
-                if (!FieldLimitType.VipRock.check(c.getPlayer().getMap().getFieldLimit())
-                        && !FieldLimitType.VipRock.check(target.getFieldLimit()) && !c.getPlayer().isInBlockedMap()) { // Makes
-
-                    c.getPlayer().changeMap(target, target.getPortal(0));
-                    used = true;
-                } else {
-                    c.getPlayer().dropMessage(1, "You cannot go to that place.");
-                }
+            //if ((itemId == 5041000 && c.getPlayer().isRockMap(target.getId())) || (itemId != 5041000 && c.getPlayer().isRegRockMap(target.getId())) || ((itemId == 5040004 || itemId == 5041001) && (c.getPlayer().isHyperRockMap(target.getId()) || GameConstants.isHyperTeleMap(target.getId())))) {
+            if (!FieldLimitType.VipRock.check(c.getPlayer().getMap().getFieldLimit()) && !FieldLimitType.VipRock.check(target.getFieldLimit()) && !c.getPlayer().isInBlockedMap()) { //Makes sure this map doesn't have a forced return map
+                c.getPlayer().changeMap(target, target.getPortal(0));
+                used = true;
             } else {
-                c.getPlayer().dropMessage(1, "You cannot go to that place.");
+                c.getPlayer().dropMessage(1, "由於天氣的阻礙，無法移動到該區域。");
             }
         } else {
-            final String name = slea.readMapleAsciiString();
-            final MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(name);
-            if (victim != null && !victim.isIntern() && c.getPlayer().getEventInstance() == null
-                    && victim.getEventInstance() == null) {
-                if (!FieldLimitType.VipRock.check(c.getPlayer().getMap().getFieldLimit())
-                        && !FieldLimitType.VipRock
-                                .check(c.getChannelServer().getMapFactory().getMap(victim.getMapId()).getFieldLimit())
-                        && !victim.isInBlockedMap() && !c.getPlayer().isInBlockedMap()) {
-                    if (itemId == 5041000 || itemId == 5040004 || itemId == 5041001
-                            || (victim.getMapId() / 100000000) == (c.getPlayer().getMapId() / 100000000)) { // Viprock
-                        // or same
-                        // continent
-                        c.getPlayer().changeMap(victim.getMap(),
-                                victim.getMap().findClosestPortal(victim.getTruePosition()));
+            final MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
+            if (victim != null && !victim.isIntern() && c.getPlayer().getEventInstance() == null && victim.getEventInstance() == null) {
+                if (!FieldLimitType.VipRock.check(c.getPlayer().getMap().getFieldLimit()) && !FieldLimitType.VipRock.check(c.getChannelServer().getMapFactory().getMap(victim.getMapId()).getFieldLimit()) && !victim.isInBlockedMap() && !c.getPlayer().isInBlockedMap()) {
+                    if (itemId == 5041000 || itemId == 5040004 || itemId == 5041001 || (victim.getMapId() / 100000000) == (c.getPlayer().getMapId() / 100000000)) { // Viprock or same continent
+                        c.getPlayer().changeMap(victim.getMap(), victim.getMap().findClosestPortal(victim.getTruePosition()));
                         used = true;
                     } else {
                         c.getPlayer().dropMessage(1, "You cannot go to that place.");
@@ -126,11 +107,50 @@ public class InventoryHandlerAction {
                     c.getPlayer().dropMessage(1, "You cannot go to that place.");
                 }
             } else {
-                c.getPlayer().dropMessage(1,
-                        "(" + name + ") is currently difficult to locate, so the teleport will not take place.");
+                c.getPlayer().dropMessage(1, "Player is currently difficult to locate, so the teleport will not take place.");
             }
         }
-        return used;
+        return used;// && itemId != 5041001 && itemId != 5040004;
+    }
+
+    public final boolean UseHyperTeleRock() {
+        boolean used = false;
+        long temptime = System.currentTimeMillis();
+        long exploit = c.getPlayer().getLongNoRecord(GameConstants.TELETIME);
+        if (itemId == 5041001 || itemId == 5040004) {
+            slea.readByte(); //useless
+        }
+        if (exploit - temptime >= 0&&c.getPlayer().getGMLevel()==0){
+            c.getPlayer().dropMessage(1, ((exploit - System.currentTimeMillis()) / 60000) + "It can be used again after a few minutes.");
+        }else{
+            if (slea.readByte() == 0) { // Rocktype
+                final MapleMap target = c.getChannelServer().getMapFactory().getMap(slea.readInt());
+                //if ((itemId == 5041000 && c.getPlayer().isRockMap(target.getId())) || (itemId != 5041000 && c.getPlayer().isRegRockMap(target.getId())) || ((itemId == 5040004 || itemId == 5041001) && (c.getPlayer().isHyperRockMap(target.getId()) || GameConstants.isHyperTeleMap(target.getId())))) {
+                if (!FieldLimitType.VipRock.check(c.getPlayer().getMap().getFieldLimit()) && !FieldLimitType.VipRock.check(target.getFieldLimit()) && !c.getPlayer().isInBlockedMap()) { //Makes sure this map doesn't have a forced return map
+                    c.getPlayer().changeMap(target, target.getPortal(0));
+                    used = false;
+                    c.getPlayer().getQuestNAdd(MapleQuest.getInstance(GameConstants.TELETIME)).setCustomData(String.valueOf(System.currentTimeMillis() + (15 * 60 * 1000)));
+                } else {
+                    c.getPlayer().dropMessage(1, "You cannot go to that place.");
+                }
+            } else {
+                final MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
+                if (victim != null && !victim.isIntern() && c.getPlayer().getEventInstance() == null && victim.getEventInstance() == null) {
+                    if (!FieldLimitType.VipRock.check(c.getPlayer().getMap().getFieldLimit()) && !FieldLimitType.VipRock.check(c.getChannelServer().getMapFactory().getMap(victim.getMapId()).getFieldLimit()) && !victim.isInBlockedMap() && !c.getPlayer().isInBlockedMap()) {
+                        if (itemId == 5041000 || itemId == 5040004 || itemId == 5041001 || (victim.getMapId() / 100000000) == (c.getPlayer().getMapId() / 100000000)) { // Viprock or same continent
+                            c.getPlayer().changeMap(victim.getMap(), victim.getMap().findClosestPortal(victim.getTruePosition()));
+                            c.getPlayer().getQuestNAdd(MapleQuest.getInstance(GameConstants.TELETIME)).setCustomData(String.valueOf(System.currentTimeMillis() + (15 * 60 * 1000)));
+                            used = false;
+                        }
+                    } else {
+                        c.getPlayer().dropMessage(1, "You cannot go to that place.");
+                    }
+                } else {
+                    c.getPlayer().dropMessage(1, "Player is currently difficult to locate, so the teleport will not take place.");
+                }
+            }
+        }
+        return used;// && itemId != 5041001 && itemId != 5040004;
     }
 
     public boolean sendStorage() {

@@ -1186,6 +1186,8 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
             case SPAWN_PET:
                 PetHandler.SpawnPet(slea, c, c.getPlayer());
                 break;
+            case REGISTER_PET_BUFF:
+                PetHandler.Pet_AutoBuff(slea, c, c.getPlayer());
             case MOVE_PET:
                 PetHandler.MovePet(slea, c.getPlayer());
                 break;
@@ -1220,6 +1222,9 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 break;
             case PET_AUTO_POT:
                 PetHandler.Pet_AutoPotion(slea, c, c.getPlayer());
+                break;
+            case PET_AUTO_BUFF:
+                PetHandler.Pet_AutoBuff(slea, c, c.getPlayer());
                 break;
             case MONSTER_CARNIVAL:
                 MonsterCarnivalHandler.MonsterCarnival(slea, c);

@@ -899,7 +899,10 @@ public class MapleStatEffect implements Serializable {
                 case 1121010: // enrage
                     ret.statups.put(MapleBuffStat.ENRAGE, ret.x * 100 + ret.mobCount);
                     break;
-                case 23111004: // Ignis Roar
+                case 23111004: // 이그니션 로어
+                    ret.statups.clear();
+                    ret.statups.put(MapleBuffStat.WATK, (int) ret.indiePad);
+                    break;
                 case 23111002: // TODO LEGEND: damage increase?
                 case 22161002: // phantom imprint
                     ret.monsterStatus.put(MonsterStatus.IMPRINT, ret.x);
@@ -2232,6 +2235,12 @@ public class MapleStatEffect implements Serializable {
                 stat.put(MapleBuffStat.WATER_SHIELD, x);
                 applyto.getMap().broadcastMessage(applyto, BuffPacket.giveForeignBuff(applyto.getId(), stat, this),
                         false);
+                break;
+            }
+            case 23111004: {
+                final EnumMap<MapleBuffStat, Integer> stat = new EnumMap<MapleBuffStat, Integer>(MapleBuffStat.class);
+                stat.put(MapleBuffStat.IGNIS_ROAR, x);
+                applyto.getMap().broadcastMessage(applyto, BuffPacket.giveForeignBuff(applyto.getId(), stat, this), false);
                 break;
             }
             case 23101003: {

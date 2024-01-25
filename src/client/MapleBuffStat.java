@@ -156,6 +156,8 @@ public enum MapleBuffStat implements Serializable, Buffstat {
     BODY_BOOST(0x40000, 4, true),
     FELINE_BERSERK(0x80000, 4),
     DICE_ROLL(0x100000, 4),
+    Monkey_Magic(0x1F0000, 5),
+    Monkey_Magic2(0xC000, 5),
     DIVINE_SHIELD(0x200000, 4),
     PIRATES_REVENGE(0x400000, 4),
     TELEPORT_MASTERY(0x800000, 4),
@@ -213,7 +215,9 @@ public enum MapleBuffStat implements Serializable, Buffstat {
     ABNORMAL_STATUS_R(0x100, 6), // %
     ELEMENTAL_STATUS_R(0x200, 6), // %
     WATER_SHIELD(0x400, 6),
+    IGNIS_ROAR(0x400, 5),
     DARK_METAMORPHOSIS(0x800, 6), // mob count
+    BARREL_ROLL(0x1000, 6),
 
     //1, unknown
     SPIRIT_SURGE(0x2000, 6),

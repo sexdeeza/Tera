@@ -1879,7 +1879,14 @@ public class InventoryHandler {
             {
                 used = action.NpcTeleportRock();
             }
-            case 5040004, 5040002, 2320000, 5040000 -> { // Teleport Coke
+            case 5040004 -> {
+                used = action.UseHyperTeleRock();
+            }
+            case
+             5040002,
+             2320000, // The Teleport Rock
+             5040000 -> { // The Teleport Rock
+
                 used = action.UseTeleRock();
             }
             case 5450005 -> {
@@ -2106,9 +2113,6 @@ public class InventoryHandler {
 
         if (used) {
             MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (short) 1, false, true);
-        } else {
-            c.getPlayer().dropMessage(1,
-                "This item cannot be used. Report this to an administrator:\r\nItemID: " + itemId);
         }
         c.getSession().write(CWvsContext.enableActions());
         if (cc) {

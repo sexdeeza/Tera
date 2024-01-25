@@ -22,10 +22,8 @@ package handling.channel.handler;
 
 import java.util.List;
 
+import client.*;
 import client.inventory.Item;
-import client.MapleClient;
-import client.MapleCharacter;
-import client.MapleDisease;
 import client.inventory.MapleInventoryType;
 import client.inventory.MaplePet;
 import constants.GameConstants;
@@ -55,6 +53,21 @@ public class PetHandler {
         chr.updateTick(slea.readInt());
         chr.spawnPet(slea.readByte(), slea.readByte() > 0);
 
+    }
+
+    public static void Pet_AutoBuff(LittleEndianAccessor slea, MapleClient c, MapleCharacter chr) {
+        int petid = slea.readInt();
+        MaplePet pet = chr.getPet(petid);
+        if (chr == null || (chr.getMap() == null) || (pet == null)) {
+            return;
+        }
+        int skillId = slea.readInt();
+        Skill buffId = SkillFactory.getSkill(skillId);
+        if ((chr.getSkillLevel(buffId) > 0) || (skillId == 0)) {
+            pet.setBuffSkill(skillId);
+            c.getSession().write(PetPacket.updatePet(pet, chr.getInventory(MapleInventoryType.CASH).getItem((short)(byte)pet.getInventoryPosition()), true));
+        }
+        c.getSession().write(CWvsContext.enableActions());
     }
 
     public static final void Pet_AutoPotion(final LittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {

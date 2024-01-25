@@ -1570,40 +1570,63 @@ public final class MapleMap {
     }
 
     public final void spawnMist(final MapleMist mist, final int duration, boolean fake) {
-        spawnAndAddRangedMapObject(mist, mist::sendSpawnData);
+        spawnAndAddRangedMapObject(mist, new DelayedPacketCreation() {
+
+            @Override
+            public void sendPackets(MapleClient c) {
+                mist.sendSpawnData(c);
+            }
+        });
 
         final TimerManager tMan = TimerManager.getInstance();
         final ScheduledFuture<?> poisonSchedule;
         switch (mist.isPoisonMist()) {
-            case 1 -> {
+            case 1:
                 //poison: 0 = none, 1 = poisonous, 2 = recovery
                 final MapleCharacter owner = getCharacterById(mist.getOwnerId());
                 final boolean pvp = owner.inPVP();
-                poisonSchedule = tMan.register(() -> {
-                    getMapObjectsInRect(mist.getBox(), Collections.singletonList(pvp ? MapleMapObjectType.PLAYER : MapleMapObjectType.MONSTER)).forEach(mo -> {
-                        if (pvp && mist.makeChanceResult() && !((MapleCharacter) mo).hasDOT() && ((MapleCharacter) mo).getId() != mist.getOwnerId()) {
-                            ((MapleCharacter) mo).setDOT(mist.getSource().getDOT(), mist.getSourceSkill().getId(), mist.getSkillLevel());
-                        } else if (!pvp && mist.makeChanceResult() && !((MapleMonster) mo).isBuffed(MonsterStatus.POISON)) {
-                            ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, true, mist.getSource());
+                poisonSchedule = tMan.register(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        for (final MapleMapObject mo : getMapObjectsInRect(mist.getBox(), Collections.singletonList(pvp ? MapleMapObjectType.PLAYER : MapleMapObjectType.MONSTER))) {
+                            if (pvp && mist.makeChanceResult() && !((MapleCharacter) mo).hasDOT() && ((MapleCharacter) mo).getId() != mist.getOwnerId()) {
+                                ((MapleCharacter) mo).setDOT(mist.getSource().getDOT(), mist.getSourceSkill().getId(), mist.getSkillLevel());
+                            } else if (!pvp && mist.makeChanceResult() && !((MapleMonster) mo).isBuffed(MonsterStatus.POISON)) {
+                                ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, true, mist.getSource());
+                            }
                         }
-                    });
+                    }
                 }, 2000, 2500);
-            }
-            case 4 ->
-                poisonSchedule = tMan.register(() -> {
-                    getMapObjectsInRect(mist.getBox(), Collections.singletonList(MapleMapObjectType.PLAYER)).stream().filter(mo -> (mist.makeChanceResult())).map(mo -> ((MapleCharacter) mo)).forEachOrdered(chr -> {
-                        chr.addMP((int) (mist.getSource().getX() * (chr.getStat().getMaxMp() / 100.0)));
-                    });
-                }, 2000, 2500);
-            default ->
+                break;
+            case 4:
+                poisonSchedule = tMan.register(new Runnable()  {
+
+                    @Override
+                    public void run(){
+                    for (final MapleMapObject mo : getMapObjectsInRect(mist.getBox(), Collections.singletonList(MapleMapObjectType.PLAYER))) {
+                        if (mist.makeChanceResult()) {
+                            final MapleCharacter chr = ((MapleCharacter) mo);
+                            chr.addMP((int) (mist.getSource().getX() * (chr.getStat().getMaxMp() / 100.0)));
+                            }
+                        }
+                    }
+                    }, 2000, 2500);
+                break;
+            default:
                 poisonSchedule = null;
+                break;
         }
         mist.setPoisonSchedule(poisonSchedule);
-        mist.setSchedule(tMan.schedule(() -> {
-            broadcastMessage(CField.removeMist(mist.getObjectId(), false));
-            removeMapObject(mist);
-            if (poisonSchedule != null) {
-                poisonSchedule.cancel(false);
+        mist.setSchedule(tMan.schedule(new Runnable() {
+
+            @Override
+            public void run() {
+                broadcastMessage(CField.removeMist(mist.getObjectId(), false));
+                removeMapObject(mist);
+                if (poisonSchedule != null) {
+                    poisonSchedule.cancel(false);
+                }
             }
         }, duration));
     }

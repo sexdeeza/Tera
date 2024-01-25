@@ -196,6 +196,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     PET_NAMECHANGE,
     PET_AUTO_HP,
     PET_AUTO_MP,
+    PET_AUTO_CURE,
     PET_UPDATE,
     COOLDOWN,
     PLAYER_HINT,
