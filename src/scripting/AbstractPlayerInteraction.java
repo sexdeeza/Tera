@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package scripting;
 
 import java.awt.Point;
-import java.util.List;
+import java.util.*;
 
 import client.inventory.Equip;
 import client.SkillFactory;
@@ -40,6 +40,7 @@ import handling.world.guild.MapleGuild;
 import server.Randomizer;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
+import server.life.MapleNPC;
 import server.maps.MapleMap;
 import server.maps.MapleReactor;
 import server.maps.MapleMapObject;
@@ -48,13 +49,12 @@ import server.maps.Event_DojoAgent;
 import server.life.MapleMonster;
 import server.life.MapleLifeFactory;
 import server.quest.MapleQuest;
+import tools.Pair;
 import tools.packet.CField;
 import tools.packet.PetPacket;
 import client.inventory.MapleInventoryIdentifier;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
-import java.util.ArrayList;
-import java.util.Arrays;
 import server.events.MapleEvent;
 import server.events.MapleEventType;
 import tools.FileoutputUtil;
@@ -68,6 +68,7 @@ public abstract class AbstractPlayerInteraction {
 
     protected MapleClient c;
     protected int id, id2;
+    private static final Map<Pair, MapleNPC> npcs = new WeakHashMap<>();
 
     public AbstractPlayerInteraction(final MapleClient c, final int id, final int id2) {
         this.c = c;
@@ -417,6 +418,37 @@ public abstract class AbstractPlayerInteraction {
 
     public void spawnNpc(final int npcId) {
         c.getPlayer().getMap().spawnNpc(npcId, c.getPlayer().getPosition());
+    }
+
+    public void spawnNPCRequestController(int npcid, int x, int y) {
+        this.spawnNPCRequestController(npcid, x, y, 0);
+    }
+
+    public void spawnNPCRequestController(int npcid, int x, int y, int f) {
+        MapleNPC npc;
+        npcs.remove(new Pair<>(npcid, c));
+        npc = MapleLifeFactory.getNPC(npcid);
+        if (npc == null) {
+            return;
+        }
+        npc.setPosition(new Point(x, y));
+        npc.setCy(y);
+        npc.setRx0(x - 50);
+        npc.setRx1(x + 50);
+        npc.setF(f);
+        npc.setFh(getMap().getFootholds().findBelow(new Point(x, y)).getId());
+        npc.setCustom(true);
+        npc.setObjectId(npcid);
+        npcs.put(new Pair<>(npcid, c), npc);
+        getClient().announce(NPCPacket.spawnNPCRequestController(npc, true));
+    }
+
+    public void getNPCDirectionEffect(int npcid, String data, int value, int x, int y) {
+        if (!npcs.containsKey(new Pair<>(npcid, this.c))) {
+            return;
+        }
+        MapleNPC npc = npcs.get(new Pair<>(npcid, c));
+        getClient().announce(UIPacket.getDirectionEffect(data, value, x, y, npc.getObjectId()));
     }
 
     public final void spawnNpc(final int npcId, final int x, final int y) {

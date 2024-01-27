@@ -1380,26 +1380,10 @@ public class MapleStatEffect implements Serializable {
             applyto.setExtractor(new MapleExtractor(applyto, sourceid, useLevel * 50, 1440)); // no clue about time left
             applyto.getMap().spawnExtractor(applyto.getExtractor());
         } else if (isMistEruption()) {
-            int i = y;
             for (MapleMist m : applyto.getMap().getAllMistsThreadsafe()) {
-                if (m.getOwnerId() == applyto.getId() && m.getSourceSkill().getId() == 2111003) {
-                    if (m.getSchedule() != null) {
-                        m.getSchedule().cancel(false);
-                        m.setSchedule(null);
-                    }
-                    if (m.getPoisonSchedule() != null) {
-                        m.getPoisonSchedule().cancel(false);
-                        m.setPoisonSchedule(null);
-                    }
-                    applyto.getMap().broadcastMessage(CField.removeMist(m.getObjectId(), true));
-                    applyto.getMap().removeMapObject(m);
-
-                    i--;
-                    if (i <= 0) {
-                        break;
-                    }
+                applyto.getMap().broadcastMessage(CField.removeMist(m.getObjectId(), true));
+                applyto.getMap().removeMapObject(m);
                 }
-            }
         } else if (cosmetic > 0) {
             if (cosmetic >= 30000) {
                 applyto.setHair(cosmetic);

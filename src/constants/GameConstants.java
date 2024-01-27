@@ -3283,6 +3283,18 @@ public class GameConstants {
     public static final int QUICK_SLOT = 123000;
     public static final int ITEM_TITLE = 124000;
 
+    public static boolean isSpecialCSScroll(final int scrollId) {
+        switch (scrollId) {
+            case 5064000:
+            case 5064100:
+            case 5064300: // 리커버리
+            case 5063000:
+            case 5064200: // 이노센트
+                return true;
+        }
+        return false;
+    }
+
     public static boolean isValidLinkSkillForJob(int skillID, short jobID) {
         switch (jobID) {
             case 2312, 2311 -> //Mercedes

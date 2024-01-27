@@ -116,13 +116,9 @@ public class InventoryHandlerAction {
     public final boolean UseHyperTeleRock() {
         boolean used = false;
         long temptime = System.currentTimeMillis();
-        long exploit = c.getPlayer().getLongNoRecord(GameConstants.TELETIME);
         if (itemId == 5041001 || itemId == 5040004) {
             slea.readByte(); //useless
         }
-        if (exploit - temptime >= 0&&c.getPlayer().getGMLevel()==0){
-            c.getPlayer().dropMessage(1, ((exploit - System.currentTimeMillis()) / 60000) + "It can be used again after a few minutes.");
-        }else{
             if (slea.readByte() == 0) { // Rocktype
                 final MapleMap target = c.getChannelServer().getMapFactory().getMap(slea.readInt());
                 //if ((itemId == 5041000 && c.getPlayer().isRockMap(target.getId())) || (itemId != 5041000 && c.getPlayer().isRegRockMap(target.getId())) || ((itemId == 5040004 || itemId == 5041001) && (c.getPlayer().isHyperRockMap(target.getId()) || GameConstants.isHyperTeleMap(target.getId())))) {
@@ -149,9 +145,10 @@ public class InventoryHandlerAction {
                     c.getPlayer().dropMessage(1, "Player is currently difficult to locate, so the teleport will not take place.");
                 }
             }
-        }
         return used;// && itemId != 5041001 && itemId != 5040004;
-    }
+        }
+
+
 
     public boolean sendStorage() {
         c.getPlayer().setConversation(4);
@@ -977,7 +974,95 @@ public class InventoryHandlerAction {
 
         return used;
     }
-    /////////////////////////////////////////// methods to work with
+
+    public static void UseProtectShield(LittleEndianAccessor slea, MapleClient c) {
+        byte slot = (byte) slea.readShort();
+        byte dst = (byte) slea.readShort();
+        slea.skip(1);
+        boolean use = false;
+        boolean legendarySpirit = false; //장인의혼 사용여부
+        Equip toScroll;
+        Equip.ScrollResult scrollSuccess = Equip.ScrollResult.SUCCESS; //무조건 성공
+        if (dst < 0) {
+            toScroll = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem(dst);
+        } else {
+            legendarySpirit = true;
+            toScroll = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIP).getItem(dst);
+        }
+        Item scroll = c.getPlayer().getInventory(MapleInventoryType.CASH).getItem(slot);
+        if (scroll == null || !GameConstants.isSpecialCSScroll(scroll.getItemId())) {
+            scroll = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
+            use = true;
+        }
+        if (!use) {
+            if (scroll.getItemId() == 5064000) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.SHIELD_WARD.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else if (scroll.getItemId() == 5064100) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.SAFETY.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else if (scroll.getItemId() == 5064300) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.RECOVERY.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else if (scroll.getItemId() == 5063000) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.LUCKS_KEY.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else if (scroll.getItemId() == 5063100) {
+                short flag = toScroll.getFlag();
+                if (!ItemFlag.LUCKS_KEY.check(flag) && !ItemFlag.SHIELD_WARD.check(flag)) {
+                    flag |= ItemFlag.LUCKS_KEY.getValue();
+                    flag |= ItemFlag.SHIELD_WARD.getValue();
+                    toScroll.setFlag(flag);
+                    c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+                } else {
+                    c.getSession().write(CWvsContext.enableActions());
+                    return;
+                }
+            }
+            c.getPlayer().getInventory(MapleInventoryType.CASH).removeItem(scroll.getPosition(), (short) 1, false);
+        } else {
+            if (scroll.getItemId() == 2531000) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.SHIELD_WARD.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else if (scroll.getItemId() == 5064200 || scroll.getItemId() == 2049600 || scroll.getItemId() == 2049601 || scroll.getItemId() == 2049604) {
+                Equip origin = (Equip) MapleItemInformationProvider.getInstance().getEquipById(toScroll.getItemId());
+                origin.setDurability(toScroll.getDurability());
+                origin.setExpiration(toScroll.getExpiration());
+                origin.setFlag(toScroll.getFlag());
+                origin.setPotential1(toScroll.getPotential1());
+                origin.setPotential2(toScroll.getPotential2());
+                origin.setPotential3(toScroll.getPotential3());
+                origin.setPotential4(toScroll.getPotential4());
+                origin.setPotential5(toScroll.getPotential5());
+                toScroll = origin;
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else  if (scroll.getItemId() == 2532000) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.SAFETY.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            } else if (scroll.getItemId() == 2530000 || scroll.getItemId() == 2530001 || scroll.getItemId() == 2530002) {
+                short flag = toScroll.getFlag();
+                flag |= ItemFlag.LUCKS_KEY.getValue();
+                toScroll.setFlag(flag);
+                c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
+            }
+            c.getPlayer().getInventory(MapleInventoryType.USE).removeItem(scroll.getPosition(), (short) 1, false);
+        }
+        c.getSession().write(InventoryPacket.scrolledItem(scroll, toScroll, false, false));
+        c.getPlayer().getMap().broadcastMessage(CField.getScrollEffect(c.getPlayer().getId(), scrollSuccess, legendarySpirit, false));
+        c.getSession().write(CWvsContext.enableActions());
+    }
 
     public static final boolean UseUpgradeScroll(final short slot, final short dst, final short ws, final MapleClient c,
             final MapleCharacter chr, final boolean legendarySpirit) {

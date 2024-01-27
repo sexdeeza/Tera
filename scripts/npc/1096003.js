@@ -1,17 +1,8 @@
-var status = -1;
+function start() {
+	cm.sendNextS("Ook！Ook!", 1);
+}
 
 function action(mode, type, selection) {
-	if (mode == 1) {
-		status++;
-	} else {
-		cm.dispose();
-		return;
-	}
-	if (status == 0) {
-		cm.sendNextNoESC("Ook! Ook!");
-	} else if (status == 1) {
-		cm.EnableUI(0);
-		cm.DisableUI(false);
-		cm.dispose();
-	}
+	cm.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroEnableUI(0));
+	cm.dispose();
 }

@@ -992,7 +992,10 @@ public class MapleServerHandler extends IoHandlerAdapter implements MapleServerH
                 InventoryHandlerAction.UseUpgradeScroll(slea.readShort(), slea.readShort(), slea.readShort(), c,
                         c.getPlayer(), slea.readByte() > 0);
                 break;
-            case USE_FLAG_SCROLL:
+            case USE_PROTECT_SHIELD:
+                c.getPlayer().updateTick(slea.readInt());
+                InventoryHandlerAction.UseProtectShield(slea, c);
+                break;
             case USE_POTENTIAL_SCROLL:
             case USE_EQUIP_SCROLL:
                 c.getPlayer().updateTick(slea.readInt());

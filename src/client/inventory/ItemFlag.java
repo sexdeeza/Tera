@@ -36,8 +36,8 @@ public enum ItemFlag {
     LUCKS_KEY(0x200), //this has some clover leaf thing at bottomleft
 	KARMA_ACC_USE(0x400),
 	KARMA_ACC(0x1000),
-	SLOTS_PROTECT(0x2000), // Upgrade count protection
-	SCROLL_PROTECT(0x4000); // scroll protection
+    SAFETY(0x2000), // Upgrade count protection
+    RECOVERY(0x4000); // scroll protection
     private final int i;
 
     private ItemFlag(int i) {

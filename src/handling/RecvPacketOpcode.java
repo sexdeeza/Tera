@@ -253,6 +253,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     QUICK_SLOT,
     MAKE_EXTRACTOR,
     USE_COSMETIC,
+    USE_PROTECT_SHIELD,
     USE_FLAG_SCROLL,
     SWITCH_BAG,
     REWARD_POT,

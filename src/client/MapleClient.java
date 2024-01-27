@@ -1198,6 +1198,10 @@ public class MapleClient implements Serializable {
         return lastPing;
     }
 
+    public void announce(byte[] packet) {
+        session.write(packet);
+    }
+
     public final void pongReceived() {
         lastPong = System.currentTimeMillis();
     }

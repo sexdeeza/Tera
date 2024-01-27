@@ -864,12 +864,22 @@ public class PlayerStats implements Serializable {
                 if (bof > 0) {
                     watk += bx.getEffect(bof).getAttackX();
                 }
+                bx = SkillFactory.getSkill(110);
+                bof = chra.getTotalSkillLevel(bx);
+                if (bof > 0) {
+                    eff = bx.getEffect(bof);
+                    localstr += eff.getStrX();
+                    localdex += eff.getDexX();
+                    localluk += eff.getLukX();
+                    localint_ += eff.getIntX();
+                }
                 bx = SkillFactory.getSkill(5300008);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
                     localstr += eff.getStrX();
                     localdex += eff.getDexX();
+                    //      System.out.println("" + eff.getStrX() + "/" + eff.getDexX() + "적용 " + localstr + "덱" + localdex);
                 }
                 bx = SkillFactory.getSkill(5311001);
                 bof = chra.getTotalSkillLevel(bx);
@@ -880,7 +890,7 @@ public class PlayerStats implements Serializable {
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {
                     eff = bx.getEffect(bof);
-                    percent_hp += eff.getHpR();
+                    percent_hp += eff.getPercentHP();
                     ASR += eff.getASRRate();
                     percent_wdef += eff.getWDEFRate();
                 }

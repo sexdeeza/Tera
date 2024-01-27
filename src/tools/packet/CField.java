@@ -571,6 +571,25 @@ public class CField {
             return mplew.getPacket();
         }
 
+        public static byte[] getDirectionEffect(String data, int value, int x, int y, int z) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+            mplew.writeShort(SendPacketOpcode.DIRECTION_INFO.getValue());
+            mplew.write(2);
+            mplew.writeMapleAsciiString(data);
+            mplew.writeInt(value);
+            mplew.writeInt(x);
+            mplew.writeInt(y);
+            mplew.write(1);
+            mplew.writeInt(0);
+            mplew.write(1);
+            mplew.writeInt(z);
+            mplew.write(z == 0 ? 1 : 0);
+            mplew.write(0);
+
+            return mplew.getPacket();
+        }
+
         public static byte[] reissueMedal(int itemId, int type) {
             MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
@@ -807,22 +826,36 @@ public class CField {
             return mplew.getPacket();
         }
 
+        public static byte[] setNPCSpecialAction(final int oid, final String action) {
+            final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort((int)SendPacketOpcode.NPC_SET_SPECIAL_ACTION.getValue());
+            mplew.writeInt(oid);
+            mplew.writeMapleAsciiString(action);
+            mplew.writeInt(0);
+            mplew.write(0);
+            return mplew.getPacket();
+        }
+
+        public static byte[] NPCSpecialAction(final int oid, final int value, final int x, final int y) {
+            final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort((int)SendPacketOpcode.NPC_UPDATE_LIMITED_INFO.getValue());
+            mplew.writeInt(oid);
+            mplew.writeInt(value);
+            mplew.writeInt(x);
+            mplew.writeInt(y);
+            return mplew.getPacket();
+        }
+
         public static byte[] setNPCScriptable(List<Pair<Integer, String>> npcs) {
             MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
             mplew.writeShort(SendPacketOpcode.NPC_SCRIPTABLE.getValue());
             mplew.write(npcs.size());
-            npcs.stream().map(s -> {
+            for (Pair<Integer, String> s : npcs) {
                 mplew.writeInt(s.left);
-                return s;
-            }).map(s -> {
                 mplew.writeMapleAsciiString(s.right);
-                return s;
-            }).map(_item -> {
                 mplew.writeInt(0); // start time
-                return _item;
-            }).forEachOrdered(_item -> {
                 mplew.writeInt(Integer.MAX_VALUE); // end time
-            });
+            }
             return mplew.getPacket();
         }
 

@@ -2416,6 +2416,7 @@ public final class MapleMap {
         removeMapObject(chr);
         chr.checkFollow();
         chr.removeExtractor();
+        chr.setExtractor(null);
         broadcastMessage(CField.removePlayerFromMap(chr.getId()));
 
         if (chr.getSummonedFamiliar() != null) {
