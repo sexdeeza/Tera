@@ -140,6 +140,8 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         pendingDisposal = true;
     }
 
+
+
     public void dispose() {
         NPCScriptManager.getInstance().dispose(c);
     }

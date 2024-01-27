@@ -248,6 +248,48 @@ public class NPCScriptManager extends AbstractScriptManager {
         }
     }
 
+    public final void startMapScript(final MapleClient c, final int npc, final String scriptName, boolean firstUser) {
+        final Lock lock = c.getNPCLock();
+        lock.lock();
+        String type = "onUserEnter/";
+        if (firstUser) {
+            type = "onFirstUserEnter/";
+        }
+        try {
+            if (c.getPlayer().isGM()) {
+                c.getPlayer().dropMessage(5, "[You have created a connection with:" + type + "Map Script" + scriptName + "connection");
+            }
+            NPCScriptManager.getInstance().dispose(c);//關閉已連接的NPC
+            c.removeClickedNPC();
+            if (!cms.containsKey(c) && c.canClickNPC()) {
+                final Invocable iv = getInvocable("map/" + type + scriptName + ".js", c, true);
+                if (iv == null) {
+                    System.out.println("New scripted map : " + type + scriptName + "\r\n");
+                    dispose(c);
+                    return;
+                }
+                final ScriptEngine scriptengine = (ScriptEngine) iv;
+                final NPCConversationManager cm = new NPCConversationManager(c, npc, -1, (byte) -1, iv);
+                cms.put(c, cm);
+                scriptengine.put("ms", cm);
+                c.getPlayer().setConversation(1);
+                c.setClickedNPC();
+                //iv.invokeFunction("use");
+                try {
+                    iv.invokeFunction("start");
+                } catch (NoSuchMethodException nsme) {
+                    iv.invokeFunction("action", (byte) 1, (byte) 0, 0);
+                }
+            }
+        } catch (final Exception e) {
+            System.err.println("Wrong Map Script ID : map/" + type + scriptName + ".js" + e);
+            FileoutputUtil.log(FileoutputUtil.ScriptEx_Log, "Wrong Map Script ID : map/" + type + scriptName + ".js" + e);
+            dispose(c);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public final void dispose(final MapleClient c) {
         final NPCConversationManager npccm = cms.get(c);
         if (npccm != null) {
