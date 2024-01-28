@@ -18,11 +18,15 @@ function end(mode, type, selection) {
             qm.gainItem(4031517, -1);
             qm.gainItem(4031518, -1);
             qm.changeJob(412);
-        }else if (qm.getJob() == 421){  
+        }  else if (qm.getJob() == 421){
             qm.gainItem(4031517, -1);
             qm.gainItem(4031518, -1)
             qm.changeJob(422);  
-        }    
+        }  else if (qm.getJob() == 433) {
+            qm.gainItem(4031517, -1);
+            qm.gainItem(4031518, -1)
+            qm.changeJob(434);
+        }
         qm.sendNext("I will take these tokens of heroism from you, and grant you your 4th job skills."); 
         qm.forceCompleteQuest(); 
         qm.dispose();

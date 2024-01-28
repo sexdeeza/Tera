@@ -43,6 +43,7 @@ import client.PlayerStats;
 import constants.GameConstants;
 import client.SkillFactory;
 import client.anticheat.CheatingOffense;
+import constants.id.ItemId;
 import database.DatabaseConnection;
 import handling.world.MaplePartyCharacter;
 import handling.world.World;
@@ -2205,6 +2206,10 @@ public class InventoryHandler {
                     chr.gainMeso(mesos, true);
                 }
                 removeItem(chr, mapitem, ob);
+            } else if (ItemId.isNxCard(mapitem.getItemId())) {
+                int nxGain = mapitem.getItemId() == ItemId.NX_CARD_100 ? 100 : 250;
+                c.getPlayer().modifyCSPoints(1, nxGain, true);
+                removeItem(chr, mapitem, ob);
             } else {
                 if (MapleItemInformationProvider.getInstance().isPickupBlocked(mapitem.getItemId())) {
                     c.getSession().write(CWvsContext.enableActions());
@@ -2307,6 +2312,10 @@ public class InventoryHandler {
                 } else {
                     chr.gainMeso(mapitem.getMeso(), true);
                 }
+                removeItem_Pet(chr, mapitem, petz);
+            } else if (ItemId.isNxCard(mapitem.getItemId())) {
+                int nxGain = mapitem.getItemId() == ItemId.NX_CARD_100 ? 100 : 250;
+                c.getPlayer().modifyCSPoints(1, nxGain, true);
                 removeItem_Pet(chr, mapitem, petz);
             } else {
                 if (MapleItemInformationProvider.getInstance().isPickupBlocked(mapitem.getItemId())

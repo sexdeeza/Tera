@@ -23,17 +23,12 @@ package handling.login.handler;
 import java.util.List;
 import java.util.Calendar;
 
+import client.*;
 import client.inventory.Item;
-import client.MapleClient;
-import client.MapleCharacter;
-import client.MapleCharacterUtil;
-import client.Skill;
-import client.SkillEntry;
 import client.inventory.MapleInventory;
 import client.inventory.MapleInventoryType;
 import constants.GameConstants;
 import constants.ServerConstants;
-import client.SkillFactory;
 import handling.channel.ChannelServer;
 import handling.login.LoginInformationProvider;
 import handling.login.LoginInformationProvider.JobType;
@@ -66,17 +61,13 @@ public class CharLoginHandler {
     public static final void login(final LittleEndianAccessor slea, final MapleClient c) {
         String login = slea.readMapleAsciiString();
         String pwd = slea.readMapleAsciiString();
-
         final boolean ipBan = c.hasBannedIP();
         final boolean macBan = c.hasBannedMac();
-
         int loginok = c.login(login, pwd, ipBan || macBan);
         final Calendar tempbannedTill = c.getTempBanCalendar();
-
         if (loginok == 0 && (ipBan || macBan) && !c.isGm()) {
             loginok = 3;
             if (macBan) {
-                // this is only an ipban o.O" - maybe we should refactor this a bit so it's more readable
                 MapleCharacter.ban(c.getSession().getRemoteAddress().toString().split(":")[0], "Enforcing account ban, account " + login, false, 4, false);
             }
         }
@@ -177,7 +168,7 @@ public class CharLoginHandler {
         final boolean resistance = (jobType == jobType.Resistance);
         final int face = slea.readInt();
         final int hair = slea.readInt();
-        if (mercedes || demon || resistance || jobType == null) { //remove this if you want these jobs available
+        if (mercedes || demon || jobType == null) { //remove this if you want these jobs available
             c.getSession().write(CWvsContext.serverMessage(0, c.getChannel(), "This class is not available.", false));
             return;
         }
@@ -252,9 +243,9 @@ public class CharLoginHandler {
         newchar.getInventory(MapleInventoryType.USE).addItem(new Item(2000014, (byte) 0, (short) 100, (byte) 0));
         //blue/red pots
         switch (jobType) {
-            //case Resistance: // Resistance
-                //newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1, (byte) 0));
-                //break;
+            case Resistance: // Resistance
+                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1, (byte) 0));
+                break;
             case Adventurer: // Adventurer
                 newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1, (byte) 0));
                 final Map<Skill, SkillEntry> ss = new HashMap<>();
@@ -263,58 +254,52 @@ public class CharLoginHandler {
                 ss.put(SkillFactory.getSkill(112), new SkillEntry((byte) 2, (byte) 2, -1));
                 newchar.changeSkillLevel_Skip(ss, false);
                 break;
-            //case Cygnus: // Cygnus
-               // newchar.setQuestAdd(MapleQuest.getInstance(20022), (byte) 1, "1");
-               // newchar.setQuestAdd(MapleQuest.getInstance(20010), (byte) 1, null); //>_>_>_> ugh
-               // newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1, (byte) 0));
-               // break;
-            //case Aran: // Aran
-               // newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1, (byte) 0));
-               // break;
-            //case Evan: //Evan
-               // newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161052, (byte) 0, (short) 1, (byte) 0));
-               // break;
-            //case Mercedes: // Mercedes
-               // newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161079, (byte) 0, (short) 1, (byte) 0));
-				//final Map<Skill, SkillEntry> ss = new HashMap<>();
-				//ss.put(SkillFactory.getSkill(20021000), new SkillEntry((byte) 0, (byte) 0, -1));
-				//ss.put(SkillFactory.getSkill(20021001), new SkillEntry((byte) 0, (byte) 0, -1));
-				//ss.put(SkillFactory.getSkill(20020002), new SkillEntry((byte) 0, (byte) 0, -1));
-				//ss.put(SkillFactory.getSkill(20020022), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss.put(SkillFactory.getSkill(20020109), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss.put(SkillFactory.getSkill(20021110), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss.put(SkillFactory.getSkill(20020111), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss.put(SkillFactory.getSkill(20020112), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss.put(SkillFactory.getSkill(20021181), new SkillEntry((byte) -1, (byte) 0, -1));
-               // ss.put(SkillFactory.getSkill(20021166), new SkillEntry((byte) -1, (byte) 0, -1));
-				//newchar.changeSkillLevel_Skip(ss, false);
-                //break;
-           // case Demon: //Demon
-               // newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161054, (byte) 0, (short) 1, (byte) 0));
-				//final Map<Skill, SkillEntry> ss2 = new HashMap<>();
-				//ss2.put(SkillFactory.getSkill(30011000), new SkillEntry((byte) 0, (byte) 0, -1));
-				//ss2.put(SkillFactory.getSkill(30011001), new SkillEntry((byte) 0, (byte) 0, -1));
-				//ss2.put(SkillFactory.getSkill(30010002), new SkillEntry((byte) 0, (byte) 0, -1));
-				//ss2.put(SkillFactory.getSkill(30010185), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss2.put(SkillFactory.getSkill(30010112), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss2.put(SkillFactory.getSkill(30010111), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss2.put(SkillFactory.getSkill(30010110), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss2.put(SkillFactory.getSkill(30010022), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss2.put(SkillFactory.getSkill(30011109), new SkillEntry((byte) 1, (byte) 1, -1));
-				//ss2.put(SkillFactory.getSkill(30011170), new SkillEntry((byte) 1, (byte) 1, -1));
-               // ss2.put(SkillFactory.getSkill(30011169), new SkillEntry((byte) 1, (byte) 1, -1));
-               // ss2.put(SkillFactory.getSkill(30011168), new SkillEntry((byte) 1, (byte) 1, -1));
-               // ss2.put(SkillFactory.getSkill(30011167), new SkillEntry((byte) 1, (byte) 1, -1));
-               // ss2.put(SkillFactory.getSkill(30010166), new SkillEntry((byte) 1, (byte) 1, -1));
-				//newchar.changeSkillLevel_Skip(ss2, false);
-                //break;
+            case Cygnus: // Cygnus
+                newchar.setQuestAdd(MapleQuest.getInstance(20022), (byte) 1, "1");
+                newchar.setQuestAdd(MapleQuest.getInstance(20010), (byte) 1, null); //>_>_>_> ugh
+                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1, (byte) 0));
+                break;
+            case Aran: // Aran
+                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1, (byte) 0));
+                break;
+            case Evan: //Evan
+                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161052, (byte) 0, (short) 1, (byte) 0));
+                break;
+            case Mercedes: // Mercedes
+                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161079, (byte) 0, (short) 1, (byte) 0));
+				final Map<Skill, SkillEntry> ss3 = new HashMap<>();
+				ss3.put(SkillFactory.getSkill(20021000), new SkillEntry((byte) 0, (byte) 0, -1));
+				ss3.put(SkillFactory.getSkill(20021001), new SkillEntry((byte) 0, (byte) 0, -1));
+				ss3.put(SkillFactory.getSkill(20020002), new SkillEntry((byte) 0, (byte) 0, -1));
+				ss3.put(SkillFactory.getSkill(20020022), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss3.put(SkillFactory.getSkill(20020109), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss3.put(SkillFactory.getSkill(20021110), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss3.put(SkillFactory.getSkill(20020111), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss3.put(SkillFactory.getSkill(20020112), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss3.put(SkillFactory.getSkill(20021181), new SkillEntry((byte) -1, (byte) 0, -1));
+                ss3.put(SkillFactory.getSkill(20021166), new SkillEntry((byte) -1, (byte) 0, -1));
+				newchar.changeSkillLevel_Skip(ss3, false);
+                break;
+            case Demon: //Demon
+                newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161054, (byte) 0, (short) 1, (byte) 0));
+				final Map<Skill, SkillEntry> ss2 = new HashMap<>();
+				ss2.put(SkillFactory.getSkill(30011000), new SkillEntry((byte) 0, (byte) 0, -1));
+				ss2.put(SkillFactory.getSkill(30011001), new SkillEntry((byte) 0, (byte) 0, -1));
+				ss2.put(SkillFactory.getSkill(30010002), new SkillEntry((byte) 0, (byte) 0, -1));
+				ss2.put(SkillFactory.getSkill(30010185), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss2.put(SkillFactory.getSkill(30010112), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss2.put(SkillFactory.getSkill(30010111), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss2.put(SkillFactory.getSkill(30010110), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss2.put(SkillFactory.getSkill(30010022), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss2.put(SkillFactory.getSkill(30011109), new SkillEntry((byte) 1, (byte) 1, -1));
+				ss2.put(SkillFactory.getSkill(30011170), new SkillEntry((byte) 1, (byte) 1, -1));
+                ss2.put(SkillFactory.getSkill(30011169), new SkillEntry((byte) 1, (byte) 1, -1));
+                ss2.put(SkillFactory.getSkill(30011168), new SkillEntry((byte) 1, (byte) 1, -1));
+                ss2.put(SkillFactory.getSkill(30011167), new SkillEntry((byte) 1, (byte) 1, -1));
+                ss2.put(SkillFactory.getSkill(30010166), new SkillEntry((byte) 1, (byte) 1, -1));
+				newchar.changeSkillLevel_Skip(ss2, false);
+                break;
             case UltimateAdventurer:
-                break;
-            case Cygnus:
-                break;
-            case Aran:
-                break;
-            case Evan:
                 break;
         }
 
