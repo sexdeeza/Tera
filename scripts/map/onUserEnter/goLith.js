@@ -20,6 +20,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function start(ms) {
-	ms.goLith();	   	       
+function start() {
+	ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroLock(1));
+	ms.getPlayer().saveLocation(Packages.server.maps.SavedLocationType.fromString("WORLDTOUR"));
+	ms.getClient().getSession().write(Packages.tools.packet.CField.EffectPacket.ShowWZEffect("Effect/Direction3.img/goLith/Scene" + (ms.getPlayer().getGender() == 0 ? "0" : "1")));
+	ms.dispose();
 }

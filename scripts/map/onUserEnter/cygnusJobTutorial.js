@@ -20,6 +20,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function start(ms) {
-	ms.displayCygnusIntro();	   	       
+function start() {
+	switch (ms.getPlayer().getMap().getId()) {
+	case 913040106:
+		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroLock(0));
+		ms.getClient().getSession().write(Packages.tools.packet.CField.EffectPacket.ShowWZEffect("Effect/Direction.img/cygnus/Scene6"));
+		break;
+	default:
+		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroLock(1));
+		ms.getClient().getSession().write(Packages.tools.packet.CField.EffectPacket.ShowWZEffect("Effect/Direction.img/cygnus/Scene" + (ms.getPlayer().getMap().getId() - 913040100)));
+		}
+		ms.dispose();
 }

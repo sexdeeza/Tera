@@ -20,6 +20,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function start(ms) {   	       
-	ms.unlockUI();
+function start() {
+	ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroEnableUI(0));
+	ms.dispose();
 }

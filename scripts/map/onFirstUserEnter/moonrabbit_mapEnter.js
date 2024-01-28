@@ -1,7 +1,10 @@
+/*
+	名字:	隱藏地圖
+	地圖:	迎月花山丘
+	描述:	910010000
+*/
+
 function start() {
-	switch (ms.getPlayer().getMap().getId()) {
-	case 103000800:
-        c.getPlayer().getMap().startMapEffect("Gather the Primrose Seeds around the moon and protect the Moon Bunny!", 5120016);
-        break;
-        }
-    }
+	ms.getPlayer().getMap().startMapEffect("Gather the Primrose Seeds around the moon and protect the Moon Bunny!", 5120016);
+	ms.dispose();
+}

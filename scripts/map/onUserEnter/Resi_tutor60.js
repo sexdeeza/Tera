@@ -1,3 +1,4 @@
-function start(ms) { 
+function start() {
+	ms.dispose();
 	ms.openNpc(2159007);
 }

@@ -20,6 +20,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function start(ms) {
-	ms.goAdventure();	   	       
+function start() {
+	ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroLock(1));
+	ms.getClient().getSession().write(Packages.tools.packet.CField.EffectPacket.ShowWZEffect("Effect/Direction3.img/goAdventure/Scene" + (ms.getPlayer().getGender() == 0 ? "0" : "1")));
+	ms.dispose();
 }

@@ -20,6 +20,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function start(ms) {   	       
-	ms.mapEffect("maplemap/enter/1010100");
+function start() {
+	ms.getClient().getSession().write(Packages.tools.packet.CField.environmentChange("maplemap/enter/1010100", 3));
+	ms.dispose();
 }
