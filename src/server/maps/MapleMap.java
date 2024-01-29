@@ -474,6 +474,23 @@ public final class MapleMap {
         return ret;
     }
 
+    private boolean isExemptedMobId(int mobId) {
+        // Add your exempted mob IDs logic here
+        return (mobId == 8800000 || mobId == 8800001 || mobId == 8800002 || mobId == 8800100 || mobId == 8800101 || mobId == 8800102 || mobId == 8810018
+                || mobId == 8810122 || mobId == 8820001 || mobId == 8850011 || mobId == 8840000); // Replace 123 and 456 with your exempted mob IDs
+    }
+
+    private boolean isExcludedMonster(MapleMonster mob, int[] excludedMonsterIds) {
+        int currentMonsterId = mob.getStats().getId();
+        for (int excludedId : excludedMonsterIds) {
+            if (currentMonsterId == excludedId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private void dropFromMonster(final MapleCharacter chr, final MapleMonster mob, final boolean instanced) {
         if (mob == null || chr == null || ChannelServer.getInstance(channel) == null || dropsDisabled || mob.dropsDisabled() || chr.getPyramidSubway() != null) { //no drops in pyramid ok? no cash either
             return;
@@ -485,6 +502,12 @@ public final class MapleMap {
         //is probably used quite often.
         if (!instanced && mapobjects.get(MapleMapObjectType.ITEM).size() >= 250) {
             removeDrops();
+        }
+
+        int levelDifference = chr.getLevel() - mob.getStats().getLevel();
+        int[] excludedMonsterIds = {8800000, 8800001, 8800002, 8800100, 8800101, 8800102, 8810018, 8810122, 8820001, 8850011, 8840000};
+        if (!isExcludedMonster(mob, excludedMonsterIds) && levelDifference > 75) {
+            return; // Don't drop anything if the player is 20 levels higher than the mob and the mob ID is not exempted
         }
 
         final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();

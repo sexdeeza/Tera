@@ -512,8 +512,16 @@ public class MapleStatEffect implements Serializable {
                 case 4211008:
                     ret.statups.put(MapleBuffStat.SHADOWPARTNER, (int) ret.level);
                     break;
+                case 1100002:
+                case 1200002:
+                case 1300002:
                 case 11101002: // All Final attack
                 case 13101002:
+                case 21100010:
+                case 23100006:
+                case 3100001:
+                case 3200001:
+                case 33100009:
                     ret.statups.put(MapleBuffStat.FINALATTACK, ret.x);
                     break;
                 case 22161004:
@@ -669,13 +677,11 @@ public class MapleStatEffect implements Serializable {
                 case 22161005:
                 case 12111007:
                 case 32111010:
-
                     ret.mpCon = (short) ret.y;
                     ret.duration = 2100000000;
                     ret.statups.put(MapleBuffStat.TELEPORT_MASTERY, ret.x);
                     ret.monsterStatus.put(MonsterStatus.STUN, Integer.valueOf(1));
                     break;
-
                 case 4331003:
                     ret.duration = 2100000000;
                     ret.statups.put(MapleBuffStat.OWL_SPIRIT, ret.y);

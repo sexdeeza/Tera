@@ -1045,6 +1045,20 @@ public class MapleItemInformationProvider {
         return i.equipStats.get("incPAD");
     }
 
+    public int getItemIncMHPr(int itemId) {//裝備%HP
+        if (getEquipStats(itemId) == null || !getEquipStats(itemId).containsKey("MHPr")) {
+            return 0;
+        }
+        return getEquipStats(itemId).get("MHPr");
+    }
+
+    public int getItemIncMMPr(int itemId) {//裝備%MP
+        if (getEquipStats(itemId) == null || !getEquipStats(itemId).containsKey("MMPr")) {
+            return 0;
+        }
+        return getEquipStats(itemId).get("MMPr");
+    }
+
     public final boolean canScroll(final int scrollid, final int itemid) {
         return (scrollid / 100) % 100 == (itemid / 10000) % 100;
     }
