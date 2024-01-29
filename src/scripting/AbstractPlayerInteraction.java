@@ -679,9 +679,12 @@ public abstract class AbstractPlayerInteraction {
         }
         final MapleMap target = getMap(mapId);
         final int cMap = getPlayer().getMapId();
-        getPlayer().getParty().getMembers().stream().map(chr -> getChannelServer().getPlayerStorage().getCharacterById(chr.getId())).filter(curChar -> (curChar != null && (curChar.getMapId() == cMap || curChar.getEventInstance() == getPlayer().getEventInstance()))).forEachOrdered(curChar -> {
-            curChar.changeMap(target, target.getPortal(0));
-        });
+        for (final MaplePartyCharacter chr : getPlayer().getParty().getMembers()) {
+            final MapleCharacter curChar = getChannelServer().getPlayerStorage().getCharacterById(chr.getId());
+            if (curChar != null && (curChar.getMapId() == cMap || curChar.getEventInstance() == getPlayer().getEventInstance())) {
+                curChar.changeMap(target, target.getPortal(0));
+            }
+        }
     }
 
     public final void warpParty(final int mapId, final int portal) {
@@ -696,17 +699,20 @@ public abstract class AbstractPlayerInteraction {
         final boolean rand = portal < 0;
         final MapleMap target = getMap(mapId);
         final int cMap = getPlayer().getMapId();
-        getPlayer().getParty().getMembers().stream().map(chr -> getChannelServer().getPlayerStorage().getCharacterById(chr.getId())).filter(curChar -> (curChar != null && (curChar.getMapId() == cMap || curChar.getEventInstance() == getPlayer().getEventInstance()))).forEachOrdered(curChar -> {
-            if (rand) {
-                try {
-                    curChar.changeMap(target, target.getPortal(Randomizer.nextInt(target.getPortals().size())));
-                } catch (Exception e) {
-                    curChar.changeMap(target, target.getPortal(0));
+        for (final MaplePartyCharacter chr : getPlayer().getParty().getMembers()) {
+            final MapleCharacter curChar = getChannelServer().getPlayerStorage().getCharacterById(chr.getId());
+            if (curChar != null && (curChar.getMapId() == cMap && curChar.getEventInstance() == getPlayer().getEventInstance())) {
+                if (rand) {
+                    try {
+                        curChar.changeMap(target, target.getPortal(Randomizer.nextInt(target.getPortals().size())));
+                    } catch (Exception e) {
+                        curChar.changeMap(target, target.getPortal(0));
+                    }
+                } else {
+                    curChar.changeMap(target, target.getPortal(portal));
                 }
-            } else {
-                curChar.changeMap(target, target.getPortal(portal));
             }
-        });
+        }
     }
 
     public final void warpParty_Instanced(final int mapId) {

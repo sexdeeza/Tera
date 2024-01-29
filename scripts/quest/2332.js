@@ -1,17 +1,25 @@
+
 var status = -1;
 
 function start(mode, type, selection) {
-	qm.getMap().killAllMonsters(true);
-	qm.spawnMonster(3300008,1);
-	qm.sendNext("Please, eliminate the Prime Minister!!!");
-	qm.forceStartQuest(2333);
-	qm.forceCompleteQuest();
-	qm.dispose();
-}
-
-function end(mode, type, selection) {
-		qm.gainItem(4032386,1);
-		qm.forceCompleteQuest();
+	switch (mode) {
+	case -1:
 		qm.dispose();
+		return;
+	case 0:
+		status--;
+		break;
+	case 1:
+		status++;
+		break;
+		}
+	switch (status) {
+	case 0:
+		qm.sendNextS("The key to the wedding venue has been obtained, I must find the Princess.", 3);
+		break;
+	case 1:
+		Packages.server.quest.MapleQuest.getInstance(2332).forceStart(qm.getPlayer(), qm.getNpc(), null);
+		qm.dispose();
+}
 }
 	

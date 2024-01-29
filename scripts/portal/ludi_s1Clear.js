@@ -1,10 +1,9 @@
 function enter(pi) {
-    var eim = pi.getPlayer().getEventInstance();
-    
-    // only let people through if the eim is ready
-    if (eim.getProperty("stage1status") == null) { // do nothing; send message to player
-	pi.playerMessage(5, "The portal is blocked.");
-    } else {
-	pi.warpParty(pi.getMapId() + 300, "st00");
-    }
+	var eim = pi.getPlayer().getEventInstance();
+	if (eim.getProperty("stage1") == null) {
+		return false;
+		}
+		map = pi.getPlayer().getMap().getId() + 300; //遺棄之塔&amp;lt;第2階段&gt;
+		pi.getPlayer().changeMap(922010400);
+		return true;
 }
