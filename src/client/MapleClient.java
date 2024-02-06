@@ -880,12 +880,11 @@ public class MapleClient implements Serializable {
                     }
                 } else if (player.isAlive()) {
                     switch (player.getMapId()) {
-                        case 541010100, 541020800, 220080001 -> //latanica
-                            //pap
+                        case 541010100: //latanica
+                        case 541020800: //krexel
+                        case 220080001: //pap
                             player.getMap().addDisconnected(player.getId());
                     }
-                    //latanica
-                    //krexel
                 }
                 player.getMap().removePlayer(player);
             }

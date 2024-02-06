@@ -51,7 +51,7 @@ function start() {
     
     var boss = Packages.server.life.MapleLifeFactory.getMonster(bossMobid);
     map.spawnMonsterOnGroundBelow(boss, bossPos);
-    map.broadcastMessage(Packages.tools.MaplePacketCreator.serverNotice(6, bossMsg));
+    map.broadcastMessage(Packages.tools.CWvsContext.serverNotice(6, bossMsg));
     
     em.schedule("start", 3 * 60 * 60 * 1000);
 }

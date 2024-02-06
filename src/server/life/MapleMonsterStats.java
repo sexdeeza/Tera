@@ -32,7 +32,7 @@ public class MapleMonsterStats {
     private byte cp, selfDestruction_action, tagColor, tagBgColor, rareItemDropLevel, HPDisplayType, summonType, PDRate, MDRate, category;
     private short level, charismaEXP;
     private long hp;
-    private int id, exp, mp, removeAfter, buffToGive, fixedDamage, selfDestruction_hp, dropItemPeriod, point, eva, acc, PhysicalAttack, MagicAttack, speed, partyBonusR, pushed;
+    private int id, exp, mp, removeAfter, buffToGive, fixedDamage, selfDestruction_hp, dropItemPeriod, point, eva, acc, PhysicalAttack, MagicAttack, speed, partyBonusR, pushed, link;
     private boolean boss, undead, ffaLoot, firstAttack, isExplosiveReward, mobile, fly, onlyNormalAttack, friendly, noDoom, invincible, partyBonusMob, changeable, escort;
     private String name, mobType;
     private EnumMap<Element, ElementalEffectiveness> resistance = new EnumMap<Element, ElementalEffectiveness>(Element.class);
@@ -87,6 +87,14 @@ public class MapleMonsterStats {
 
     public void setCharismaEXP(short leve) {
         this.charismaEXP = leve;
+    }
+
+    public void setLink(int link) {
+        this.link = link;
+    }
+
+    public int getLink() {
+        return link;
     }
 
     public void setSelfD(byte selfDestruction_action) {

@@ -50,7 +50,6 @@ function monsterValue(eim, mobId) {
 
 function playerExit(eim, player) {
     eim.unregisterPlayer(player);
-
 	eim.disposeIfPlayerBelow(0, 0);
 }
 

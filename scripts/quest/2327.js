@@ -23,19 +23,19 @@ function start(mode, type, selection) {
 	case 2:
 		Packages.server.quest.MapleQuest.getInstance(2327).forceComplete(qm.getPlayer(), qm.getNpc());
 		qm.spawnNPCRequestController(1300008, 218, 139, 0);
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.UIPacket.IntroEnableUI(1));
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.NPCPacket.setNPCSpecialAction(1300008, "out"));
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.UIPacket.getDirectionInfo(1, 2800));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroEnableUI(1));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.NPCPacket.setNPCSpecialAction(1300008, "out"));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2800));
 		qm.gainExp(1900);
 		break;
 	case 3:
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.NPCPacket.removeNPCController(1300008));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.NPCPacket.removeNPCController(1300008));
 		qm.spawnNPCRequestController(1300008, 218, 139, 0);
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.NPCPacket.setNPCSpecialAction(1300008, "hat"));
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.UIPacket.getDirectionInfo(1, 3000));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.NPCPacket.setNPCSpecialAction(1300008, "hat"));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 3000));
 		break;
 	case 4:
-		qm.getClient().getSession().write(Packages.tools.packet.EtcPacket.UIPacket.IntroEnableUI(0));
+		qm.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroEnableUI(0));
 		qm.dispose();
 }
 }

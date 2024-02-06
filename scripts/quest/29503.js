@@ -65,7 +65,7 @@ function end(mode, type, selection) {
 		break;
 	case 2:
 		if (qm.getPlayer().getInventory(Packages.client.inventory.MapleInventoryType.EQUIP).getNumFreeSlot() < 1) {
-			qm.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(1, "There is not enough space in the equipment window"));
+			qm.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(1, "There is not enough space in the equipment window"));
 			qm.dispose();
 			return;
 			}

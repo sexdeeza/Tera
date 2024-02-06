@@ -61,7 +61,7 @@ function playerEntry(eim, player) {
     player.changeMap(entryMap, 2);
     em.setProperty("noEntry","true");
     
-    player.getClient().announce(MaplePacketCreator.getClock(eventTime * 60));
+    player.getClient().announce(CWvsContext.getClock(eventTime * 60));
     eim.startEventTimer(eventTime * 60000);
 }
 

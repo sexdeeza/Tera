@@ -103,7 +103,7 @@ function playerEntry(eim, player) {
         var map = eim.getMapInstance(entryMap);
         player.changeMap(map, map.getPortal(0));
         
-        player.announce(MaplePacketCreator.showEffect("event/space/start"));
+        player.announce(CWvsContext.showEffect("event/space/start"));
         player.startMapEffect("Please rescue Gaga within the time limit.", 5120027);
 }
 

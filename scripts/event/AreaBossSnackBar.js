@@ -52,7 +52,7 @@ function start() {
         var rndPos = setPos[Math.floor(Math.random() * setPos.length)];
         
         snackBarMap.spawnMonsterOnGroundBelow(snackBar, new Packages.java.awt.Point(rndPos[0], rndPos[1]));
-        snackBarMap.broadcastMessage(Packages.tools.MaplePacketCreator.serverNotice(6, "Slowly, a suspicious food stand opens up on a strangely remote place."));
+        snackBarMap.broadcastMessage(Packages.tools.CWvsContext.serverNotice(6, "Slowly, a suspicious food stand opens up on a strangely remote place."));
 	em.schedule("start", 3 * 60 *60 * 1000);
 }
 

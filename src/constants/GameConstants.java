@@ -343,9 +343,11 @@ public class GameConstants {
 
     public static boolean isElementAmp_Skill(final int skill) {
         switch (skill) {
-            case 2110001, 2210001, 12110001, 22150000 -> {
+            case 2110001:
+            case 2210001:
+            case 12110001:
+            case 22150000:
                 return true;
-            }
         }
         return false;
     }

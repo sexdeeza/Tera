@@ -49,7 +49,7 @@ function start() {
 	}
 	
     herbGarden.spawnMonsterOnGroundBelow(gcent, new Packages.java.awt.Point(560, 50));
-    herbGarden.broadcastMessage(Packages.tools.MaplePacketCreator.serverNotice(6, "From the mists surrounding the herb garden, the gargantuous Giant Centipede appears."));
+    herbGarden.broadcastMessage(Packages.tools.CWvsContext.serverNotice(6, "From the mists surrounding the herb garden, the gargantuous Giant Centipede appears."));
 	em.schedule("start", 3 * 60 *60 * 1000);
 }
 

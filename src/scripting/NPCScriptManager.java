@@ -290,6 +290,42 @@ public class NPCScriptManager extends AbstractScriptManager {
         }
     }
 
+    public final void startItemScript(final MapleClient c, final int npc, final String item) {
+        final Lock lock = c.getNPCLock();
+        lock.lock();
+        try {
+            if (c.getPlayer().isGM()) {
+                c.getPlayer().dropMessage(5, "[You have created a connection with: Item Script" + item + "connection");
+            }
+            if (!cms.containsKey(c) && c.canClickNPC()) {
+                final Invocable iv = getInvocable("item/" + item + ".js", c, true);
+                if (iv == null) {
+                    System.out.println("New scripted item : "  + item + "\r\n");
+                    dispose(c);
+                    return;
+                }
+                final ScriptEngine scriptengine = (ScriptEngine) iv;
+                final NPCConversationManager cm = new NPCConversationManager(c, npc, -1, (byte) -1, iv);
+                cms.put(c, cm);
+                scriptengine.put("im", cm);
+                c.getPlayer().setConversation(1);
+                c.setClickedNPC();
+                //iv.invokeFunction("use");
+                try {
+                    iv.invokeFunction("start");
+                } catch (NoSuchMethodException nsme) {
+                    iv.invokeFunction("action", (byte) 1, (byte) 0, 0);
+                }
+            }
+        } catch (final Exception e) {
+            System.err.println("The wrong item script ID: " + item + ".js" + e);
+            FileoutputUtil.log(FileoutputUtil.ScriptEx_Log, "The wrong item script ID: " + item + ".js" + e);
+            dispose(c);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public final void dispose(final MapleClient c) {
         final NPCConversationManager npccm = cms.get(c);
         if (npccm != null) {

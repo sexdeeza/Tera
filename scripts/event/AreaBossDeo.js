@@ -49,7 +49,7 @@ function start() {
 	}
 	
     royalCatthusDesert.spawnMonsterOnGroundBelow(deo, new Packages.java.awt.Point(645, 275));
-    royalCatthusDesert.broadcastMessage(Packages.tools.MaplePacketCreator.serverNotice(6, "Deo slowly appeared out of the sand dust."));
+    royalCatthusDesert.broadcastMessage(Packages.tools.CWvsContext.serverNotice(6, "Deo slowly appeared out of the sand dust."));
 	em.schedule("start", 3 * 60 *60 * 1000);
 }
 

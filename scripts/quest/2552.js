@@ -25,7 +25,7 @@ function start(mode, type, selection) {
 		break;
 	case 3:
 		if (qm.getPlayer().getInventory(Packages.client.inventory.MapleInventoryType.ETC).getNumFreeSlot() < 1) {
-			qm.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(1, "Please check for space in your inventory."));
+			qm.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(1, "Please check for space in your inventory."));
 			qm.dispose();
 			return;
 			}

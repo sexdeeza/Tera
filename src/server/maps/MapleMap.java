@@ -500,16 +500,6 @@ public final class MapleMap {
         //This will not affect the internal state, and we don't want to
         //introduce unneccessary locking, especially since this function
         //is probably used quite often.
-        if (!instanced && mapobjects.get(MapleMapObjectType.ITEM).size() >= 250) {
-            removeDrops();
-        }
-
-        int levelDifference = chr.getLevel() - mob.getStats().getLevel();
-        int[] excludedMonsterIds = {8800000, 8800001, 8800002, 8800100, 8800101, 8800102, 8810018, 8810122, 8820001, 8850011, 8840000};
-        if (!isExcludedMonster(mob, excludedMonsterIds) && levelDifference > 75) {
-            return; // Don't drop anything if the player is 20 levels higher than the mob and the mob ID is not exempted
-        }
-
         final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
         final byte droptype = (byte) (mob.getStats().isExplosiveReward() ? 3 : mob.getStats().isFfaLoot() ? 2 : chr.getParty() != null ? 1 : 0);
         final int mobpos = mob.getTruePosition().x;
@@ -523,6 +513,12 @@ public final class MapleMap {
             showdown += mse.getX();
         }
 
+        int mobId = mob.getId();
+        int originmob = mobId;
+        if (mobId >= 9800000 && mobId <= 9800124) {
+            mobId = mob.getStats().getLink();
+        }
+
         final MapleMonsterInformationProvider mi = MapleMonsterInformationProvider.getInstance();
         final List<MonsterDropEntry> derp = mi.retrieveDrop(mob.getId());
         if (derp == null) { //if no drops, no global drops either <3
@@ -530,6 +526,35 @@ public final class MapleMap {
         }
         final List<MonsterDropEntry> dropEntry = new ArrayList<>(derp);
         Collections.shuffle(dropEntry);
+
+        if ((mob.getStats().getLevel() >= 130) && (mob.getStats().getLevel() <=200)) {
+            dropEntry.add(new MonsterDropEntry(4310015, 10000,1,1, (short) 0)); //Gallant Emblem drop
+        }
+
+        if ((mob.getStats().getLevel() >= 1) && (mob.getStats().getLevel() <= 69)) {
+            dropEntry.add(new MonsterDropEntry(4001513, 50000, 1, 1, (short) 0));//Zebra Stripe
+        }
+        if ((mob.getStats().getLevel()) >= 70 && (mob.getStats().getLevel() <= 119)) {
+            dropEntry.add(new MonsterDropEntry(4001515, 50000, 1, 1, (short) 0));//Lep Stripe
+        }
+        if ((mob.getStats().getLevel()) >= 120 && (mob.getStats().getLevel() <= 255)) {
+            dropEntry.add(new MonsterDropEntry(4001521, 50000, 1, 1, (short) 0));//Tiger Stripe
+        }
+
+        if (originmob >= 9800000 && originmob <= 9800124) {
+            dropEntry.add(new MonsterDropEntry(4310020, 30000, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(2028079, 12000, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(2028080, 12000, 1, 1, (short) 0));
+
+            dropEntry.add(new MonsterDropEntry(4330000, 3500, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330004, 3500, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330001, 2500, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330005, 2500, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330002, 2000, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330006, 2000, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330003, 1500, 1, 1, (short) 0));
+            dropEntry.add(new MonsterDropEntry(4330007, 1500, 1, 1, (short) 0));
+        }
 
         boolean mesoDropped = false;
         for (final MonsterDropEntry de : dropEntry) {
@@ -821,19 +846,16 @@ public final class MapleMap {
                     killMonster(mons, chr, false, false, animation);
                 }
             }
-        } else if (mobid / 100000 == 98 && chr.getMapId() / 10000000 == 95 && getAllMonstersThreadsafe().isEmpty()) {
-            switch ((chr.getMapId() % 1000) / 100) {
-                case 0, 1, 2, 3, 4 ->
-                    chr.getClient().getSession().write(CField.MapEff("monsterPark/clear"));
-                case 5 -> {
-                    if (chr.getMapId() / 1000000 == 952) {
-                        chr.getClient().getSession().write(CField.MapEff("monsterPark/clearF"));
-                    } else {
-                        chr.getClient().getSession().write(CField.MapEff("monsterPark/clear"));
-                    }
-                }
-                case 6 ->
-                    chr.getClient().getSession().write(CField.MapEff("monsterPark/clearF"));
+        } else if (mobid / 100000 == 98 && chr.getMapId() / 10000000 == 95 && getAllMonstersThreadsafe().size() == 0) {
+            int stage = (chr.getMap().getId() / 100) % 100;
+                broadcastMessage(CField.playSound("Party1/Clear"));
+                if (stage == 5) {
+                    broadcastMessage(CWvsContext.getTopMsg(""));
+                    broadcastMessage(CField.showEffect("monsterPark/clearF"));
+                } else {
+                    broadcastMessage(CWvsContext.getTopMsg(""));
+                    broadcastMessage(CField.showEffect("monsterPark/clear"));
+
             }
         }
         if (type != null) {

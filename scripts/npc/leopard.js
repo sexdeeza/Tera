@@ -25,7 +25,7 @@ function action(mode, type, selection) {
             var party = cm.getParty().getMembers().iterator();
             var next = true;
             var cPlayer = party.next();       
-            if(cPlayer.getLevel() <70 || cPlayer.getLevel() >119 || cPlayer.getMapid() != cm.getMapd()){
+            if(cPlayer.getLevel() <70 || cPlayer.getLevel() >119 || cPlayer.getMapid() != cm.getMapId()){
                 next = false;            
             }
         }

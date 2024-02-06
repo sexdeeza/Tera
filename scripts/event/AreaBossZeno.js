@@ -49,7 +49,7 @@ function start() {
 	}
 	
     graysPrairie.spawnMonsterOnGroundBelow(zeno, new Packages.java.awt.Point(-4224, 776));
-    graysPrairie.broadcastMessage(Packages.tools.MaplePacketCreator.serverNotice(6, "Zeno has appeared with a heavy sound of machinery."));
+    graysPrairie.broadcastMessage(Packages.tools.CWvsContext.serverNotice(6, "Zeno has appeared with a heavy sound of machinery."));
 	em.schedule("start", 3 * 60 * 60 * 1000);
 }
 

@@ -89,6 +89,8 @@ public class MapScriptMethods {
 
     private static enum onUserEnter {
 
+        cygnusJobTutorial,
+        cygnusTest,
         explorationPoint,
         NULL;
 
@@ -206,6 +208,15 @@ public class MapScriptMethods {
         String data = "";
         int npc = 9010000;
         switch (onUserEnter.fromString(scriptName)) {
+
+            case cygnusTest: {
+                showIntro(c, "Effect/Direction.img/cygnus/Scene" + (c.getPlayer().getMapId() == 913040006 ? 9 : (c.getPlayer().getMapId() - 913040000)));
+                break;
+            }
+            case cygnusJobTutorial: {
+                showIntro(c, "Effect/Direction.img/cygnusJobTutorial/Scene" + (c.getPlayer().getMapId() - 913040100));
+                break;
+            }
             case explorationPoint: {
                 if (c.getPlayer().getMapId() == 104000000) {
                     c.getSession().write(UIPacket.IntroDisableUI(false));

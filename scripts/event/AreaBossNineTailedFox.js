@@ -53,7 +53,7 @@ function start() {
     var posY = 33;
     posX =  Math.floor((Math.random() * 1300) - 800);
     moonRidge.spawnMonsterOnGroundBelow(nineTailedFox, new Packages.java.awt.Point(posX, posY));
-    moonRidge.broadcastMessage(Packages.tools.MaplePacketCreator.serverNotice(6, "As the moon light dims, a long fox cry can be heard and the presence of the old fox can be felt"));
+    moonRidge.broadcastMessage(Packages.tools.CWvsContext.serverNotice(6, "As the moon light dims, a long fox cry can be heard and the presence of the old fox can be felt"));
 	em.schedule("start", 3 * 60 *60 * 1000);
 }
 

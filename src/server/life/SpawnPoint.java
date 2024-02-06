@@ -49,8 +49,8 @@ public class SpawnPoint extends Spawns {
         this.monster = monster.getStats();
         this.pos = pos;
         this.id = monster.getId();
-	this.fh = monster.getFh();
-	this.f = monster.getF();
+	    this.fh = monster.getFh();
+	    this.f = monster.getF();
         this.mobTime = (mobTime < 0 ? -1 : (mobTime * 1000));
         this.carnivalTeam = carnivalTeam;
         this.msg = msg;
@@ -106,15 +106,21 @@ public class SpawnPoint extends Spawns {
         return nextPossibleSpawn <= time;
     }
 
+    public final void spawnMultipleMonsters(final MapleMap map, int numberOfMonsters) {
+        for (int i = 0; i < numberOfMonsters; i++) {
+            spawnMonster(map);
+        }
+    }
+
     @Override
     public final MapleMonster spawnMonster(final MapleMap map) {
         final MapleMonster mob = new MapleMonster(id, monster);
         mob.setPosition(pos);
-	mob.setCy(pos.y);
-	mob.setRx0(pos.x - 50);
-	mob.setRx1(pos.x + 50); //these dont matter for mobs
-	mob.setFh(fh);
-	mob.setF(f);
+	    mob.setCy(pos.y);
+	    mob.setRx0(pos.x - 50);
+	    mob.setRx1(pos.x + 50); //these dont matter for mobs
+	    mob.setFh(fh);
+	    mob.setF(f);
         mob.setCarnivalTeam(carnivalTeam);
 		if (level > -1) {
 			mob.changeLevel(level);

@@ -8,7 +8,7 @@ function init() {
 function playerEntry(eim, player) {
     var map = eim.setInstanceMap(912040005);
     player.changeMap(map, map.getPortal(0));
-    player.getClient().getSession().write(tools.MaplePacketCreator.getClock(600));
+    player.getClient().getSession().write(tools.CWvsContext.getClock(600));
     eim.schedule("warpOut", 600000);	
 }
 

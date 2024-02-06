@@ -25,9 +25,9 @@ function scheduledTimeout(eim) {//Ҏ���r�g�Y��
 
 function monsterValue(eim, mobId) {//�������|�l
 	if (mobId == 9400633) {
-		eim.getMapInstance(677000012).broadcastMessage(Packages.tools.packet.MaplePacketCreator.serverNotice(6, "��˾���屻����"));
-		eim.getMapInstance(677000012).broadcastMessage(Packages.tools.packet.EtcPacket.environmentChange("quest/party/clear", 3));
-		eim.getMapInstance(677000012).broadcastMessage(Packages.tools.packet.EtcPacket.environmentChange("Party1/Clear", 4));
+		eim.getMapInstance(677000012).broadcastMessage(Packages.tools.packet.CWvsContext.serverNotice(6, "��˾���屻����"));
+		eim.getMapInstance(677000012).broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+		eim.getMapInstance(677000012).broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
 		eim.startEventTimer(3 * 60000);
 		}
 		return 1;

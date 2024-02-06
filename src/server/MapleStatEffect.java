@@ -560,7 +560,7 @@ public class MapleStatEffect implements Serializable {
                 case 2111008:
                 case 2211008:
                 case 12101005:
-                case 22121001: // Elemental Reset
+                case 22131002: // Elemental Reset
                     ret.statups.put(MapleBuffStat.ELEMENT_RESET, ret.x);
                     break;
                 case 3111000:
@@ -752,6 +752,9 @@ public class MapleStatEffect implements Serializable {
                 case 23121004:// TODO LEGEND
                     ret.statups.put(MapleBuffStat.PIRATES_REVENGE, (int) ret.damR);
                     break;
+                case 22181000: // Blessing of the Onyx
+                    ret.statups.put(MapleBuffStat.MATK, ret.x);
+                    break;
                 case 1211009:
                 case 1111007:
                 case 1311007: // magic crash
@@ -786,7 +789,6 @@ public class MapleStatEffect implements Serializable {
                     ret.duration = 60000;
                     ret.statups.put(MapleBuffStat.BODY_BOOST, (int) ret.level); // lots of variables
                     break;
-                case 22131002:
                 case 22141003: // Slow
                     ret.statups.put(MapleBuffStat.SLOW, ret.x);
                     break;
@@ -3038,9 +3040,9 @@ public class MapleStatEffect implements Serializable {
             case 35120000: // Extreme Mech
                 sameSrc = effect.sourceid == 35001002;
                 break;
-            case 35121013: // Mech: Siege Mode
-                sameSrc = effect.sourceid == 35111004;
-                break;
+            //case 35121013: // Mech: Siege Mode
+            //    sameSrc = effect.sourceid == 35111004;
+            //    break;
         }
         return effect != null && sameSrc && this.skill == effect.skill;
     }

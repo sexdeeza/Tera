@@ -216,7 +216,7 @@ public class Skill {
                     case 22171000: //maple warrior
                     case 22171004: //hero will
                     case 5721002: //hero will
-                        //   case 22181000: //onyx blessing
+                    case 22181000: //onyx blessing
                     case 22181004:
                     case 22161004:
                     case 22181003: //soul stone

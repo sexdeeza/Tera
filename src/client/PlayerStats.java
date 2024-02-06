@@ -1347,7 +1347,6 @@ public class PlayerStats implements Serializable {
                 if (bof > 0) {
                     percent_hp += bx.getEffect(bof).getPercentHP();
                 }
-                magic += chra.getTotalSkillLevel(SkillFactory.getSkill(22000000));
                 bx = SkillFactory.getSkill(22150000);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0) {

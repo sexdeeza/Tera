@@ -135,7 +135,7 @@ function action(mode, type, selection) {
 					cm.gainItem(itemToUse, -1);
 					
 				cm.getPlayer().getCashShop().gainCash(1, nxAmount);
-				cm.getPlayer().announce(Packages.tools.MaplePacketCreator.earnTitleMessage("You have earned " + nxAmount + " NX"));
+				cm.getPlayer().announce(Packages.tools.CWvsContext.earnTitleMessage("You have earned " + nxAmount + " NX"));
 				cm.logLeaf(nxAmount + " NX");
 				cm.dispose();
 			} else if(choice == 2) {

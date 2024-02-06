@@ -1781,7 +1781,10 @@ public class World {
         if (numTimes % 7 == 0 && chr.getMount() != null && chr.getMount().canTire(now)) {
             chr.getMount().increaseFatigue();
         }
-        if (numTimes % 13 == 0) { //we're parsing through the characters anyway (:
+        if (numTimes % 30 == 0) {//Automatically restore fatigue level
+            chr.setFatigue(chr.getFatigue() - 1);
+        }
+        if (numTimes % 164 == 0) { //we're parsing through the characters anyway (:
             chr.doFamiliarSchedule(now);
             for (MaplePet pet : chr.getSummonedPets()) {
                 if (pet.getPetItemId() == 5000054 && pet.getSecondsLeft() > 0) {

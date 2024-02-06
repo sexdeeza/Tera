@@ -41,10 +41,10 @@ function start() {
 		}
 	if (ms.getPlayer().getMap().getId() == 104000000) {
 	if (ms.getSavedLocation("WORLDTOUR") == 2010000) {
-		ms.getClient().getSession().write(Packages.tools.packet.EtcPacket.UIPacket.IntroLock(0));
+		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroLock(0));
 		ms.getPlayer().clearSavedLocation(Packages.server.maps.SavedLocationType.fromString("WORLDTOUR"));
 		}
-		ms.getClient().getSession().write(Packages.tools.packet.EtcPacket.environmentChange("maplemap/enter/104000000", 3));
+		ms.getClient().getSession().write(Packages.tools.packet.CField.environmentChange("maplemap/enter/104000000", 3));
 		}
 	for (var i = 0; i < map.length; i++)
 	if (ms.getPlayer().getMap().getId() == map[i]) {

@@ -310,7 +310,7 @@ function writeAllFeatures() {
 }
 
 function start() {
-        cm.getPlayer().announce(MaplePacketCreator.musicChange(anthemSong));
+        cm.getPlayer().announce(CWvsContext.musicChange(anthemSong));
         status = -1;
         writeAllFeatures();
         action(1, 0, 0);
@@ -318,11 +318,11 @@ function start() {
 
 function action(mode, type, selection) {
         if (mode == -1) {
-                cm.getPlayer().announce(MaplePacketCreator.musicChange(ambientSong));
+                cm.getPlayer().announce(CWvsContext.musicChange(ambientSong));
                 cm.dispose();
         } else {
                 if (mode == 0 && type > 0) {
-                        cm.getPlayer().announce(MaplePacketCreator.musicChange(ambientSong));
+                        cm.getPlayer().announce(CWvsContext.musicChange(ambientSong));
                         cm.dispose();
                         return;
                 }
@@ -356,7 +356,7 @@ function action(mode, type, selection) {
 
                         cm.sendPrev(sendStr);
                 } else {
-                        cm.getPlayer().announce(MaplePacketCreator.musicChange(ambientSong));
+                        cm.getPlayer().announce(CWvsContext.musicChange(ambientSong));
                         cm.dispose();
                 }
         }
