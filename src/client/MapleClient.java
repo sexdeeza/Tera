@@ -75,7 +75,7 @@ public class MapleClient implements Serializable {
     private transient MapleAESOFB send, receive;
     private final transient MapleSession session;
     private MapleCharacter player;
-    private int channel = 1, accId = -1, world, birthday,hostip;
+    private int channel = 1, accId = -1, world, birthday;
     private int charslots = DEFAULT_CHARSLOT;
     private boolean loggedIn = false, serverTransition = false;
     private transient Calendar tempban = null;
@@ -86,15 +86,16 @@ public class MapleClient implements Serializable {
     private boolean csshop;
     private byte greason = 1, gender = -1;
     public transient short loginAttempt = 0;
-    private transient List<Integer> allowedChar = new LinkedList<Integer>();
-    private transient Set<String> macs = new HashSet<String>();
-    private transient Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
+    private final transient List<Integer> allowedChar = new LinkedList<Integer>();
+    private final transient Set<String> macs = new HashSet<String>();
+    private final transient Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
     private transient ScheduledFuture<?> idleTask = null;
     private transient String secondPassword, salt2, tempIP = ""; // To be used only on login
     private final transient Lock mutex = new ReentrantLock(true);
     private final transient Lock npc_mutex = new ReentrantLock();
     private long lastNpcClick = 0;
     private final static Lock login_mutex = new ReentrantLock(true);
+    private boolean isPicEnable = false;
 
     public MapleClient(MapleAESOFB send, MapleAESOFB receive, MapleSession session) {
         this.send = send;
@@ -233,19 +234,18 @@ public class MapleClient implements Serializable {
         return loggedIn && accId >= 0;
     }
 
-    private Calendar getTempBanCalendar(ResultSet rs) throws SQLException {
+    private Calendar getTempBanCalendar(Timestamp ts) {
         Calendar lTempban = Calendar.getInstance();
-        if (rs.getLong("tempban") == 0) { // basically if timestamp in db is 0000-00-00
+        if (ts == null) {
             lTempban.setTimeInMillis(0);
-            return lTempban;
+        } else {
+            lTempban.setTimeInMillis(ts.getTime());
         }
         Calendar today = Calendar.getInstance();
-        lTempban.setTimeInMillis(rs.getTimestamp("tempban").getTime());
         if (today.getTimeInMillis() < lTempban.getTimeInMillis()) {
             return lTempban;
         }
 
-        lTempban.setTimeInMillis(0);
         return lTempban;
     }
 
@@ -465,80 +465,98 @@ public class MapleClient implements Serializable {
 
     public int login(String login, String pwd, boolean ipMacBanned) {
         int loginok = 5;
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        Connection con = DatabaseConnection.getConnection();
         try {
-            con = DatabaseConnection.getConnection();
-            ps = con.prepareStatement("SELECT * FROM accounts WHERE name = ?");
-            ps.setString(1, login);
-            rs = ps.executeQuery();
+            try (PreparedStatement ps = con.prepareStatement("SELECT * FROM accounts WHERE name = ?")) {
+                ps.setString(1, login);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        final int banned = rs.getInt("banned");
+                        final String passhash = rs.getString("password");
+                        final String salt = rs.getString("salt");
+                        final String oldSession = rs.getString("SessionIP");
+                        accountName = login;
+                        accId = rs.getInt("id");
+                        secondPassword = rs.getString("2ndpassword");
+                        salt2 = rs.getString("salt2");
+                        gm = rs.getInt("gm") > 0;
+                        greason = rs.getByte("greason");
+                        //tempban = getTempBanCalendar(rs);
+                        Timestamp ts = rs.getTimestamp("tempban");
+                        tempban = getTempBanCalendar(ts);
 
-            if (rs.next()) {
-                final int banned = rs.getInt("banned");
-                final String passhash = rs.getString("password");
-                final String salt = rs.getString("salt");
-                final String oldSession = rs.getString("SessionIP");
+                        gender = rs.getByte("gender");
 
-                accountName = login;
-                accId = rs.getInt("id");
-                secondPassword = rs.getString("2ndpassword");
-                salt2 = rs.getString("salt2");
-                gm = rs.getInt("gm") > 0;
-                greason = rs.getByte("greason");
-                tempban = getTempBanCalendar(rs);
-                gender = rs.getByte("gender");
+                        //final boolean admin = rs.getInt("gm") > 1;
+                        if (secondPassword != null && salt2 != null) {
+                            secondPassword = LoginCrypto.rand_r(secondPassword);
+                        }
+                        ps.close();
 
-                final boolean admin = rs.getInt("gm") > 1;
-
-                if (secondPassword != null && salt2 != null) {
-                    secondPassword = LoginCrypto.rand_r(secondPassword);
-                }
-
-                if (banned > 0 && !gm) {
-                    loginok = 3;
-                } else {
-                    if (banned == -1) {
-                        unban();
-                    }
-                    byte loginstate = getLoginState();
-                    if (loginstate > MapleClient.LOGIN_NOTLOGGEDIN) {
-                        loggedIn = false;
-                        loginok = 7;
-                    } else {
-                        if (passhash == null || passhash.isEmpty()) {
-                            if (oldSession != null && !oldSession.isEmpty()) {
-                                loggedIn = getSessionIPAddress().equals(oldSession);
-                                loginok = loggedIn ? 0 : 4;
-                            } else {
-                                loginok = 4;
-                                loggedIn = false;
-                            }
-                        } else if ((pwd.equals(passhash))) {
-                            loginok = 0;
-                        } else if (salt == null && (pwd.equals(passhash))) {
-                            loginok = 0;
+                        if (banned > 0 && !gm) {
+                            loginok = 3;
                         } else {
-                            loggedIn = false;
-                            loginok = 4;
+                            if (banned == -1) {
+                                unban();
+                            }
+                            byte loginstate = getLoginState();
+                            if (loginstate > MapleClient.LOGIN_NOTLOGGEDIN) { // already loggedin
+                                loggedIn = false;
+                                loginok = 7;
+                            } else {
+                                boolean updatePasswordHash = false;
+                                // Check if the passwords are correct here. :B
+                                if (passhash == null || passhash.isEmpty()) {
+                                    //match by sessionIP
+                                    if (oldSession != null && !oldSession.isEmpty()) {
+                                        loggedIn = getSessionIPAddress().equals(oldSession);
+                                        loginok = loggedIn ? 0 : 4;
+                                        updatePasswordHash = loggedIn;
+                                    } else {
+                                        loginok = 4;
+                                        loggedIn = false;
+                                    }
+                                } else if (LoginCryptoLegacy.isLegacyPassword(passhash) && LoginCryptoLegacy.checkPassword(pwd, passhash)) {
+                                    // Check if a password upgrade is needed.
+                                    loginok = 0;
+                                    updatePasswordHash = true;
+                                } else if (salt == null && LoginCrypto.checkSha1Hash(passhash, pwd)) {
+                                    loginok = 0;
+                                    updatePasswordHash = true;
+                                } else if (passhash.equals(pwd)) {
+                                    loginok = 0;
+                                    updatePasswordHash = true;
+                                } else if (LoginCrypto.checkSaltedSha512Hash(passhash, pwd, salt)) {
+                                    loginok = 0;
+                                } else {
+                                    loggedIn = false;
+                                    loginok = 4;
+                                }
+                                if (updatePasswordHash) {
+                                    try (PreparedStatement pss = con.prepareStatement("UPDATE `accounts` SET `password` = ?, `salt` = ? WHERE id = ?")) {
+                                        final String newSalt = LoginCrypto.makeSalt();
+                                        pss.setString(1, LoginCrypto.makeSaltedSha512Hash(pwd, newSalt));
+                                        pss.setString(2, newSalt);
+                                        pss.setInt(3, accId);
+                                        pss.executeUpdate();
+                                        pss.close();
+                                    }
+                                }
+                            }
                         }
                     }
                 }
+                ps.close();
             }
+            con.close();
         } catch (SQLException e) {
             System.err.println("ERROR" + e);
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (Exception e) {
+            try {
+                if (con != null && !con.isClosed()) {
+                    con.close();
                 }
-            }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (Exception e) {
-                }
+            } catch (SQLException ignore) {
             }
         }
         return loginok;
