@@ -24,12 +24,6 @@ import java.net.InetSocketAddress;
 
 import constants.ServerConstants;
 import handling.netty.ServerConnection;
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.common.SimpleByteBufferAllocator;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
 import handling.MapleServerHandler;
 import handling.channel.PlayerStorage;

@@ -22,7 +22,7 @@ package tools;
 
 import java.io.ByteArrayOutputStream;
 
-import org.apache.mina.common.ByteBuffer;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Provides a class for manipulating hexadecimal numbers.
@@ -48,20 +48,17 @@ public class HexTool {
     }
 
     /**
-     * Turns a <code>org.apache.mina.common.ByteBuffer</code> into a
-     * hexadecimal string.
+     * Turns a <code>org.apache.mina.common.ByteBuffer</code> into a hexadecimal
+     * string.
      *
-     * @param buf The <code>org.apache.mina.common.ByteBuffer</code> to
-     *            convert.
+     * @param buf The <code>org.apache.mina.common.ByteBuffer</code> to convert.
      * @return The hexadecimal representation of <code>buf</code>
      */
-    public static final String toString(final ByteBuffer buf) {
-        buf.flip();
-        final byte arr[] = new byte[buf.remaining()];
-        buf.get(arr);
-        String ret = toString(arr);
-        buf.flip();
-        buf.put(arr);
+    public static final String toString(ByteBuf buf) {
+        byte[] array = new byte[buf.readableBytes()];
+        buf.getBytes(0, array);
+        String ret = toString(array);
+        buf.setBytes(0, array);
         return ret;
     }
 
