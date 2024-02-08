@@ -4,7 +4,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.Command;
 import server.ShutdownServer;
-import server.TimerManager;
+import server.Timer;
 
 public class ShutdownTimeCommand extends Command {
     @Override
@@ -47,6 +47,6 @@ public class ShutdownTimeCommand extends Command {
             }
         };
 
-        TimerManager.getInstance().schedule(shutdown, time);
+        Timer.EventTimer.getInstance().schedule(shutdown, time);
     }
 }

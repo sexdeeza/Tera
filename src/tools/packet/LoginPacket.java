@@ -59,16 +59,27 @@ public class LoginPacket {
         return mplew.getPacket();
     }
 
+    public static byte[] sendGuestTOS() {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.SEND_LINK.getValue());
+        mplew.writeShort(0x100);
+        mplew.writeInt(Randomizer.nextInt(999999));
+        mplew.writeLong(0);
+        mplew.write(new byte[]{(byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
+        mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
+        mplew.writeInt(0);
+        mplew.writeMapleAsciiString("http://maplefags.com");
+        return mplew.getPacket();
+    }
+
     public static final byte[] getAuthSuccessRequest(final MapleClient client) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
         mplew.writeShort(SendPacketOpcode.LOGIN_STATUS.getValue());
-        mplew.write(0);
-        mplew.write(0);
-        mplew.writeInt(0);
+        mplew.writeZeroBytes(6);
         mplew.writeInt(client.getAccID());
         mplew.write(client.getGender());
-        mplew.write(client.isGm() ? 1 : 0); // Admin byte - Find, Trade, etc.
+        mplew.write(client.isGm() ? 0 : 0); // Admin byte - Find, Trade, etc.
         mplew.writeShort(0/*2*/); //0 for new accounts
         mplew.write(0/*client.isGm() ? 1 : 0*/); // Admin byte - Commands
         mplew.writeMapleAsciiString(client.getAccountName());
@@ -78,20 +89,17 @@ public class LoginPacket {
         mplew.write(1);
         mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis())); //really create date
         mplew.writeInt(4); // Remove the "Select the world you want to play in" since it doesn't fit inside the loginscreen
-        mplew.write(1); //1 = pin disabled, 0 = pin enabled, 1 default
-        if(client.isPicEnable()){
-            if(client.getSecondPassword()==null || client.getSecondPassword().length()==0){
-                mplew.write(0);
-            }else{
-                mplew.write(1);
-            }
-        }else{
-            mplew.write(2);
-        }
-        
-        //mplew.write(client.getSecondPassword() == null ? 0 : (client.getSecondPassword().equals("") ? 2 : 1)); //2 = no pic at all
+        mplew.write(1); //1 = pin disabled, 0 = pin enabled
+        mplew.write(client.getSecondPassword() == null ? 0 : (client.getSecondPassword().equals("") ? 2 : 1)); //2 = no pic at all
         mplew.writeLong(Randomizer.nextLong());
+        return mplew.getPacket();
+    }
 
+    public static final byte[] getLoginAUTH() {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(13);
+
+        mplew.writeShort(SendPacketOpcode.LOGIN_AUTH.getValue());
+        mplew.writeMapleAsciiString("MapLogin2");
         return mplew.getPacket();
     }
 
@@ -148,6 +156,17 @@ public class LoginPacket {
         return mplew.getPacket();
     }
 
+    public static final byte[] getGenderChanged(final MapleClient client) {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+        mplew.writeShort(SendPacketOpcode.GENDER_SET.getValue());
+        mplew.write(0);
+        mplew.writeMapleAsciiString(client.getAccountName());
+        mplew.writeMapleAsciiString(String.valueOf(client.getAccID()));
+
+        return mplew.getPacket();
+    }
+
     public static final byte[] getSecondAuthSuccess(final MapleClient client) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
@@ -155,7 +174,7 @@ public class LoginPacket {
         mplew.write(0);
         mplew.writeInt(client.getAccID());
         mplew.write(client.getGender());
-        mplew.write(client.isGm() ? 1 : 0); // Admin byte - Find, Trade, etc.
+        mplew.write(client.isGm() ? 0 : 0); // Admin byte - Find, Trade, etc.
         mplew.writeShort(2);
         mplew.write(client.isGm() ? 1 : 0); // Admin byte - Commands
         mplew.writeMapleAsciiString(client.getAccountName());
@@ -165,7 +184,10 @@ public class LoginPacket {
         mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis())); //really create date
         mplew.writeInt(4); //idk
         mplew.writeLong(Randomizer.nextLong()); //randomizer.nextLong(), remote hack check.
-        mplew.write(0); // a boolean, 1/0
+        mplew.write(1); // a boolean, 1/0
+        mplew.write(1); // a boolean, 1/0
+        mplew.write(1); // a boolean, 1/0
+        mplew.write(1); // a boolean, 1/0
 
         return mplew.getPacket();
     }
@@ -261,8 +283,8 @@ public class LoginPacket {
 
     public static final byte[] getLoginWelcome() {
         List<Pair<String, Integer>> flags = new LinkedList<>();
-        //flags.add(new Pair<>("20120111", 0));
-        //flags.add(new Pair<>("returnLegend2", 0));
+        flags.add(new Pair<>("20120111", 0));
+        flags.add(new Pair<>("returnLegend2", 0));
         return CField.spawnFlags(flags);
     }
 
@@ -287,30 +309,18 @@ public class LoginPacket {
         return mplew.getPacket();
     }
 
-    public static final byte[] getCharList(MapleClient c, final List<MapleCharacter> chars) {
+    public static final byte[] getCharList(final String secondpw, final List<MapleCharacter> chars, int charslots) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        final String secondpw=c.getSecondPassword();
+
         mplew.writeShort(SendPacketOpcode.CHARLIST.getValue());
         mplew.write(0);
         mplew.write(chars.size());
         for (final MapleCharacter chr : chars) {
             addCharEntry(mplew, chr, !chr.isGM() && chr.getLevel() >= 30, false);
         }
-        if(c.isPicEnable()){
-            if(c.getSecondPassword()==null || c.getSecondPassword().length()==0){
-                mplew.write(0);
-            }else{
-                mplew.write(1);
-            }
-        }else{
-            mplew.write(2);
-            
-            
-        }
-
-        //mplew.write(secondpw != null && secondpw.length() > 0 ? 1 : (secondpw != null && secondpw.length() <= 0 ? 2 : 0)); // second pw request
+        mplew.write(secondpw != null && secondpw.length() > 0 ? 1 : (secondpw != null && secondpw.length() <= 0 ? 2 : 0)); // second pw request
         mplew.write(0);
-        mplew.writeInt(c.getCharacterSlots());
+        mplew.writeInt(charslots);
         mplew.writeInt(0);
 
         return mplew.getPacket();
@@ -360,7 +370,7 @@ public class LoginPacket {
         return mplew.getPacket();
     }
 
-    public static byte[] showAllCharacterInfo(int worldid, List<MapleCharacter> chars, MapleClient c) {
+    public static byte[] showAllCharacterInfo(int worldid, List<MapleCharacter> chars, String pic) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.ALL_CHARLIST.getValue());
         mplew.write(chars.size() == 0 ? 5 : 0); //5 = cannot find any
@@ -369,16 +379,7 @@ public class LoginPacket {
         for (MapleCharacter chr : chars) {
             addCharEntry(mplew, chr, true, true);
         }
-        if(c.isPicEnable()){
-            if(c.getSecondPassword()==null || c.getSecondPassword().length()==0){
-                mplew.write(0);
-            }else{
-                mplew.write(1);
-            }
-        }else{
-            mplew.write(2);
-        }
-        //mplew.write(c.getSecondPassword() == null ? 0 : (c.getSecondPassword().equals("") ? 2 : 1)); //writing 2 here disables PIC		
+        mplew.write(pic == null ? 0 : (pic.equals("") ? 2 : 1)); //writing 2 here disables PIC
         return mplew.getPacket();
     }
 

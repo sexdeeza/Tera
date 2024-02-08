@@ -491,6 +491,14 @@ public class NPCHandler {
         }
     }
 
+    public static final void QuestItem(final LittleEndianAccessor slea, final MapleClient c) {
+        final int qid = slea.readShort();
+        final MapleQuest quest = MapleQuest.getInstance(qid);
+        final MapleQuestStatus stats = c.getPlayer().getQuestNoAdd(quest);
+        c.getPlayer().updateQuest(stats, true);
+        c.announce(CWvsContext.enableActions());
+    }
+
     public static final void RPSGame(final LittleEndianAccessor slea, final MapleClient c) {
         if (slea.available() == 0 || c.getPlayer() == null || c.getPlayer().getMap() == null || !c.getPlayer().getMap().containsNPC(9000019)) {
             if (c.getPlayer() != null && c.getPlayer().getRPS() != null) {

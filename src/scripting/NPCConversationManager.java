@@ -43,9 +43,6 @@ import client.SkillFactory;
 import client.SkillEntry;
 import client.MapleStat;
 
-import scripting.AbstractPlayerInteraction;
-import scripting.NPCScriptManager;
-import scripting.EventInstanceManager;
 import server.MapleCarnivalParty;
 import server.Randomizer;
 import server.MapleInventoryManipulator;
@@ -77,7 +74,7 @@ import javax.script.Invocable;
 import server.MapleStatEffect;
 import server.SpeedRunner;
 import server.StructItemOption;
-import server.TimerManager;
+import server.Timer;
 import server.life.MapleMonsterInformationProvider;
 import server.life.MonsterDropEntry;
 import server.maps.Event_PyramidSubway;
@@ -1054,7 +1051,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
     public void openDuey() {
         c.getPlayer().setConversation(2);
-        c.getSession().write(CField.sendDuey((byte) 9, null));
+        c.getSession().write(CField.sendDuey((byte) 8, null, null));
     }
 
     public void openMerchantItemStore() {
@@ -1479,7 +1476,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         final MapleCharacter chr = (MapleCharacter) ch;
         final MapleCharacter player = getPlayer();
         getMap().broadcastMessage(CWvsContext.yellowChat(player.getName() + ", do you take " + chr.getName() + " as your wife and promise to stay beside her through all downtimes, crashes, and lags?"));
-        TimerManager.getInstance().schedule(new Runnable() {
+        Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
             public void run() {
                 if (chr == null || player == null) {
@@ -1489,7 +1486,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
                 }
             }
         }, 10000);
-        TimerManager.getInstance().schedule(new Runnable() {
+        Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
             public void run() {
                 if (chr == null || player == null) {

@@ -1202,6 +1202,11 @@ public class PlayerStats implements Serializable {
                     percent_hp += eff.getPercentHP();
                     ignoreTargetDEF += eff.getIgnoreMob();
                 }
+                bx = SkillFactory.getSkill(3120008);//Advanced Final Attack
+                bof = chra.getTotalSkillLevel(bx);
+                if (bof > 0) {
+                    watk += bx.getEffect(bof).getAttackX();
+                }
                 bx = SkillFactory.getSkill(3120006);
                 bof = chra.getTotalSkillLevel(bx);
                 if (bof > 0 && chra.getBuffedValue(MapleBuffStat.SPIRIT_LINK) != null) {
@@ -1209,11 +1214,6 @@ public class PlayerStats implements Serializable {
                     percent_hp += eff.getX();
                     dam_r *= (eff.getDamage() + 100.0) / 100.0;
                     bossdam_r *= (eff.getDamage() + 100.0) / 100.0;
-                }
-                bx = SkillFactory.getSkill(3120008);//Advanced Final Attack
-                bof = chra.getTotalSkillLevel(bx);
-                if (bof > 0) {
-                    watk += bx.getEffect(bof).getAttackX();
                 }
                 break;
             }

@@ -1,5 +1,7 @@
 package handling.cashshop.handler;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import handling.login.LoginServer;
 import handling.world.CharacterTransfer;
 import handling.world.World;
 import java.util.List;
+
+import scripting.NPCScriptManager;
 import server.CashItemFactory;
 import server.CashItemInfo;
 import server.MTSCart;
@@ -39,13 +43,19 @@ public class CashShopOperation {
         c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION, c.getSessionIPAddress());
 
         try {
-
+            String[] socket = c.getChannelServer().getIP().split(":");
             World.ChannelChange_Data(new CharacterTransfer(chr), chr.getId(), c.getChannel());
-            c.getSession().write(CField.getChannelChange(c, Integer.parseInt(ChannelServer.getInstance(c.getChannel()).getIP().split(":")[1])));
+            try {
+                c.getSession().write(CField.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(ChannelServer.getInstance(c.getChannel()).getIP().split(":")[1])));
+            } catch (UnknownHostException ex) {
+            }
         } finally {
             final String s = c.getSessionIPAddress();
             LoginServer.addIPAuth(s.substring(s.indexOf('/') + 1, s.length()));
+
             chr.saveToDB(false, true);
+            c.setPlayer(null);
+            c.setReceiving(false);
 
             /* c.setPlayer(null);
             c.setReceiving(false);
@@ -518,5 +528,22 @@ public class CashShopOperation {
             default ->
                 MapleCharacter.CashShopType.NX_PREPAID;
         };
+    }
+
+    public static final void UseGachapon(final LittleEndianAccessor slea, MapleClient c){
+        int type = slea.readInt();
+        if (c.getPlayer().getInventory(GameConstants.getInventoryType(type)).countById(type) < 1) {
+            return;
+        }
+        int mode = slea.readInt();
+        if (type == 5451000) {
+            int npcId = 9100100;
+            if (mode != 8 && mode != 9) {
+                npcId += mode;
+            } else {
+                npcId = mode == 8 ? 9100109 : 9100117;
+            }
+            NPCScriptManager.getInstance().start(c, npcId);
+        }
     }
 }

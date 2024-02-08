@@ -201,7 +201,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 
     public void cancelHarvest(boolean succ) {
         getPlayer().setFatigue((byte) (getPlayer().getFatigue() + 1));
-        getPlayer().getMap().broadcastMessage(getPlayer(), CField.showHarvesting(getPlayer().getId(), 0), false);
+        getPlayer().getMap().broadcastMessage(getPlayer(), CField.cancelHarvesting(getPlayer().getClient()), false);
         getPlayer().getMap().broadcastMessage(CField.harvestResult(getPlayer().getId(), succ));
     }
 

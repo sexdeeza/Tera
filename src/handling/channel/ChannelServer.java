@@ -22,7 +22,6 @@ package handling.channel;
 
 import client.MapleCharacter;
 import constants.GameConstants;
-import constants.ServerConstants;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -35,9 +34,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import constants.ServerConstants;
 import handling.MapleServerHandler;
 import handling.login.LoginServer;
-import handling.mina.MapleCodecFactory;
+import handling.netty.ServerConnection;
 import handling.world.CheaterData;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import scripting.EventScriptManager;
@@ -47,12 +47,6 @@ import server.maps.MapleMapFactory;
 import server.shops.HiredMerchant;
 import server.life.PlayerNPC;
 
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.common.SimpleByteBufferAllocator;
-import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -75,7 +69,7 @@ public class ChannelServer {
     private String serverMessage, ip, serverName;
     private boolean shutdown = false, finishedShutdown = false, MegaphoneMuteState = false, adminOnly = false;
     private PlayerStorage players;
-    private IoAcceptor acceptor;
+    private ServerConnection acceptor;
     private final MapleMapFactory mapFactory;
     private EventScriptManager eventSM;
     private AramiaFireWorks works = new AramiaFireWorks();
@@ -102,13 +96,13 @@ public class ChannelServer {
         if (!events.isEmpty()) {
             return;
         }
-        // events.put(MapleEventType.CokePlay, new MapleCoconut(channel, MapleEventType.CokePlay)); // yep, coconut. same
+         events.put(MapleEventType.CokePlay, new MapleCoconut(channel, MapleEventType.CokePlay)); // yep, coconut. same
                                                                                                  // shit
-        // events.put(MapleEventType.Coconut, new MapleCoconut(channel, MapleEventType.Coconut));
-        // events.put(MapleEventType.Fitness, new MapleFitness(channel, MapleEventType.Fitness));
-        // events.put(MapleEventType.OlaOla, new MapleOla(channel, MapleEventType.OlaOla));
-        events.put(MapleEventType.OxQuiz, new MapleOxQuiz(channel, MapleEventType.OxQuiz));
-        // events.put(MapleEventType.Snowball, new MapleSnowball(channel, MapleEventType.Snowball));
+         events.put(MapleEventType.Coconut, new MapleCoconut(channel, MapleEventType.Coconut));
+         //events.put(MapleEventType.Fitness, new MapleFitness(channel, MapleEventType.Fitness));
+         //events.put(MapleEventType.OlaOla, new MapleOla(channel, MapleEventType.OlaOla));
+         events.put(MapleEventType.OxQuiz, new MapleOxQuiz(channel, MapleEventType.OxQuiz));
+         events.put(MapleEventType.Snowball, new MapleSnowball(channel, MapleEventType.Snowball));
         // events.put(MapleEventType.Survival, new MapleSurvival(channel, MapleEventType.Survival));
     }
 
@@ -127,28 +121,24 @@ public class ChannelServer {
                     ServerProperties.getProperty("net.sf.odinms.channel.events").split(","));
             port = Short.parseShort(ServerProperties.getProperty("net.sf.odinms.channel.net.port" + channel,
                     String.valueOf(DEFAULT_PORT + channel)));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        ip = ServerProperties.getProperty("net.sf.odinms.channel.net.interface") + ":" + port;
+        ip = ServerConstants.ip + ":" + port;
 
-        ByteBuffer.setUseDirectBuffers(false);
-        ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
-
-        acceptor = new SocketAcceptor();
-        final SocketAcceptorConfig acceptor_config = new SocketAcceptorConfig();
-        acceptor_config.getSessionConfig().setTcpNoDelay(true);
-        acceptor_config.setDisconnectOnUnbind(true);
-        acceptor_config.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MapleCodecFactory()));
         players = new PlayerStorage(channel);
+
         loadEvents();
 
         try {
-            acceptor.bind(new InetSocketAddress(port), new MapleServerHandler(channel, false), acceptor_config);
-            System.out.println("[SERVER] Channel " + channel + " Started -> Listening on port " + port + "");
+
+            acceptor = new ServerConnection(port, 0, channel, false);
+            acceptor.run();
+            System.out.println(" <" + channel + ">Loading Port: " + port + "Please wait..:debug"+GameConstants.build);
             eventSM.init();
-        } catch (IOException e) {
-            System.out.println("Binding to port " + port + " failed (ch: " + getChannel() + ")" + e);
+
+        } catch (Exception e) {
+            System.out.println("" + port + "Port Already occupied (channel : " + getChannel() + ")" + e);
         }
     }
 
@@ -166,7 +156,7 @@ public class ChannelServer {
 
         System.out.println("Channel " + channel + ", Unbinding...");
 
-        acceptor.unbindAll();
+        acceptor.close();
         acceptor = null;
 
         // temporary while we dont have !addchannel
@@ -175,7 +165,7 @@ public class ChannelServer {
     }
 
     public final void unbind() {
-        acceptor.unbindAll();
+        acceptor.close();
     }
 
     public final boolean hasFinishedShutdown() {

@@ -23,7 +23,7 @@ package server.events;
 
 import java.util.concurrent.ScheduledFuture;
 import client.MapleCharacter;
-import server.TimerManager;
+import server.Timer;
 import tools.packet.CField;
 import tools.packet.CWvsContext;
 
@@ -57,7 +57,7 @@ public class MapleSurvival extends MapleEvent {
         broadcast(CField.getClock((int) (time / 1000)));
         this.timeStarted = System.currentTimeMillis();
 
-        olaSchedule = TimerManager.getInstance().schedule(new Runnable() {
+        olaSchedule = Timer.EventTimer.getInstance().schedule(new Runnable() {
 
             @Override
             public void run() {

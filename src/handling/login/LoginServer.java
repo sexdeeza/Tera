@@ -26,16 +26,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.common.SimpleByteBufferAllocator;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
-
 import constants.GameConstants;
 import handling.MapleServerHandler;
-import handling.mina.MapleCodecFactory;
+import handling.netty.ServerConnection;
 import server.ServerProperties;
 import server.ThreadManager;
 import tools.Pair;
@@ -44,7 +37,7 @@ public class LoginServer {
 
     public static final int PORT = 8484;
     private static InetSocketAddress InetSocketadd;
-    private static IoAcceptor acceptor;
+    private static ServerConnection acceptor;
     private static Map<Integer, Integer> load = new HashMap<Integer, Integer>();
     private static String serverName, eventMessage;
     private static byte flag;
@@ -91,22 +84,14 @@ public class LoginServer {
             adminOnly = Boolean.parseBoolean(ServerProperties.getProperty("net.sf.odinms.world.admin", "false"));
             maxCharacters = Integer.parseInt(ServerProperties.getProperty("net.sf.odinms.login.maxCharacters"));
 
-            ByteBuffer.setUseDirectBuffers(false);
-            ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
-
-            acceptor = new SocketAcceptor();
-            final SocketAcceptorConfig cfg = new SocketAcceptorConfig();
-            cfg.getSessionConfig().setTcpNoDelay(true);
-            cfg.setDisconnectOnUnbind(true);
-            cfg.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MapleCodecFactory()));
-
             try {
-                InetSocketadd = new InetSocketAddress(PORT);
-                acceptor.bind(InetSocketadd, new MapleServerHandler(-1, false), cfg);
+
+                acceptor = new ServerConnection(PORT, 0, -1, false);
+                acceptor.run();
                 System.out.println(System.lineSeparator());
                 System.out.print("[SERVER] Login Started -> Listening on port " + PORT + ".");
                 System.out.println(System.lineSeparator());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.err.println("Binding to port " + PORT + " failed" + e);
             }
 
@@ -119,7 +104,7 @@ public class LoginServer {
             return;
         }
         System.out.println("Shutting down login...");
-        acceptor.unbindAll();
+        acceptor.close();
         finishedShutdown = true; //nothing. lol
     }
 
@@ -170,10 +155,6 @@ public class LoginServer {
 
     public static final void setUserLimit(final int newLimit) {
         userLimit = newLimit;
-    }
-
-    public static final int getNumberOfSessions() {
-        return acceptor.getManagedSessions(InetSocketadd).size();
     }
 
     public static final boolean isAdminOnly() {

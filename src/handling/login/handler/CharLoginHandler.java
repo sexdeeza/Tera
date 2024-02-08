@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package handling.login.handler;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Calendar;
 
@@ -39,8 +41,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import server.MapleItemInformationProvider;
 import server.ServerProperties;
+import server.Timer;
 import server.quest.MapleQuest;
 import tools.packet.CField;
 import tools.packet.LoginPacket;
@@ -56,6 +62,25 @@ public class CharLoginHandler {
             return true;
         }
         return false;
+    }
+
+    public static final void SetGenderRequest(final LittleEndianAccessor slea, final MapleClient c) {
+        byte type = slea.readByte(); //?
+        if (type == 0x01 && c.getGender() == 10) { //Packet shouldn't come if Gender isn't 10.
+            c.setGender(slea.readByte());
+            c.updateGender();//性別刷新
+            c.getSession().write(LoginPacket.getAuthSuccessRequest(c));
+            c.getSession().write(LoginPacket.getGenderChanged(c));//選擇性別回饋
+            //c.getSession().write(LoginPacket.getLoginFailed(23));//楓之谷協議
+            c.setIdleTask(Timer.PingTimer.getInstance().schedule(new Runnable() {
+                public void run() {
+                    c.getSession().close();
+                }
+            }, 10 * 60 * 10000));
+        }
+        if (c.getGender()== 10) {
+            c.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN, c.getSessionIPAddress());//防止卡帳號
+        }
     }
 
     public static final void login(final LittleEndianAccessor slea, final MapleClient c) {
@@ -139,8 +164,8 @@ public class CharLoginHandler {
             c.setWorld(server);
             c.setChannel(channel);
             c.getSession().write(LoginPacket.getSecondAuthSuccess(c));
-            
-            c.getSession().write(LoginPacket.getCharList(c, chars));
+
+            c.getSession().write(LoginPacket.getCharList(c.getSecondPassword(), chars, c.getCharacterSlots()));
         } else {
             c.getSession().close();
         }
@@ -503,7 +528,12 @@ public class CharLoginHandler {
         final String s = c.getSessionIPAddress();
         LoginServer.putLoginAuth(charId, s.substring(s.indexOf('/') + 1, s.length()), c.getTempIP());
         c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION, s);
-        c.getSession().write(CField.getServerIP(c, Integer.parseInt(ChannelServer.getInstance(c.getChannel()).getIP().split(":")[1]), charId));
+        String[] socket = c.getChannelServer().getIP().split(":");
+        try {
+            c.getSession().write(CField.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(ChannelServer.getInstance(c.getChannel()).getIP().split(":")[1]), charId));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(CharLoginHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static final void Character_WithSecondPassword(final LittleEndianAccessor slea, final MapleClient c, final boolean view) {
@@ -529,7 +559,12 @@ public class CharLoginHandler {
             final String s = c.getSessionIPAddress();
             LoginServer.putLoginAuth(charId, s.substring(s.indexOf('/') + 1, s.length()), c.getTempIP());
             c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION, s);
-            c.getSession().write(CField.getServerIP(c, Integer.parseInt(ChannelServer.getInstance(c.getChannel()).getIP().split(":")[1]), charId));
+            String[] socket = c.getChannelServer().getIP().split(":");
+            try {
+                c.getSession().write(CField.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(ChannelServer.getInstance(c.getChannel()).getIP().split(":")[1]), charId));
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(CharLoginHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             c.getSession().write(LoginPacket.secondPwError((byte) 0x14));
         }
@@ -552,7 +587,7 @@ public class CharLoginHandler {
             }
         }
         for (Entry<Byte, ArrayList<MapleCharacter>> w : worlds.entrySet()) {
-            c.getSession().write(LoginPacket.showAllCharacterInfo(w.getKey(), w.getValue(), c));
+            c.getSession().write(LoginPacket.showAllCharacterInfo(w.getKey(), w.getValue(), c.getSecondPassword()));
         }
     }
 }

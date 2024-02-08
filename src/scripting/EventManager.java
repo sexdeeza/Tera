@@ -38,7 +38,7 @@ import java.util.Map;
 import server.maps.MapleReactor;
 import server.MapleSquad;
 import server.Randomizer;
-import server.TimerManager;
+import server.Timer;
 import server.events.MapleEvent;
 import server.events.MapleEventType;
 import server.life.MapleMonster;
@@ -75,7 +75,7 @@ public class EventManager {
     }
 
     public ScheduledFuture<?> schedule(final String methodName, long delay) {
-        return TimerManager.getInstance().schedule(() -> {
+        return Timer.EventTimer.getInstance().schedule(() -> {
             try {
                 iv.invokeFunction(methodName, (Object) null);
             } catch (NoSuchMethodException | ScriptException ex) {
@@ -86,7 +86,7 @@ public class EventManager {
     }
 
     public ScheduledFuture<?> schedule(final String methodName, long delay, final EventInstanceManager eim) {
-        return TimerManager.getInstance().schedule(() -> {
+        return Timer.EventTimer.getInstance().schedule(() -> {
             try {
                 iv.invokeFunction(methodName, eim);
             } catch (NoSuchMethodException | ScriptException ex) {
@@ -97,7 +97,7 @@ public class EventManager {
     }
 
     public ScheduledFuture<?> scheduleAtTimestamp(final String methodName, long timestamp) {
-        return TimerManager.getInstance().scheduleAtTimestamp(() -> {
+        return Timer.EventTimer.getInstance().scheduleAtTimestamp(() -> {
             try {
                 iv.invokeFunction(methodName, (Object) null);
             } catch (ScriptException | NoSuchMethodException ex) {
@@ -397,7 +397,7 @@ public class EventManager {
             broadcastYellowMsg(msg);
             return false;
         }
-        TimerManager.getInstance().schedule(() -> {
+        Timer.EventTimer.getInstance().schedule(() -> {
             if (cs.getEvent() >= 0) {
                 MapleEvent.setEvent(cs, true);
             }

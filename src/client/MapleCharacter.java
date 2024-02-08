@@ -24,6 +24,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,6 +51,8 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import client.MapleTrait.MapleTraitType;
 import client.anticheat.CheatTracker;
@@ -105,7 +109,7 @@ import server.MapleStorage;
 import server.MapleTrade;
 import server.RandomRewards;
 import server.Randomizer;
-import server.TimerManager;
+import server.Timer;
 import server.life.MapleMonster;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
@@ -161,12 +165,13 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
             scrolledPosition;
 
     private int accountid, id, meso, exp, hair, face, demonMarking, mapid, fame, pvpExp, pvpPoints,
-            guildid = 0, fallcounter, maplepoints, NxPrepaid, NXCredit, chair, itemEffect, points, vpoints,
+            guildid = 0, fallcounter, maplepoints, NxPrepaid, NXCredit, chair, itemEffect, points, vpoints, teachskill,
             rank = 1, rankMove = 0, jobRank = 1, jobRankMove = 0, marriageId, marriageItemId, dotHP, currentrep,
             totalrep, coconutteam, followid, battleshipHP, gachexp, challenge, guildContribution = 0;
     public int killCount = 0;
     public boolean burning = false;
     private Point old;
+    public boolean pendants=false, pendantfirst=false;
     private MonsterFamiliar summonedFamiliar;
     private int[] wishlist, rocks, savedLocations, regrocks, hyperrocks, remainingSp = new int[10];
     private transient AtomicInteger inst, insd;
@@ -234,6 +239,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     /* Start of Custom Feature */
  /* All custom shit declare here */
     private int reborns, apstorage;
+    private MagicWheel wheel;
     private String commandtext;
     private boolean claimedStarterKit;
     private long irvinCommandLastUsageTime = 0;
@@ -1966,7 +1972,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         client.getSession().write(CField.getClock(time));
         final MapleMap ourMap = getMap();
         time *= 1000;
-        mapTimeLimitTask = TimerManager.getInstance().register(() -> {
+        mapTimeLimitTask = Timer.MapTimer.getInstance().register(() -> {
             if (ourMap.getId() == GameConstants.JAIL) {
                 getQuestNAdd(MapleQuest.getInstance(GameConstants.JAIL_TIME))
                         .setCustomData(String.valueOf(System.currentTimeMillis()));
@@ -2234,7 +2240,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                 addHP((int) (effect.getHpR() * this.stats.getCurrentMaxHp()));
                 addMP((int) (effect.getMpR() * this.stats.getCurrentMaxMp(this.getJob())));
                 setSchedule(MapleBuffStat.INFINITY,
-                TimerManager.getInstance().schedule(new CancelEffectAction(this, effect, start, stat),
+                        Timer.BuffTimer.getInstance().schedule(new CancelEffectAction(this, effect, start, stat),
                                 effect.alchemistModifyVal(this, 4000, false)));
                 return;
             }
@@ -3539,6 +3545,15 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         }
     }
 
+    public void setMP(int delta) {
+        stats.setMp(delta, this);
+        updateSingleStat(MapleStat.MP, stats.getMp());
+    }
+
+    public int getMP() {
+        return stats.getMp();
+    }
+
     public void addMPHP(int hpDiff, int mpDiff) {
         Map<MapleStat, Integer> statups = new EnumMap<>(MapleStat.class);
 
@@ -4666,6 +4681,51 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         }
     }
 
+    public void changeTeachSkill(int skillId, int toChrId) {//链接技能
+        Skill skill = SkillFactory.getSkill(skillId);
+        if (skill == null) {
+            return;
+        }
+        this.client.getSession().write(CWvsContext.updateSkill(skillId, toChrId, 1, -1L));
+        this.skills.put(skill, new SkillEntry(1, (byte) 1, -1L, toChrId));
+        this.changed_skills = true;
+    }
+
+    public int teachSkill(int skillId, int toChrId) {
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM skills WHERE skillid = ? AND teachId = ?");
+            ps.setInt(1, skillId);
+            ps.setInt(2, this.id);
+            ps.executeUpdate();
+            ps.close();
+            ps = con.prepareStatement("SELECT * FROM skills WHERE skillid = ? AND characterid = ?");
+            ps.setInt(1, skillId);
+            ps.setInt(2, toChrId);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                rs.close();
+                ps.close();
+                PreparedStatement psskills = con.prepareStatement("INSERT INTO skills (characterid, skillid, skilllevel, masterlevel, expiration, teachId) VALUES (?, ?, ?, ?, ?, ?)");
+                psskills.setInt(1, toChrId);
+                psskills.setInt(2, skillId);
+                psskills.setInt(3, 1);
+                psskills.setByte(4, (byte) 1);
+                psskills.setLong(5, -1);
+                psskills.setInt(6, this.id);
+                psskills.executeUpdate();
+                psskills.close();
+                return 1;
+            }
+            rs.close();
+            ps.close();
+            return -1;
+        } catch (Exception Ex) {
+            //log.error("Error while read bosslog.", Ex);
+        }
+        return -1;
+    }
+
     public final MaplePet getPet(final int index) {
         byte count = 0;
         for (final MaplePet pet : pets) {
@@ -5704,7 +5764,11 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     public void setLastRes(List<LifeMovementFragment> lastres) {
         this.lastres = lastres;
     }
-    
+
+    public void GmText(int type, String message) {
+        client.getSession().write(CField.getGMText(type, message));
+    }
+
     public void toggleBurning() {
         burning = burning != true;
     }
@@ -6149,7 +6213,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     }
 
     public MapleCharacter cloneLooks() {
-        MapleClient cs = new MapleClient(null, null, new MockIOSession());
+        MapleClient cs = new MapleClient(null, null, null);
 
         final int minus = (getId() + Randomizer.nextInt(Integer.MAX_VALUE - getId())); // really randomize it, dont want
         // it to fail
@@ -6399,6 +6463,7 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
     }
 
     public void changeChannel(final int channel) {
+        saveToDB(false, false);
         final ChannelServer toch = ChannelServer.getInstance(channel);
 
         if (channel == client.getChannel() || toch == null || toch.isShutdown()) {
@@ -6411,6 +6476,12 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         if (getMessenger() != null) {
             World.Messenger.silentLeaveMessenger(getMessenger().getId(), new MapleMessengerCharacter(this));
         }
+        MapleQuestStatus stat =  client.getPlayer().getQuestNoAdd(MapleQuest.getInstance(GameConstants.PENDANT_SLOT));
+        if(stat != null &&  client.getPlayer().pendants==true){
+            client.getSession().write(CWvsContext.pendantSlot(stat != null && stat.getCustomData() != null && Long.parseLong(stat.getCustomData()) > System.currentTimeMillis()));
+            client.getPlayer().pendants=false;
+        }
+
         PlayerBuffStorage.addBuffsToStorage(getId(), getAllBuffs());
         PlayerBuffStorage.addCooldownsToStorage(getId(), getCooldowns());
         PlayerBuffStorage.addDiseaseToStorage(getId(), getAllDiseases());
@@ -6419,8 +6490,12 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
         client.updateLoginState(MapleClient.CHANGE_CHANNEL, client.getSessionIPAddress());
         final String s = client.getSessionIPAddress();
         LoginServer.addIPAuth(s.substring(s.indexOf('/') + 1, s.length()));
-        client.getSession().write(CField.getChannelChange(client, Integer.parseInt(toch.getIP().split(":")[1])));
-        saveToDB(false, false);
+        String[] socket = client.getChannelServer().getIP().split(":");
+        try {
+            client.getSession().write(CField.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(toch.getIP().split(":")[1])));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(MapleCharacter.class.getName()).log(Level.SEVERE, null, ex);
+        }
         getMap().removePlayer(this);
 
         client.setPlayer(null);
@@ -7817,5 +7892,113 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
                 cancelEffect(skill.getEffect(1), false, -1);                    
             }
         }
+    }
+
+    public void send(Object ob) {
+        getClient().getSession().write(ob);
+    }
+
+    public void setKeyValue(String key, String value, boolean a) {
+        if (getKeyValue(key) == null) {
+            Connection con = null;
+            PreparedStatement ps = null;
+            try {
+                con = DatabaseConnection.getConnection();
+                ps = null;
+                String query = "INSERT into `acheck` (`cid`, `keya`, `value`, `day`) VALUES ('";
+                query = new StringBuilder().append(query).append(id).toString();
+                query = new StringBuilder().append(query).append("', '").toString();
+                query = new StringBuilder().append(query).append(key).toString();
+                query = new StringBuilder().append(query).append("', '").toString();
+                query = new StringBuilder().append(query).append(value).toString();
+                if (a) {
+                    query = new StringBuilder().append(query).append("', '").toString();
+                    query = new StringBuilder().append(query).append("1").toString();
+                    query = new StringBuilder().append(query).append("')").toString();
+                } else {
+                    query = new StringBuilder().append(query).append("', '").toString();
+                    query = new StringBuilder().append(query).append("0").toString();
+                    query = new StringBuilder().append(query).append("')").toString();
+                }
+                ps = con.prepareStatement(query);
+                ps.executeUpdate();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+
+        } else {
+            Connection con = null;
+            PreparedStatement ps = null;
+            try {
+                con = DatabaseConnection.getConnection();
+                ps = con.prepareStatement("UPDATE acheck SET value = ? WHERE cid = ? AND keya = ?");
+                ps.setString(1, value);
+                ps.setInt(2, id);
+                ps.setString(3, key);
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+
+            } finally {
+
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }
+    }
+
+    public void setKeyValue(String key, String value) {
+        setKeyValue(key, value, false);
+    }
+
+    public String getKeyValue(String key) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            ps = con.prepareStatement("SELECT * FROM acheck WHERE cid = ? and keya = ?");
+            ps.setInt(1, id);
+            ps.setString(2, key);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getString("value");
+            }
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setMagicWheel(MagicWheel mw) {
+        wheel = mw;
+    }
+
+    public MagicWheel getMagicWheel() {
+        return wheel;
     }
 }

@@ -34,7 +34,7 @@ import server.MapleItemInformationProvider;
 import server.maps.MapleMapObjectType;
 import tools.packet.CWvsContext;
 import tools.packet.PlayerShopPacket;
-import server.TimerManager;
+import server.Timer;
 public class HiredMerchant extends AbstractPlayerStore {
 
     public ScheduledFuture<?> schedule;
@@ -46,7 +46,7 @@ public class HiredMerchant extends AbstractPlayerStore {
         super(owner, itemId, desc, "", 6);
         start = System.currentTimeMillis();
         blacklist = new LinkedList<String>();
-        this.schedule = TimerManager.getInstance().schedule(new Runnable() {
+        this.schedule = Timer.EtcTimer.getInstance().schedule(new Runnable() {
 
             @Override
             public void run() {

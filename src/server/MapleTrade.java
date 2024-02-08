@@ -266,6 +266,17 @@ public class MapleTrade {
         }
     }
 
+    public static final void cancelCashTrade(final MapleTrade Localtrade, final MapleClient c, final MapleCharacter chr) {
+        Localtrade.cancel(c, chr);
+
+        final MapleTrade partner = Localtrade.getPartner();
+        if (partner != null && partner.getChr() != null) {
+            partner.cancel(partner.getChr().getClient(), partner.getChr());
+            partner.getChr().setTrade(null);
+        }
+        chr.setTrade(null);
+    }
+
     public static final void cancelTrade(final MapleTrade Localtrade, final MapleClient c, final MapleCharacter chr) {
         Localtrade.cancel(c, chr);
 
@@ -275,6 +286,15 @@ public class MapleTrade {
             partner.getChr().setTrade(null);
         }
         chr.setTrade(null);
+    }
+
+    public static final void startCashTrade(final MapleCharacter c) {
+        if (c.getTrade() == null) {
+            c.setTrade(new MapleTrade((byte) 0, c));
+            c.getClient().getSession().write(InteractionPacket.getCashTradeStart(c.getClient(), c.getTrade(), (byte) 0));
+        } else {
+            c.getClient().getSession().write(CWvsContext.serverNotice(5, "You are already in a Cash Trade"));
+        }
     }
 
     public static final void startTrade(final MapleCharacter c) {
@@ -301,6 +321,21 @@ public class MapleTrade {
         }
     }
 
+    public static final void inviteCashTrade(final MapleCharacter c1, final MapleCharacter c2) {
+        if (c1 == null || c1.getTrade() == null) {
+            return;
+        }
+        if (c2 != null && c2.getTrade() == null) {
+            c2.setTrade(new MapleTrade((byte) 1, c2));
+            c2.getTrade().setPartner(c1.getTrade());
+            c1.getTrade().setPartner(c2.getTrade());
+            c2.getClient().getSession().write(InteractionPacket.getCashTradeInvite(c1));
+        } else {
+            c1.getClient().getSession().write(CWvsContext.serverNotice(5, "The other player is already trading with someone else."));
+            cancelTrade(c1.getTrade(), c1.getClient(), c1);
+        }
+    }
+
     public static final void visitTrade(final MapleCharacter c1, final MapleCharacter c2) {
         if (c2 != null && c1.getTrade() != null && c1.getTrade().getPartner() == c2.getTrade() && c2.getTrade() != null && c2.getTrade().getPartner() == c1.getTrade()) {
             // We don't need to check for map here as the user is found via MapleMap.getCharacterById()
@@ -309,6 +344,17 @@ public class MapleTrade {
             c1.getClient().getSession().write(InteractionPacket.getTradeStart(c1.getClient(), c1.getTrade(), (byte) 1));
             c1.dropMessage(-2, "System : Use @tradehelp to see the list of trading commands");
             c2.dropMessage(-2, "System : Use @tradehelp to see the list of trading commands");
+        } else {
+            c1.getClient().getSession().write(CWvsContext.serverNotice(5, "The other player has already closed the trade"));
+        }
+    }
+
+    public static final void visitCashTrade(final MapleCharacter c1, final MapleCharacter c2) {
+        if (c2 != null && c1.getTrade() != null && c1.getTrade().getPartner() == c2.getTrade() && c2.getTrade() != null && c2.getTrade().getPartner() == c1.getTrade()) {
+            // We don't need to check for map here as the user is found via MapleMap.getCharacterById()
+            c1.getTrade().inTrade = true;
+            c2.getClient().getSession().write(PlayerShopPacket.shopVisitorAdd(c1, 1));
+            c1.getClient().getSession().write(InteractionPacket.getCashTradeStart(c1.getClient(), c1.getTrade(), (byte) 1));
         } else {
             c1.getClient().getSession().write(CWvsContext.serverNotice(5, "The other player has already closed the trade"));
         }

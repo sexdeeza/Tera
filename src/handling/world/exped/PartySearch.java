@@ -1,7 +1,7 @@
 package handling.world.exped;
 
 import handling.world.World;
-import server.TimerManager;
+import server.Timer;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -33,7 +33,7 @@ public class PartySearch {
 
     public void scheduleRemoval() {
 	cancelRemoval();
-	removal = TimerManager.getInstance().schedule(new Runnable() {
+	removal = Timer.EtcTimer.getInstance().schedule(new Runnable() {
 	    public void run() {
 		World.Party.removeSearch(PartySearch.this, "The Party Listing was removed because it has expired.");
 	    }

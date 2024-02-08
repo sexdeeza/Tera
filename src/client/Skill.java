@@ -250,6 +250,7 @@ public class Skill {
                     case 33111003: //puppet ?
                     case 1211009:
                     case 1111007:
+                    case 11111008://魔防消除
                     case 51111005: //Mihile's magic crash
                     case 1311007: //magic,armor,atk crash
                     case 32121003: //twister

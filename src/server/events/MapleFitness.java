@@ -23,7 +23,7 @@ package server.events;
 
 import java.util.concurrent.ScheduledFuture;
 import client.MapleCharacter;
-import server.TimerManager;
+import server.Timer;
 import tools.packet.CField;
 import tools.packet.CWvsContext;
 
@@ -59,7 +59,7 @@ public class MapleFitness extends MapleEvent {
         this.timeStarted = System.currentTimeMillis();
         checkAndMessage();
 
-        fitnessSchedule = TimerManager.getInstance().schedule(new Runnable() {
+        fitnessSchedule = Timer.EventTimer.getInstance().schedule(new Runnable() {
 
             @Override
             public void run() {
@@ -115,7 +115,7 @@ public class MapleFitness extends MapleEvent {
     }
 
     public void checkAndMessage() {
-        msgSchedule = TimerManager.getInstance().register(new Runnable() {
+        msgSchedule = Timer.EventTimer.getInstance().register(new Runnable() {
 
             @Override
             public void run() {

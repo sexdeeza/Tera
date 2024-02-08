@@ -660,10 +660,10 @@ public class MapleItemInformationProvider {
             final Map<String, Integer> eqstats = getEquipStats(equip.getItemId());
             final int succ = (GameConstants.isTablet(scrollId.getItemId()) ? GameConstants.getSuccessTablet(scrollId.getItemId(), nEquip.getLevel()) : ((GameConstants.isEquipScroll(scrollId.getItemId()) || GameConstants.isPotentialScroll(scrollId.getItemId()) || !stats.containsKey("success") ? 0 : stats.get("success"))));
             final int curse = (GameConstants.isTablet(scrollId.getItemId()) ? GameConstants.getCurseTablet(scrollId.getItemId(), nEquip.getLevel()) : ((GameConstants.isEquipScroll(scrollId.getItemId()) || GameConstants.isPotentialScroll(scrollId.getItemId()) || !stats.containsKey("cursed") ? 0 : stats.get("cursed"))));
-            final int added = (ItemFlag.LUCKS_KEY.check(equip.getFlag()) ? 10 : 0) + (chr.getTrait(MapleTraitType.craft).getLevel() / 10);
+            final int added = (ItemFlag.LUKCYDAY.check(equip.getFlag()) ? 10 : 0) + (chr.getTrait(MapleTraitType.craft).getLevel() / 10);
             int success = succ + (vegas == 5610000 && succ == 10 ? 20 : (vegas == 5610001 && succ == 60 ? 30 : 0)) + added;
-            if (ItemFlag.LUCKS_KEY.check(equip.getFlag()) && !GameConstants.isPotentialScroll(scrollId.getItemId()) && !GameConstants.isEquipScroll(scrollId.getItemId()) && !GameConstants.isSpecialScroll(scrollId.getItemId())) {
-                equip.setFlag((short) (equip.getFlag() - ItemFlag.LUCKS_KEY.getValue()));
+            if (ItemFlag.LUKCYDAY.check(equip.getFlag()) && !GameConstants.isPotentialScroll(scrollId.getItemId()) && !GameConstants.isEquipScroll(scrollId.getItemId()) && !GameConstants.isSpecialScroll(scrollId.getItemId())) {
+                equip.setFlag((short) (equip.getFlag() - ItemFlag.LUKCYDAY.getValue()));
             }
             if (GameConstants.isPotentialScroll(scrollId.getItemId()) || GameConstants.isEquipScroll(scrollId.getItemId()) || GameConstants.isSpecialScroll(scrollId.getItemId()) || Randomizer.nextInt(100) <= success) {
                 switch (scrollId.getItemId()) {
@@ -702,14 +702,14 @@ public class MapleItemInformationProvider {
                     case 2530000:
                     case 2530001: {
                         short flag = nEquip.getFlag();
-                        flag |= ItemFlag.LUCKS_KEY.getValue();
+                        flag |= ItemFlag.LUKCYDAY.getValue();
                         nEquip.setFlag(flag);
                         break;
                     }
                     case 5064000:
                     case 2531000: {
                         short flag = nEquip.getFlag();
-                        flag |= ItemFlag.SHIELD_WARD.getValue();
+                        flag |= ItemFlag.PROTECT.getValue();
                         nEquip.setFlag(flag);
                         break;
                     }
@@ -1061,6 +1061,13 @@ public class MapleItemInformationProvider {
 
     public final boolean canScroll(final int scrollid, final int itemid) {
         return (scrollid / 100) % 100 == (itemid / 10000) % 100;
+    }
+
+    public int getScrollSuccess(int itemId) {
+        if (itemId / 10000 != 204 || getEquipStats(itemId) == null || !getEquipStats(itemId).containsKey("success")) {
+            return 0;
+        }
+        return (getEquipStats(itemId).get("success"));
     }
 
     public final String getName(final int itemId) {

@@ -29,7 +29,7 @@ import handling.world.World;
 import server.MapleInventoryManipulator;
 import server.RandomRewards;
 import server.Randomizer;
-import server.TimerManager;
+import server.Timer;
 import server.maps.FieldLimitType;
 import server.maps.MapleMap;
 import server.maps.SavedLocationType;
@@ -164,7 +164,7 @@ public abstract class MapleEvent {
                                     CWvsContext.serverNotice(0, "Entries for the event are now closed!"));
                             e.broadcast(CWvsContext.serverNotice(0, "The event will start in 30 seconds!"));
                             e.broadcast(CField.getClock(30));
-                            TimerManager.getInstance().schedule(() -> {
+                            Timer.EventTimer.getInstance().schedule(() -> {
                                 e.startEvent();
                             }, 30000);
                             break;

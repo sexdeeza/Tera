@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tools.data.output;
 
-import org.apache.mina.common.ByteBuffer;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Uses a bytebuffer as an underlying storage method to hold a stream of bytes.
@@ -31,15 +31,15 @@ import org.apache.mina.common.ByteBuffer;
  */
 public class ByteBufferOutputstream implements ByteOutputStream {
 
-    private ByteBuffer bb;
+    private final ByteBuf bb;
 
     /**
-     * Class constructor - Wraps this instance around ByteBuffer <code>bb</code>
+     * Class constructor - Wraps this instance around IoBuffer <code>bb</code>
      *
-     * @param bb The <code>org.apache.mina.common.ByteBuffer</code> to wrap
+     * @param bb The <code>org.apache.mina.common.IoBuffer</code> to wrap
      *            this stream around.
      */
-    public ByteBufferOutputstream(final ByteBuffer bb) {
+    public ByteBufferOutputstream(final ByteBuf bb) {
         super();
         this.bb = bb;
     }
@@ -48,10 +48,10 @@ public class ByteBufferOutputstream implements ByteOutputStream {
      * Writes a byte to the underlying buffer.
      *
      * @param b The byte to write.
-     * @see org.apache.mina.common.ByteBuffer#put(byte)
+     * @see org.apache.mina.common.IoBuffer#put(byte)
      */
     @Override
     public void writeByte(final byte b) {
-        bb.put(b);
+        this.bb.writeByte(b);
     }
 }

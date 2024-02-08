@@ -540,6 +540,12 @@ public class Equip extends Item implements Serializable {
         return android;
     }
 
+    public boolean getAndroid2() {
+        int id = (getItemId() / 10000);
+        if (id == 167) return true;
+        return false;
+    }
+
     public void setAndroid(MapleAndroid ring) {
         this.android = ring;
     }

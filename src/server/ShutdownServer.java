@@ -5,7 +5,6 @@ import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import database.DatabaseConnection;
 import handling.cashshop.CashShopServer;
 import handling.channel.ChannelServer;
 import handling.login.LoginServer;
@@ -81,7 +80,13 @@ public class ShutdownServer implements ShutdownServerMBean {
             } catch (Exception e) {
                 System.err.println(e);
             }
-            TimerManager.getInstance().stop();
+            Timer.WorldTimer.getInstance().stop();
+            Timer.MapTimer.getInstance().stop();
+            Timer.BuffTimer.getInstance().stop();
+            Timer.CloneTimer.getInstance().stop();
+            Timer.EventTimer.getInstance().stop();
+            Timer.EtcTimer.getInstance().stop();
+            Timer.PingTimer.getInstance().stop();
             ThreadManager.getInstance().stop();
             System.out.println("Shutdown 2 has finished.");
             try {

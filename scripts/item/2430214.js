@@ -6,7 +6,7 @@
 
 function start() {
 	if (im.getPlayer().getFatigue() < 1) {
-		im.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(6, "角色精力飽滿，不需要飲用提神飲品"));
+		im.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(6, "角色精力飽滿，不需要飲用提神飲品"));
 		im.dispose();
 		return;
 		}

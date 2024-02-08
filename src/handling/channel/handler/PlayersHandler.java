@@ -20,16 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package handling.channel.handler;
 
-import client.MapleBuffStat;
+import client.*;
 import client.inventory.Item;
-import client.MapleCharacter;
-import client.MapleClient;
-import client.MapleDisease;
-import client.MapleQuestStatus;
 import client.inventory.MapleInventoryType;
-import client.MapleStat;
-import client.Skill;
-import client.SkillFactory;
 import client.anticheat.CheatTracker;
 import client.anticheat.CheatingOffense;
 import client.anticheat.ReportType;
@@ -1180,5 +1173,60 @@ public class PlayersHandler {
              addLinkSkills.close();
          }
          c.getPlayer().dropMessage(1, "The link skill has been given to all characters in the account.");
+    }
+
+    public static void TeachSkill(LittleEndianAccessor slea, MapleClient c, MapleCharacter chr) {
+        if ((chr == null) || (chr.getMap() == null) || (chr.hasBlockedInventory())) {
+            c.getSession().write(CWvsContext.enableActions());
+            return;
+        }
+        if (chr.getLevel() < 70) {
+            chr.dropMessage(1, "After reaching level 70, you can be in the same server\n" +
+                    "Choose a character to teach this skill");
+            c.getSession().write(CWvsContext.enableActions());
+            return;
+        }
+        int skillId = slea.readInt();
+        if (chr.getSkillLevel(skillId) < 1) {
+            c.getSession().write(CWvsContext.enableActions());
+            return;
+        }
+        int toChrId = slea.readInt();
+        Pair toChrInfo = MapleCharacterUtil.getNameById(toChrId, 0);
+        if (toChrInfo == null) {
+            c.getSession().write(CWvsContext.enableActions());
+            return;
+        }
+        int toChrAccId = ((Integer) toChrInfo.getRight()).intValue();
+        String toChrName = (String) toChrInfo.getLeft();
+        MapleQuest quest = MapleQuest.getInstance(7783);
+        if ((quest != null) && (chr.getAccountID() == toChrAccId)) {
+            int toSkillId;
+            if (GameConstants.isCannon(chr.getJob())) {
+                toSkillId = 80000000;
+            } else {
+                if (GameConstants.isDemon(chr.getJob())) {
+                    toSkillId = 80000001;
+                } else {
+                    if (GameConstants.isMercedes(chr.getJob())) {
+                        toSkillId = 80001040;
+                    } else {
+                        chr.dropMessage(1, "Failed to teach skills");
+                        c.getSession().write(CWvsContext.enableActions());
+                        return;
+                    }
+                }
+            }
+            if ((chr.teachSkill(toSkillId, toChrId) > 0) && (toSkillId >= 80000000)) {
+                chr.changeTeachSkill(skillId, toChrId);
+                quest.forceComplete(chr, 0);
+                c.getSession().write(CWvsContext.teachMessage(skillId, toChrId, toChrName));
+            } else {
+                chr.dropMessage(1, new StringBuilder().append("The skill failed to be taught to the character [\").append(toChrName).append(\"] has already acquired the skill").toString());
+            }
+        } else {
+            chr.dropMessage(1, "Failed to teach skills.");
+        }
+        c.getSession().write(CWvsContext.enableActions());
     }
 }

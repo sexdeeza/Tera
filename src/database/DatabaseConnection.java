@@ -10,6 +10,13 @@ import server.ServerProperties;
  * @author Manu -
  */
 public class DatabaseConnection {
+    public static final int CLOSE_CURRENT_RESULT = 1;
+    public static final int KEEP_CURRENT_RESULT = 2;
+    public static final int CLOSE_ALL_RESULTS = 3;
+    public static final int SUCCESS_NO_INFO = -2;
+    public static final int EXECUTE_FAILED = -3;
+    public static final int RETURN_GENERATED_KEYS = 1;
+    public static final int NO_GENERATED_KEYS = 2;
 
     private static final DatabaseConnection dbc = new DatabaseConnection();
 
@@ -28,9 +35,9 @@ public class DatabaseConnection {
 
                 return DriverManager.getConnection(
                         ServerProperties.getProperty("database.url",
-                                "jdbc:mysql://localhost:3306/ludus?autoReconnect=true"),
+                                "jdbc:mysql://localhost:3306/lidium?autoReconnect=true"),
                         ServerProperties.getProperty("database.user", "root"),
-                        ServerProperties.getProperty("database.password", "Ivyemi1823!"));
+                        ServerProperties.getProperty("database.password", ""));
             } catch (SQLException sqle) {
                 denies++;
 

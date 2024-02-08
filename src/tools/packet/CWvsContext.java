@@ -76,6 +76,24 @@ import tools.data.MaplePacketLittleEndianWriter;
  */
 public class CWvsContext {
 
+    public static byte[] updateSkill(int skillid, int level, int masterlevel, long expiration) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+        mplew.writeShort(SendPacketOpcode.UPDATE_SKILLS.getValue());
+        mplew.write(1);
+        if (GameConstants.GMS) { //todo jump?
+            mplew.write(0);
+        }
+        mplew.writeShort(1);
+        mplew.writeInt(skillid);
+        mplew.writeInt(level);
+        mplew.writeInt(masterlevel);
+        PacketHelper.addExpirationTime(mplew, expiration);
+        mplew.write(4);
+
+        return mplew.getPacket();
+    }
+
     //<editor-fold defaultstate="collapsed" desc="InventoryPacket">
     public static class InventoryPacket {
 
@@ -559,10 +577,10 @@ public class CWvsContext {
                     mplew.writeInt(buffid);
                     mplew.writeLong(stat.getValue().longValue());
                 } else {
-                    if (stat.getKey() == MapleBuffStat.SPIRIT_SURGE) {
-                        mplew.writeInt(stat.getValue());
+                    if (stat.getKey() == MapleBuffStat.SPIRIT_SURGE || stat.getKey() == MapleBuffStat.SPIRIT_LINK || buffid == 23101003) {
+                        mplew.writeInt(stat.getValue().intValue());
                     } else {
-                        mplew.writeShort(stat.getValue());
+                        mplew.writeShort(stat.getValue().intValue());
                     }
                     mplew.writeInt(buffid);
                 }
@@ -578,7 +596,7 @@ public class CWvsContext {
 					mplew.writeInt(effect.getInflation());
 				}
 			}
-            mplew.writeShort(0); // combo 600, too
+            mplew.writeShort((buffid == 1111002 || buffid == 11111001) ? 1000 : 0); // combo 600, too
             mplew.write(1);
             mplew.write(effect != null && effect.isShadow() ? 1 : 4); // Test
 			if (isAura) {
@@ -2498,6 +2516,17 @@ public class CWvsContext {
     }
     //</editor-fold>
 
+    public static byte[] teachMessage(int skillId, int toChrId, String toChrName) {//链接技能
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.GIVE_CHARACTER_SKILL.getValue());
+        mplew.writeInt(0);
+        mplew.writeInt(skillId);
+        mplew.writeInt(toChrId);
+        mplew.writeMapleAsciiString(toChrName);
+
+        return mplew.getPacket();
+    }
+
     public static byte[] enableActions() {
         return updatePlayerStats(new EnumMap<MapleStat, Integer>(MapleStat.class), true, null);
     }
@@ -3483,6 +3512,26 @@ public class CWvsContext {
         mplew.writeMapleAsciiString(object);
         mplew.writeMapleAsciiString(amount);
 
+        return mplew.getPacket();
+    }
+
+    public static byte[] magicWheelMessage(byte message) {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.MAGIC_WHEEL.getValue());
+        mplew.write(message);
+        return mplew.getPacket();
+    }
+
+    public static byte[] magicWheelStart(List<Integer> items, int unique, byte random) {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.MAGIC_WHEEL.getValue());
+        mplew.write(3);
+        mplew.write(items.size());
+        for (Integer i : items) {
+            mplew.writeInt(i);
+        }
+        mplew.writeMapleAsciiString(unique+"");
+        mplew.write(random);
         return mplew.getPacket();
     }
 

@@ -195,4 +195,8 @@ public class MaplePacketLittleEndianWriter {
         baos.write((byte) ((l >>> 48) & 0xFF));
         baos.write((byte) ((l >>> 56) & 0xFF));
     }
+
+    public void write0(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

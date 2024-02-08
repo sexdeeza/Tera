@@ -30,10 +30,12 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     // GENERIC
 
     PONG(false),
+    AUTO_LOGIN(false),
     CLIENT_HELLO(false),
     // LOGIN
     LOGIN_PASSWORD(false),
     SEND_ENCRYPTED(false),
+    SET_GENDER(false),//選擇性別
     CLIENT_ERROR(false),
     SERVERLIST_REQUEST,
     REDISPLAY_SERVERLIST,
@@ -54,7 +56,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     VIEW_SELECT_PIC,
     PICK_ALL_CHAR,
     TWIN_DRAGON_EGG,
-    
+
     XMAS_SURPRISE,
     VICIOUS_HAMMER,
     USE_ALIEN_SOCKET,
@@ -64,7 +66,6 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     CHAR_SELECT_NO_PIC,
     VIEW_SERVERLIST,
     RSA_KEY(false),
-    CLIENT_START(false),
     CLIENT_FAILED(false),
     // CHANNEL
     PLAYER_LOGGEDIN(false),
@@ -107,6 +108,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     USE_SCRIPTED_NPC_ITEM,
     USE_CASH_ITEM,
     USE_CATCH_ITEM,
+    USE_REMOTE,
     USE_SKILL_BOOK,
     USE_RETURN_SCROLL,
     USE_UPGRADE_SCROLL,
@@ -185,6 +187,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     COUPON_CODE,
     MAPLETV,
     MOVE_DRAGON,
+    DRAGON_FLY,
     REPAIR,
     REPAIR_ALL,
     TOUCHING_MTS,
@@ -198,7 +201,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     USE_OWL_MINERVA,
     RPS_GAME,
     UPDATE_QUEST,
-    //QUEST_ITEM, //header -> questid(int) -> 1/0(byte, open or close)
+    QUEST_ITEM,
     USE_ITEM_QUEST,
     FOLLOW_REQUEST,
     FOLLOW_REPLY,
@@ -219,6 +222,7 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     REMOVE_SUMMON,
     AUTO_FOLLOW_REPLY,
     REPORT,
+    TEACH_SKILL,//連結技能
     MOB_BOMB,
     CREATE_ULTIMATE,
     PAM_SONG,
@@ -254,7 +258,6 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     MAKE_EXTRACTOR,
     USE_COSMETIC,
     USE_PROTECT_SHIELD,
-    USE_FLAG_SCROLL,
     SWITCH_BAG,
     REWARD_POT,
     PVP_INFO,
@@ -265,7 +268,10 @@ public enum RecvPacketOpcode implements WritableIntValueHolder {
     PVP_ATTACK,
     PVP_SUMMON,
     PUBLIC_NPC,
-    LINKED_SKILL_SELECT,
+    AT_LOGIN_SCREEN,
+    AT_LOGIN_SCREEN2,
+    USE_AP_RESET_SCROLL,
+    USE_SP_RESET_SCROLL,
     MTS_TAB;
     private short code = -2;
 

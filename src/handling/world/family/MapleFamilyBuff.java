@@ -28,7 +28,7 @@ import java.util.EnumMap;
 import java.util.concurrent.ScheduledFuture;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
-import server.TimerManager;
+import server.Timer;
 import server.MapleStatEffect.CancelEffectAction;
 
 import tools.packet.CWvsContext.BuffPacket;
@@ -97,7 +97,7 @@ public enum MapleFamilyBuff {
 		chr.cancelEffect(eff, true, -1, effects);
        		final long starttime = System.currentTimeMillis();
        		final CancelEffectAction cancelAction = new CancelEffectAction(chr, eff, starttime, effects);
-       		final ScheduledFuture<?> schedule = TimerManager.getInstance().schedule(cancelAction, duration*60000);
+       		final ScheduledFuture<?> schedule = Timer.BuffTimer.getInstance().schedule(cancelAction, duration*60000);
        		chr.registerEffect(eff, starttime, schedule, effects, false, duration, chr.getId());
 	}
 }

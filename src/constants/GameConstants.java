@@ -444,6 +444,24 @@ public class GameConstants {
         return MapleInventoryType.getByType(type);
     }
 
+    public static String getENGType(int id) {
+        switch (getInventoryType(id)) {
+            case EQUIPPED:
+                return "Equipped";
+            case EQUIP:
+                return "Equip";
+            case USE:
+                return "Use";
+            case SETUP:
+                return "Setup";
+            case ETC:
+                return "Etc";
+            case CASH:
+                return "Cash";
+        }
+        return "";
+    }
+
     public static boolean isInBag(final int slot, final byte type) {
         return ((slot >= 101 && slot <= 512) && type == MapleInventoryType.ETC.getType());
     }
@@ -568,6 +586,26 @@ public class GameConstants {
         // Spikes on show
         // Cape for Cold protection
         return false;
+    }
+
+    public static boolean isTwoHandeds(final int itemId) {
+        switch (getWeaponType(itemId)) {
+            case AXE2H:
+            case GUN:
+            case KNUCKLE:
+            case BLUNT2H:
+            case BOW:
+            case CLAW:
+            case CROSSBOW:
+            case POLE_ARM:
+            case SPEAR:
+            case SWORD2H:
+            case CANNON:
+            case DUAL_BOW: //magic arrow
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static boolean isTwoHanded(final int itemId) {
@@ -3255,6 +3293,11 @@ public class GameConstants {
         }
         return 30; // beginner or 3100
     }
+
+    public static boolean isExtendedSPJob(int jobId) {
+        return jobId / 1000 == 3 || (jobId / 100 == 22 || jobId == 2001) || (jobId / 100 == 23 || jobId == 2002) || (jobId / 100 == 24 || jobId == 2003);
+    }
+
     //public static final int[] publicNpcIds = {0};
     //public static final String[] publicNpcs = {"#cNPC#"};
     //questID; FAMILY USES 19000x, MARRIAGE USES 16000x, EXPED USES 16010x
@@ -3269,6 +3312,7 @@ public class GameConstants {
     public static final int JAIL_QUEST = 123456;
     public static final int REPORT_QUEST = 123457;
     public static final int ULT_EXPLORER = 111111;
+    public static final int build = 1;
     //codex = -55 slot
     //crafting/gathering are designated as skills(short exp then byte 0 then byte level), same with recipes(integer.max_value skill level)
 
@@ -3296,6 +3340,8 @@ public class GameConstants {
         }
         return false;
     }
+
+
 
     public static boolean isValidLinkSkillForJob(int skillID, short jobID) {
         switch (jobID) {

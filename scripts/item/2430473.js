@@ -6,7 +6,7 @@
 
 function start() {
 	if (im.getPlayer().getLevel() > 199) {
-		im.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(6, "200等以上的角色無法使用該道具"));
+		im.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(6, "200等以上的角色無法使用該道具"));
 		im.dispose();
 		return;
 		}

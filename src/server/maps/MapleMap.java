@@ -60,7 +60,6 @@ import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import server.maps.MapScriptMethods;
 import server.MapleItemInformationProvider;
 import server.MaplePortal;
 import server.MapleStatEffect;
@@ -97,7 +96,7 @@ import tools.packet.CField;
 import tools.packet.CField.SummonPacket;
 import tools.packet.CWvsContext;
 import tools.packet.CWvsContext.PartyPacket;
-import server.TimerManager;
+import server.Timer;
 
 public final class MapleMap {
 
@@ -682,7 +681,7 @@ public final class MapleMap {
 
     public final void killMonster(final MapleMonster monster, final MapleCharacter chr, final boolean withDrops, final boolean second, byte animation, final int lastSkill) {
         if ((monster.getId() == 8810122 || monster.getId() == 8810018) && !second) {
-            TimerManager.getInstance().schedule(() -> {
+            Timer.MapTimer.getInstance().schedule(() -> {
                 killMonster(monster, chr, true, true, (byte) 1);
                 killAllMonsters(true);
             }, 3000);
@@ -1088,7 +1087,7 @@ public final class MapleMap {
         reactor.setTimerActive(false);
 
         if (reactor.getDelay() > 0) {
-            TimerManager.getInstance().schedule(() -> {
+            Timer.MapTimer.getInstance().schedule(() -> {
                 respawnReactor(reactor);
             }, reactor.getDelay());
         }
@@ -1623,7 +1622,7 @@ public final class MapleMap {
             }
         });
 
-        final TimerManager tMan = TimerManager.getInstance();
+        final Timer.MapTimer tMan = Timer.MapTimer.getInstance();
         final ScheduledFuture<?> poisonSchedule;
         switch (mist.isPoisonMist()) {
             case 1:
@@ -1742,7 +1741,7 @@ public final class MapleMap {
         } finally {
             mapobjectlocks.get(MapleMapObjectType.ITEM).readLock().unlock();
         }
-        TimerManager.getInstance().schedule(() -> {
+        Timer.MapTimer.getInstance().schedule(() -> {
             final Point pos = new Point(Randomizer.nextInt(800) + 531, -806);
             final int theItem = Randomizer.nextInt(1000);
             int itemid = 0;
@@ -1803,7 +1802,7 @@ public final class MapleMap {
                     if (item.getItemId() == GameConstants.getCustomReactItem(react.getReactorId(), react.getReactItem().getLeft()) && react.getReactItem().getRight() == item.getQuantity()) {
                         if (react.getArea().contains(drop.getTruePosition())) {
                             if (!react.isTimerActive()) {
-                                TimerManager.getInstance().schedule(new ActivateItemReactor(drop, react, c), 5000);
+                                Timer.MapTimer.getInstance().schedule(new ActivateItemReactor(drop, react, c), 5000);
                                 react.setTimerActive(true);
                                 break;
                             }
@@ -1912,7 +1911,7 @@ public final class MapleMap {
         mapEffect = new MapleMapEffect(msg, itemId);
         mapEffect.setJukebox(jukebox);
         broadcastMessage(mapEffect.makeStartData());
-        TimerManager.getInstance().schedule(() -> {
+        Timer.MapTimer.getInstance().schedule(() -> {
             if (mapEffect != null) {
                 broadcastMessage(mapEffect.makeDestroyData());
                 mapEffect = null;
@@ -1922,7 +1921,7 @@ public final class MapleMap {
 
     public final void startExtendedMapEffect(final String msg, final int itemId) {
         broadcastMessage(CField.startMapEffect(msg, itemId, true));
-        TimerManager.getInstance().schedule(() -> {
+        Timer.MapTimer.getInstance().schedule(() -> {
             broadcastMessage(CField.removeMapEffect());
             broadcastMessage(CField.startMapEffect(msg, itemId, false));
             //dont remove mapeffect.
@@ -2133,7 +2132,7 @@ public final class MapleMap {
                     // To Rien
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(1 * 60 * 1000); // [1 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090060) {
                             chr.changeMap(140020300, 0);
                         }
@@ -2143,7 +2142,7 @@ public final class MapleMap {
                     // To Lith Harbor
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(1 * 60 * 1000); // [1 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090070) {
                             chr.changeMap(104000000, 3);
                         }
@@ -2153,7 +2152,7 @@ public final class MapleMap {
                     // To Ereve from Victoria Island (SkyFerry)
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(2 * 60 * 1000); // [2 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090030) {
                             chr.changeMap(130000210, 0);
                         }
@@ -2163,7 +2162,7 @@ public final class MapleMap {
                     // To Victoria Island from Ereve (SkyFerry)
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(2 * 60 * 1000); // [2 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090031) {
                             chr.changeMap(101000400, 0);
                         }
@@ -2173,7 +2172,7 @@ public final class MapleMap {
                     // To Orbis from ereve (SkyFerry)
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(2 * 60 * 1000); // [2 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090021) {
                             chr.changeMap(200000100, 0);
                         }
@@ -2183,7 +2182,7 @@ public final class MapleMap {
                     // To Ereve From Orbis (SkyFerry)
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(2 * 60 * 1000); // [2 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090020) {
                             chr.changeMap(130000210, 0);
                         }
@@ -2193,7 +2192,7 @@ public final class MapleMap {
                     // To edelstein From Orbis
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(2 * 60 * 1000); // [2 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090600) { //edelstein bound
                             chr.changeMap(310000010, 0); //edelstein station
                         }
@@ -2203,7 +2202,7 @@ public final class MapleMap {
                     // To orbis From edelstein
                     int travelTime = ChannelServer.getInstance(channel).getTransportationTime(2 * 60 * 1000); // [2 min]
                     chr.getClient().getSession().write(CField.getClock(travelTime / 1000));
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         if (chr.getMapId() == 200090610) { //orbis bound
                             chr.changeMap(200000100, 0); //orbis station
                         }
@@ -2344,7 +2343,7 @@ public final class MapleMap {
                     }
                 };
             }
-            squadSchedule = TimerManager.getInstance().schedule(run, 300000); //5 mins
+            squadSchedule = Timer.MapTimer.getInstance().schedule(run, 300000); //5 mins
         }
     }
 
@@ -2999,7 +2998,7 @@ public final class MapleMap {
                 reactor.setTimerActive(false);
 
                 if (reactor.getDelay() > 0) {
-                    TimerManager.getInstance().schedule(() -> {
+                    Timer.MapTimer.getInstance().schedule(() -> {
                         reactor.forceHitReactor((byte) 0);
                     }, reactor.getDelay());
                 }
@@ -3502,7 +3501,7 @@ public final class MapleMap {
     public final void resetShammos(final MapleClient c) {
         killAllMonsters(true);
         broadcastMessage(CWvsContext.serverNotice(5, "A player has moved too far from Shammos. Shammos is going back to the start."));
-        TimerManager.getInstance().schedule(() -> {
+        Timer.EtcTimer.getInstance().schedule(() -> {
             if (c.getPlayer() != null) {
                 c.getPlayer().changeMap(MapleMap.this, getPortal(0));
                 if (getCharactersThreadsafe().size() > 1) {

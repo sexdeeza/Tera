@@ -7,6 +7,6 @@
 function start() {
 	im.gainItem(2430036, -1);
 	im.getPlayer().changeSingleSkillLevel(Packages.client.SkillFactory.getSkill(80001004), 1, 1, im.getCurrentTime() + (1 * 24 * 60 * 60 * 1000));
-	im.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(6, "角色獲得了新的騎獸技能"));
+	im.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(6, "角色獲得了新的騎獸技能"));
 	im.dispose();
 }

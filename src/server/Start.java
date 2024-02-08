@@ -63,7 +63,13 @@ public class Start {
 
         long start = System.currentTimeMillis();
         ThreadManager.getInstance().start();
-        TimerManager.getInstance().start();
+        Timer.WorldTimer.getInstance().start();
+        Timer.EtcTimer.getInstance().start();
+        Timer.MapTimer.getInstance().start();
+        Timer.CloneTimer.getInstance().start();
+        Timer.EventTimer.getInstance().start();
+        Timer.BuffTimer.getInstance().start();
+        Timer.PingTimer.getInstance().start();
         // Loading Skills -> ok
         SkillFactory.load();
         MapleLifeFactory.loadNpcName();
@@ -149,7 +155,7 @@ public class Start {
         CashShopServer.run_startup_configurations();
         ThreadManager.getInstance().newTask(() -> {
             // Loading Cheat Timer - alredy in a thread
-            TimerManager.getInstance().register(AutobanManager.getInstance(), 60000);
+            Timer.CheatTimer.getInstance().register(AutobanManager.getInstance(), 60000);
 
             // Loading Shutdown hook - already in a thread
             Runtime.getRuntime().addShutdownHook(new Thread(new Shutdown()));
@@ -167,31 +173,6 @@ public class Start {
         MapleMonsterInformationProvider.getInstance().addExtra();
         LoginServer.setOn(); // now or later
         RankingWorker.run();
-
-        TimerManager.getInstance().register(() -> {
-            // System.out.println("Checking diseases");
-            ChannelServer.getAllInstances().parallelStream().forEach((chs) -> {
-                chs.getPlayerStorage().getAllCharacters().parallelStream().forEach((chr) -> {
-                    MapleMap map = chr.getMap();
-                    if (map != null) {
-                        if (chr.getDiseaseSize() > 0) {
-                            chr.getAllDiseases().parallelStream().forEach((m) -> {
-                                // System.out.print(">removing " + m.disease);
-                                chr.dispelDebuff(m.disease);
-                            });
-                        }
-                    }
-                });
-
-            });
-        }, 2000);
-
-        // Free memory usage every 5 minutes ( 1 min = 60000)
-        TimerManager.getInstance().register(() -> {
-            System.gc();
-        }, 60000 * 5);
-
-        TimerManager.getInstance().register(new AutoSaver(), 1000 * 60 * 5);
     }
 
     public static class Shutdown implements Runnable {

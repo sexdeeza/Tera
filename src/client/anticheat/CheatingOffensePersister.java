@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import server.TimerManager;
+import server.Timer;
 
 
 
@@ -36,7 +36,7 @@ public class CheatingOffensePersister {
     private final Lock mutex = new ReentrantLock();
 
     private CheatingOffensePersister() {
-        TimerManager.getInstance().register(new PersistingTask(), 61000);
+        Timer.CheatTimer.getInstance().register(new PersistingTask(), 61000);
     }
 
     public static CheatingOffensePersister getInstance() {

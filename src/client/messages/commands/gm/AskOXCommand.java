@@ -7,7 +7,7 @@ import java.util.List;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.Command;
-import server.TimerManager;
+import server.Timer;
 import server.maps.MapleMap;
 import server.maps.SavedLocationType;
 import tools.StringUtil;
@@ -41,13 +41,13 @@ public class AskOXCommand extends Command {
 
         thisMap.broadcastMessage(CField.MapEff("SportsDay/EndMessage/Start"));
         thisMap.broadcastMessage(CField.playSound("Dojang/start"));
-        TimerManager.getInstance().schedule(new Runnable() {
+        Timer.EventTimer.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
                 thisMap.broadcastMessage(CWvsContext.serverNotice(1, question));
                 thisMap.broadcastMessage(CWvsContext.serverNotice(0, question));
                 thisMap.broadcastMessage(CField.getClock(timeLimit));
-                TimerManager.getInstance().schedule(new Runnable() {
+                Timer.EventTimer.getInstance().schedule(new Runnable() {
                     @Override
                     public void run() {
                         List<MapleCharacter> winners = new ArrayList<MapleCharacter>();
@@ -75,7 +75,7 @@ public class AskOXCommand extends Command {
                                 if (victim != asker && !winners.contains(victim)) {
                                     victim.dropMessage(5, "Unfortunately you picked the wrong answer. You will be warped out in 5 secs.");
                                     // WARP OUT IN 5 SEC
-                                    TimerManager.getInstance().schedule(new Runnable() {
+                                    Timer.EventTimer.getInstance().schedule(new Runnable() {
                                     @Override
                                         public void run() {
                                             int map = victim.getSavedLocation(SavedLocationType.EVENT);

@@ -28,10 +28,18 @@ public class SkillEntry implements Serializable {
     public int skillevel;
     public byte masterlevel;
     public long expiration;
+    public int teachId;
 
     public SkillEntry(final int skillevel, final byte masterlevel, final long expiration) {
         this.skillevel = skillevel;
         this.masterlevel = masterlevel;
         this.expiration = expiration;
+    }
+
+    public SkillEntry(int skillevel, byte masterlevel, long expiration, int teachId) {
+        this.skillevel = skillevel;
+        this.masterlevel = masterlevel;
+        this.expiration = expiration;
+        this.teachId = teachId;
     }
 }

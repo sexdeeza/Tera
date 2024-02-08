@@ -32,7 +32,7 @@ import client.MapleCharacter;
 import handling.world.CharacterTransfer;
 import handling.world.CheaterData;
 import handling.world.World;
-import server.TimerManager;
+import server.Timer;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -52,7 +52,7 @@ public class PlayerStorage {
     public PlayerStorage(int channel) {
 	this.channel = channel;
         // Prune once every 15 minutes
-        TimerManager.getInstance().register(new PersistingTask(), 60000);
+        Timer.PingTimer.getInstance().register(new PersistingTask(), 60000);
     }
 
     public final ArrayList<MapleCharacter> getAllCharacters() {

@@ -33,7 +33,7 @@ import server.quest.MapleQuest;
 import server.life.MapleLifeFactory;
 import tools.packet.CField;
 import tools.packet.CWvsContext;
-import server.TimerManager;
+import server.Timer;
 public class Event_PyramidSubway {
 
     private int kill = 0, cool = 0, miss = 0, skill = 0, type, energybar = 100, bar = 0;
@@ -56,7 +56,7 @@ public class Event_PyramidSubway {
 		}
 	    }
             commenceTimerNextMap(c, 1);
-            energyBarDecrease = TimerManager.getInstance().register(new Runnable() {
+            energyBarDecrease = Timer.MapTimer.getInstance().register(new Runnable() {
 
                 public void run() {
                     energybar -= (c.getParty() != null && c.getParty().getMembers().size() > 1 ? 5 : 2);
@@ -118,7 +118,7 @@ public class Event_PyramidSubway {
                 ourMap.spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(9700023), c.getPosition());
             }
         }
-        timerSchedule = TimerManager.getInstance().schedule(new Runnable() {
+        timerSchedule = Timer.MapTimer.getInstance().schedule(new Runnable() {
 
             public void run() {
                 boolean ret = false;

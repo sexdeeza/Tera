@@ -52,7 +52,7 @@ import scripting.EventInstanceManager;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import server.Randomizer;
-import server.TimerManager;
+import server.Timer;
 import server.maps.MapleMap;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
@@ -1013,7 +1013,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
     public final void setTempEffectiveness(final Element e, final long milli) {
         stats.setEffectiveness(e, ElementalEffectiveness.WEAK);
-        TimerManager.getInstance().schedule(new Runnable() {
+        Timer.EtcTimer.getInstance().schedule(new Runnable() {
 
             public void run() {
                 stats.removeEffectiveness(e);

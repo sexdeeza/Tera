@@ -221,12 +221,12 @@ public enum MapleBuffStat implements Serializable, Buffstat {
 
     //1, unknown
     SPIRIT_SURGE(0x2000, 6),
-    SPIRIT_LINK(0x4000, 6, true),
+    SPIRIT_LINK(0x2000, 6),
     //8 unknown
 
     VIRTUE_EFFECT(0x10000, 6),
     //2, 4, 8 unknown
-
+    CRITICAL_INC(0x80000,6),
     NO_SLIP(0x100000, 6),
     FAMILIAR_SHADOW(0x200000, 6),
     // 4

@@ -494,7 +494,7 @@ public class ItemMakerHandler {
         } else {
             marr.setCustomData(String.valueOf(System.currentTimeMillis()));
             c.getSession().write(CField.harvestMessage(reactor.getObjectId(), GameConstants.GMS ? 13 : 11)); //ok to harvest, gogo
-            c.getPlayer().getMap().broadcastMessage(chr, CField.showHarvesting(chr.getId(), item.getItemId()), false);
+            c.getPlayer().getMap().broadcastMessage(chr, CField.showHarvesting(chr.getClient(), item.getItemId()), false);
         }
     }
 
@@ -598,7 +598,7 @@ public class ItemMakerHandler {
                     }
                 }
             }
-            toGet = 4031016;
+            toGet = 4021016;
             quantity = (short) Randomizer.rand(3, GameConstants.isWeapon(itemId) || GameConstants.isOverall(itemId) ? 11 : 7);
             if (reqLevel <= 60) {
                 toGet = 4021013;
@@ -610,7 +610,7 @@ public class ItemMakerHandler {
             if (quantity <= 5) {
                 cr = CraftRanking.SOSO;
             }
-            if (Randomizer.nextInt(5) == 0 && toGet != 4031016) {
+            if (Randomizer.nextInt(5) == 0 && toGet != 4021016) {
                 toGet++;
                 quantity = 1;
                 cr = CraftRanking.COOL;

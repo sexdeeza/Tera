@@ -997,7 +997,7 @@ public class InventoryHandlerAction {
         if (!use) {
             if (scroll.getItemId() == 5064000) {
                 short flag = toScroll.getFlag();
-                flag |= ItemFlag.SHIELD_WARD.getValue();
+                flag |= ItemFlag.PROTECT.getValue();
                 toScroll.setFlag(flag);
                 c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
             } else if (scroll.getItemId() == 5064100) {
@@ -1012,14 +1012,14 @@ public class InventoryHandlerAction {
                 c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
             } else if (scroll.getItemId() == 5063000) {
                 short flag = toScroll.getFlag();
-                flag |= ItemFlag.LUCKS_KEY.getValue();
+                flag |= ItemFlag.LUKCYDAY.getValue();
                 toScroll.setFlag(flag);
                 c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
             } else if (scroll.getItemId() == 5063100) {
                 short flag = toScroll.getFlag();
-                if (!ItemFlag.LUCKS_KEY.check(flag) && !ItemFlag.SHIELD_WARD.check(flag)) {
-                    flag |= ItemFlag.LUCKS_KEY.getValue();
-                    flag |= ItemFlag.SHIELD_WARD.getValue();
+                if (!ItemFlag.LUKCYDAY.check(flag) && !ItemFlag.PROTECT.check(flag)) {
+                    flag |= ItemFlag.LUKCYDAY.getValue();
+                    flag |= ItemFlag.PROTECT.getValue();
                     toScroll.setFlag(flag);
                     c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
                 } else {
@@ -1031,7 +1031,7 @@ public class InventoryHandlerAction {
         } else {
             if (scroll.getItemId() == 2531000) {
                 short flag = toScroll.getFlag();
-                flag |= ItemFlag.SHIELD_WARD.getValue();
+                flag |= ItemFlag.PROTECT.getValue();
                 toScroll.setFlag(flag);
                 c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
             } else if (scroll.getItemId() == 5064200 || scroll.getItemId() == 2049600 || scroll.getItemId() == 2049601 || scroll.getItemId() == 2049604) {
@@ -1053,7 +1053,7 @@ public class InventoryHandlerAction {
                 c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
             } else if (scroll.getItemId() == 2530000 || scroll.getItemId() == 2530001 || scroll.getItemId() == 2530002) {
                 short flag = toScroll.getFlag();
-                flag |= ItemFlag.LUCKS_KEY.getValue();
+                flag |= ItemFlag.LUKCYDAY.getValue();
                 toScroll.setFlag(flag);
                 c.getSession().write(InventoryPacket.updateSpecialItemUse(toScroll, toScroll.getType(), c.getPlayer()));
             }
@@ -1231,10 +1231,10 @@ public class InventoryHandlerAction {
         Equip scrolled = (Equip) ii.scrollEquipWithId(toScroll, scroll, whiteScroll, chr, vegas);
         ScrollResult scrollSuccess;
         if (scrolled == null) {
-            if (ItemFlag.SHIELD_WARD.check(oldFlag)) {
+            if (ItemFlag.PROTECT.check(oldFlag)) {
                 scrolled = toScroll;
                 scrollSuccess = Equip.ScrollResult.FAIL;
-                scrolled.setFlag((short) (oldFlag - ItemFlag.SHIELD_WARD.getValue()));
+                scrolled.setFlag((short) (oldFlag - ItemFlag.PROTECT.getValue()));
             } else {
                 scrollSuccess = Equip.ScrollResult.CURSE;
             }
@@ -1467,7 +1467,7 @@ public class InventoryHandlerAction {
         // another int here, lock = 5A E5 F2 0A, 7 day = D2 30 F3 0A
         if (item != null && item.getType() == 1) { // equip
             short flag = item.getFlag();
-            flag |= ItemFlag.LUCKS_KEY.getValue();
+            flag |= ItemFlag.LUKCYDAY.getValue();
             item.setFlag(flag);
 
             c.getPlayer().forceReAddItem_Flag(item, type);
@@ -1489,7 +1489,7 @@ public class InventoryHandlerAction {
 
             }
             short flag = item.getFlag();
-            flag |= ItemFlag.SHIELD_WARD.getValue();
+            flag |= ItemFlag.PROTECT.getValue();
             item.setFlag(flag);
             c.getPlayer().forceReAddItem_Flag(item, type);
             used = true;

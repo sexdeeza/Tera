@@ -200,7 +200,7 @@ public class CommandsExecutor {
         addCommand("int", 0, StatIntCommand.class);
         addCommand("luk", 0, StatLukCommand.class);
         addCommand("str", 0, StatStrCommand.class);
-        addCommand("enablepic", 0, EnablePicCommand.class);
+        //addCommand("enablepic", 0, EnablePicCommand.class);
         addCommand("mob", 0, MobCommand.class);
         addCommand("clearslot", 0, ClearSlotCommand.class);
         addCommand("check", 0, CheckCommand.class);
@@ -300,7 +300,7 @@ public class CommandsExecutor {
         levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
         addCommand("servermessage", 5, ServerMessageCommand.class);
         addCommand("playernpc", 5, PlayerNpcCommand.class);
-        addCommand("offlineplayernpc", 5, OfflinePlayerNpcCommand.class);
+        //addCommand("offlineplayernpc", 5, OfflinePlayerNpcCommand.class);
         addCommand("toggleoffence", 5, ToggleOffenceCommand.class);
         addCommand("mesorate", 5, MesoRateCommand.class);
         addCommand("droprate", 5, DropRateCommand.class);

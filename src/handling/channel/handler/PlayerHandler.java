@@ -45,7 +45,7 @@ import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import server.MaplePortal;
 import server.Randomizer;
-import server.TimerManager;
+import server.Timer;
 import server.events.MapleSnowball.MapleSnowballs;
 import server.life.MapleMonster;
 import server.life.MobAttackInfo;
@@ -860,7 +860,7 @@ public class PlayerHandler {
                 final double maxdamage2 = maxdamage;
                 final MapleStatEffect eff2 = effect;
                 final AttackInfo attack2 = DamageParse.DivideAttack(attack, chr.isGM() ? 1 : 4);
-                TimerManager.getInstance().schedule(new Runnable() {
+                Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
                     public void run() {
                         if (!clone.isHidden()) {
@@ -1084,7 +1084,7 @@ public class PlayerHandler {
                 final int visProjectile2 = visProjectile;
                 final int skillLevel2 = skillLevel;
                 final AttackInfo attack2 = DamageParse.DivideAttack(attack, chr.isGM() ? 1 : 4);
-                TimerManager.getInstance().schedule(new Runnable() {
+                Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
                     public void run() {
                         if (!clone.isHidden()) {
@@ -1170,7 +1170,7 @@ public class PlayerHandler {
                 final double maxd = maxdamage;
                 final int skillLevel2 = skillLevel;
                 final AttackInfo attack2 = DamageParse.DivideAttack(attack, chr.isGM() ? 1 : 4);
-                TimerManager.getInstance().schedule(new Runnable() {
+                Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
                     public void run() {
                         if (!clone.isHidden()) {
@@ -1185,7 +1185,7 @@ public class PlayerHandler {
         }
     }
 
-    public static final void DropMeso(final int meso, final MapleCharacter chr) {
+    public static final void DropMeso(final int meso, final MapleCharacter chr, boolean anytime) {
         if (!chr.isAlive() || (meso < 10 || meso > 50000) || (meso > chr.getMeso())) {
             chr.getClient().getSession().write(CWvsContext.enableActions());
             return;
@@ -1227,7 +1227,7 @@ public class PlayerHandler {
             for (int i = 0; i < clones.length; i++) {
                 if (clones[i].get() != null) {
                     final MapleCharacter clone = clones[i].get();
-                    TimerManager.getInstance().schedule(new Runnable() {
+                    Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
                         public void run() {
                             clone.getMap().broadcastMessage(CField.facialExpression(clone, emote));
@@ -1323,7 +1323,7 @@ public class PlayerHandler {
                 if (clones[i].get() != null) {
                     final MapleCharacter clone = clones[i].get();
                     final List<LifeMovementFragment> res3 = res;
-                    TimerManager.getInstance().schedule(new Runnable() {
+                    Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
                         public void run() {
                             try {

@@ -4,6 +4,6 @@ function enter(pi) {
 		return false;
 		}
 		map = pi.getPlayer().getMap().getId() + 300; //遺棄之塔&amp;lt;第2階段&gt;
-		pi.getPlayer().changeMap(922010400);
+		pi.getPlayer().changeMap(pi.getMap(map), pi.getMap(map).getPortal(0));
 		return true;
 }

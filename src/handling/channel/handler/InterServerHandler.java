@@ -41,7 +41,12 @@ import handling.world.PlayerBuffStorage;
 import handling.world.World;
 import handling.world.exped.MapleExpedition;
 import handling.world.guild.MapleGuild;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import scripting.NPCScriptManager;
 import server.maps.FieldLimitType;
@@ -61,7 +66,7 @@ import tools.packet.MTSCSPacket;
 
 public class InterServerHandler {
 
-    public static final void EnterCS(final MapleClient c, final MapleCharacter chr, final boolean mts) {
+    public static final void EnterCS(final MapleClient c, final MapleCharacter chr, final boolean mts, final boolean npc) {
         if (chr.hasBlockedInventory() || chr.getMap() == null || chr.getEventInstance() != null || c.getChannelServer() == null) {
             c.getSession().write(CField.serverBlocked(2));
             c.getSession().write(CWvsContext.enableActions());
@@ -98,7 +103,12 @@ public class InterServerHandler {
         c.updateLoginState(MapleClient.CHANGE_CHANNEL, c.getSessionIPAddress());
         chr.saveToDB(false, false);
         chr.getMap().removePlayer(chr);
-        c.getSession().write(CField.getChannelChange(c, Integer.parseInt(CashShopServer.getIP().split(":")[1])));
+        String[] socket = c.getChannelServer().getIP().split(":");
+        try {
+            c.getSession().write(CField.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(CashShopServer.getIP().split(":")[1])));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(InterServerHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         c.setPlayer(null);
         c.setReceiving(false);
     }

@@ -126,7 +126,7 @@ public class MapleSquad {
     }
 
     public void scheduleRemoval() {
-        removal = TimerManager.getInstance().schedule(new Runnable() {
+        removal = Timer.EtcTimer.getInstance().schedule(new Runnable() {
 
             @Override
             public void run() {

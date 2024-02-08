@@ -6,7 +6,7 @@
 
 function start() {
 	if (im.getPlayer().getInventory(Packages.client.inventory.MapleInventoryType.ETC).getNumFreeSlot() < 1) {
-		im.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(6, "打開混濁的玻璃珠之前，請在其它欄保留一個空位"));
+		im.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(6, "打開混濁的玻璃珠之前，請在其它欄保留一個空位"));
 		im.dispose();
 		return;
 		}
@@ -16,6 +16,6 @@ function start() {
 		im.dispose();
 		return;
 		}
-		im.getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(6, "混濁的玻璃珠裡什麼都沒有"));
+		im.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(6, "混濁的玻璃珠裡什麼都沒有"));
 		im.dispose();
 }

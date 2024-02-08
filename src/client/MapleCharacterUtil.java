@@ -25,6 +25,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
+
+import tools.Pair;
 import tools.Triple;
 import java.util.regex.Pattern;
 
@@ -78,6 +80,28 @@ public class MapleCharacterUtil {
         wui = wui.replace("vv", "Vv");
         wui = wui.replace("VV", "Vv");
         return wui;
+    }
+
+    public static Pair<String, Integer> getNameById(int chrId, int world) {
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM characters WHERE id = ? AND world = ?");
+            ps.setInt(1, chrId);
+            ps.setInt(2, world);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                rs.close();
+                ps.close();
+                return null;
+            }
+            Pair id = new Pair(rs.getString("name"), Integer.valueOf(rs.getInt("accountid")));
+            rs.close();
+            ps.close();
+            return id;
+        } catch (Exception e) {
+            //log.error("error 'getInfoByName' " + e);
+        }
+        return null;
     }
 
     public static final int getIdByName(final String name) {
@@ -233,4 +257,5 @@ public class MapleCharacterUtil {
         }
         return ret;
     }
+
 }

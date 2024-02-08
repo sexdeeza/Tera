@@ -20,148 +20,248 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tools;
 
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelConfig;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelId;
+import io.netty.channel.ChannelMetadata;
+import io.netty.channel.ChannelOutboundBuffer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.ChannelProgressivePromise;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.EventLoop;
+import io.netty.channel.RecvByteBufAllocator;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 import java.net.SocketAddress;
-
-import org.apache.mina.common.CloseFuture;
-import org.apache.mina.common.IoFilterChain;
-import org.apache.mina.common.IoHandler;
-import org.apache.mina.common.IoService;
-import org.apache.mina.common.IoServiceConfig;
-import org.apache.mina.common.IoSessionConfig;
-import org.apache.mina.common.TransportType;
-import org.apache.mina.common.WriteFuture;
-import org.apache.mina.common.IoFilter.WriteRequest;
-import org.apache.mina.common.support.BaseIoSession;
 
 /**
  * Represents a mock version of an IOSession to use a MapleClient instance
  * without an active connection (faekchar, etc).
- * 
+ *
  * Most methods return void, or when they return something, null. Therefore,
  * this class is mostly undocumented, due to the fact that each and every
  * function does squat.
- * 
+ *
  * @author Frz
  * @since Revision 518
  * @version 1.0
  */
-public class MockIOSession extends BaseIoSession {
+public class MockIOSession implements Channel {
 
-    /**
-     * Does nothing.
-     */
     @Override
-    protected void updateTrafficMask() {
-    }
-
-    /**
-     * Does nothing.
-     */
-    @Override
-    public IoSessionConfig getConfig() {
+    public Unsafe unsafe() {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public IoFilterChain getFilterChain() {
+    public <T> Attribute<T> attr(AttributeKey<T> ak) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public IoHandler getHandler() {
+    public <T> boolean hasAttr(AttributeKey<T> ak) {
+        return false;
+    }
+
+    @Override
+    public ChannelFuture bind(SocketAddress sa) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public SocketAddress getLocalAddress() {
+    public ChannelFuture connect(SocketAddress sa) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public SocketAddress getRemoteAddress() {
+    public ChannelFuture connect(SocketAddress sa, SocketAddress sa1) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public IoService getService() {
+    public ChannelFuture disconnect() {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public SocketAddress getServiceAddress() {
+    public ChannelFuture close() {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public IoServiceConfig getServiceConfig() {
+    public ChannelFuture deregister() {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public TransportType getTransportType() {
+    public ChannelFuture bind(SocketAddress sa, ChannelPromise cp) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    public CloseFuture close() {
+    public ChannelFuture connect(SocketAddress sa, ChannelPromise cp) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    protected void close0() {
-    }
-
-    /**
-     * Does nothing.
-     */
-    @Override
-    public WriteFuture write(Object message, SocketAddress remoteAddress) {
+    public ChannelFuture connect(SocketAddress sa, SocketAddress sa1, ChannelPromise cp) {
         return null;
     }
 
-    /**
-     * "Fake writes" a packet to the client, only running the OnSend event of
-     * the packet.
-     */
     @Override
-    public WriteFuture write(Object message) {
+    public ChannelFuture disconnect(ChannelPromise cp) {
         return null;
     }
 
-    /**
-     * Does nothing.
-     */
     @Override
-    protected void write0(WriteRequest writeRequest) {
+    public ChannelFuture close(ChannelPromise cp) {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture deregister(ChannelPromise cp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ChannelFuture write(Object o) {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture write(Object o, ChannelPromise cp) {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture writeAndFlush(Object o, ChannelPromise cp) {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture writeAndFlush(Object o) {
+        return null;
+    }
+
+    @Override
+    public ChannelPromise newPromise() {
+        return null;
+    }
+
+    @Override
+    public ChannelProgressivePromise newProgressivePromise() {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture newSucceededFuture() {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture newFailedFuture(Throwable thrwbl) {
+        return null;
+    }
+
+    @Override
+    public ChannelPromise voidPromise() {
+        return null;
+    }
+
+    @Override
+    public int compareTo(Channel t) {
+        return 0;
+    }
+
+    @Override
+    public ChannelId id() {
+        return null;
+    }
+
+    @Override
+    public EventLoop eventLoop() {
+        return null;
+    }
+
+    @Override
+    public Channel parent() {
+        return null;
+    }
+
+    @Override
+    public ChannelConfig config() {
+        return null;
+    }
+
+    @Override
+    public boolean isOpen() {
+        return false;
+    }
+
+    @Override
+    public boolean isRegistered() {
+        return false;
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public ChannelMetadata metadata() {
+        return null;
+    }
+
+    @Override
+    public SocketAddress localAddress() {
+        return null;
+    }
+
+    @Override
+    public SocketAddress remoteAddress() {
+        return null;
+    }
+
+    @Override
+    public ChannelFuture closeFuture() {
+        return null;
+    }
+
+    @Override
+    public boolean isWritable() {
+        return false;
+    }
+
+    @Override
+    public long bytesBeforeUnwritable() {
+        return 0;
+    }
+
+    @Override
+    public long bytesBeforeWritable() {
+        return 0;
+    }
+
+    @Override
+    public ChannelPipeline pipeline() {
+        return null;
+    }
+
+    @Override
+    public ByteBufAllocator alloc() {
+        return null;
+    }
+
+    @Override
+    public Channel read() {
+        return null;
+    }
+
+    @Override
+    public Channel flush() {
+        return null;
     }
 }

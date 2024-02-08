@@ -36,6 +36,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     LOGIN_SECOND,
     PIN_OPERATION,
     SECONDPW_ERROR,
+    GENDER_SET,
     SERVERLIST,
     SERVERSTATUS,
     SERVER_IP,
@@ -53,7 +54,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     CHANGE_NAME_RESPONSE,
     GACHAPON_STAMPS,
     FREE_CASH_ITEM,
-    ONE_A_DAY,    
+    ONE_A_DAY,
     // CHANNEL
     CHANGE_CHANNEL, SHOW_TITLE,
     UPDATE_STATS,
@@ -152,6 +153,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     UPDATE_CHAR_BOX,
     NPC_TALK,
     KEYMAP,
+    MONSTER_BOMB,
     SHOW_MONSTER_HP,
     PARTY_OPERATION,
     UPDATE_PARTYMEMBER_HP,
@@ -176,6 +178,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     CANCEL_CHAIR,
     SKILL_EFFECT,
     CANCEL_SKILL_EFFECT,
+    GIVE_CHARACTER_SKILL,
     BOSS_ENV,
     REACTOR_SPAWN,
     REACTOR_HIT,
@@ -200,6 +203,9 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     PET_AUTO_MP,
     PET_AUTO_CURE,
     PET_UPDATE,
+    START_TV,
+    REMOVE_TV,
+    ENABLE_TV,
     COOLDOWN,
     PLAYER_HINT,
     SUMMON_HINT,
@@ -270,6 +276,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     MESOBAG_FAILURE,
     SERVER_BLOCKED,
     DRAGON_MOVE,
+    SHOW_DRAGON_FLY,
     DRAGON_REMOVE,
     DRAGON_SPAWN,
     ARAN_COMBO,
@@ -419,7 +426,8 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
     SPECIAL_CREATION,
     MONSTER_RESIST,
     PET_EXCEPTION_LIST,
-    RPS_GAME;
+    RPS_GAME,
+    GM_TEXT, MAGIC_WHEEL, PCROOM_CHECK, DOJO_RANKING, SEND_LINK;
     private short code = -2;
 
     @Override

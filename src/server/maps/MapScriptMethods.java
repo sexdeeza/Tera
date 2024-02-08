@@ -25,17 +25,8 @@ import java.awt.Point;
 
 import client.MapleClient;
 import client.MapleQuestStatus;
-import client.Skill;
-import client.SkillEntry;
-import client.SkillFactory;
-import constants.GameConstants;
-import java.util.HashMap;
-import java.util.Map;
-import scripting.EventManager;
 import scripting.NPCScriptManager;
-import server.Randomizer;
-import server.MapleItemInformationProvider;
-import server.TimerManager;
+import server.Timer;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.OverrideMonsterStats;
@@ -44,11 +35,9 @@ import server.quest.MapleQuest.MedalQuest;
 import tools.FileoutputUtil;
 import tools.packet.CField;
 import server.maps.MapleNodes.DirectionInfo;
-import static server.maps.SavedLocationType.WORLDTOUR;
 import tools.packet.CField.EffectPacket;
 import tools.packet.CField.UIPacket;
 import tools.packet.CWvsContext;
-import tools.packet.MobPacket;
 
 public class MapScriptMethods {
 
@@ -91,6 +80,7 @@ public class MapScriptMethods {
 
         cygnusJobTutorial,
         cygnusTest,
+        evanPromotion,
         explorationPoint,
         NULL;
 
@@ -102,30 +92,6 @@ public class MapScriptMethods {
             }
         }
     }
-
-    private static enum directionInfo {
-
-        merTutorDrecotion01,
-        merTutorDrecotion02,
-        merTutorDrecotion03,
-        merTutorDrecotion04,
-        merTutorDrecotion05,
-        merTutorDrecotion12,
-        merTutorDrecotion21,
-        ds_tuto_0_1,
-        ds_tuto_0_2,
-        ds_tuto_0_3,
-        NULL;
-
-        private static directionInfo fromString(String Str) {
-            try {
-                return valueOf(Str);
-            } catch (IllegalArgumentException ex) {
-                return NULL;
-            }
-        }
-    }
-
 
     public static void startScript_FirstUser(MapleClient c, String scriptName) {
         if (c.getPlayer() == null) {
@@ -217,6 +183,30 @@ public class MapScriptMethods {
                 showIntro(c, "Effect/Direction.img/cygnusJobTutorial/Scene" + (c.getPlayer().getMapId() - 913040100));
                 break;
             }
+            case evanPromotion:
+                switch (c.getPlayer().getMapId()) {
+                    case 900090000:
+                        data = "Effect/Direction4.img/promotion/Scene0" + (c.getPlayer().getGender() == 0 ? "0" : "1");
+                        break;
+                    case 900090001:
+                        data = "Effect/Direction4.img/promotion/Scene1";
+                        break;
+                    case 900090002:
+                        data = "Effect/Direction4.img/promotion/Scene2" + (c.getPlayer().getGender() == 0 ? "0" : "1");
+                        break;
+                    case 900090003:
+                        data = "Effect/Direction4.img/promotion/Scene3";
+                        break;
+                    case 900090004:
+                        c.getSession().write(UIPacket.IntroDisableUI(false));
+                        c.getSession().write(UIPacket.IntroLock(false));
+                        c.getSession().write(CWvsContext.enableActions());
+                        final MapleMap mapto = c.getChannelServer().getMapFactory().getMap(900010000);
+                        c.getPlayer().changeMap(mapto, mapto.getPortal(0));
+                        return;
+                }
+                showIntro(c, data);
+                break;
             case explorationPoint: {
                 if (c.getPlayer().getMapId() == 104000000) {
                     c.getSession().write(UIPacket.IntroDisableUI(false));
@@ -395,138 +385,5 @@ public class MapScriptMethods {
         oms.setOHp((long) Math.ceil(theMob.getMobMaxHp() * (level / 5.0))); //10k to 4m
         theMob.setOverrideStats(oms);
         map.spawnMonsterOnGroundBelow(theMob, witchTowerPos);
-    }
-
-
-    public static void startDirectionInfo(MapleCharacter chr, boolean start) {
-        final MapleClient c = chr.getClient();
-        DirectionInfo di = chr.getMap().getDirectionInfo(start ? 0 : chr.getDirection());
-        if (di != null && di.EventQ.size() > 0) {
-            if (start) {
-                c.getSession().write(UIPacket.IntroDisableUI(true));
-                c.getSession().write(UIPacket.getDirectionInfo(3, 4));
-            } else {
-                for (String s : di.EventQ) {
-                    switch (directionInfo.fromString(s)) {
-                        case merTutorDrecotion01: //direction info: 1 is probably the time
-                            c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/0", 2000, 0, -100, 1));
-                            break;
-                        case merTutorDrecotion02:
-                            c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/1", 2000, 0, -100, 1));
-                            break;
-                        case merTutorDrecotion03:
-                            c.getSession().write(UIPacket.getDirectionInfo(3, 2));
-                            c.getSession().write(UIPacket.getDirectionStatus(true));
-                            c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/2", 2000, 0, -100, 1));
-                            break;
-                        case merTutorDrecotion04:
-                            c.getSession().write(UIPacket.getDirectionInfo(3, 2));
-                            c.getSession().write(UIPacket.getDirectionStatus(true));
-                            c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/3", 2000, 0, -100, 1));
-                            break;
-                        case merTutorDrecotion05:
-                            c.getSession().write(UIPacket.getDirectionInfo(3, 2));
-                            c.getSession().write(UIPacket.getDirectionStatus(true));
-                            c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/4", 2000, 0, -100, 1));
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(3, 2));
-                                    c.getSession().write(UIPacket.getDirectionStatus(true));
-                                    c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/5", 2000, 0, -100, 1));
-                                }
-                            }, 2000);
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.IntroEnableUI(0));
-                                    c.getSession().write(CWvsContext.enableActions());
-                                }
-                            }, 4000);
-                            break;
-                        case merTutorDrecotion12:
-                            c.getSession().write(UIPacket.getDirectionInfo(3, 2));
-                            c.getSession().write(UIPacket.getDirectionStatus(true));
-                            c.getSession().write(UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/8", 2000, 0, -100, 1));
-                            c.getSession().write(UIPacket.IntroEnableUI(0));
-                            break;
-                        case merTutorDrecotion21:
-                            c.getSession().write(UIPacket.getDirectionInfo(3, 1));
-                            c.getSession().write(UIPacket.getDirectionStatus(true));
-                            MapleMap mapto = c.getChannelServer().getMapFactory().getMap(910150005);
-                            c.getPlayer().changeMap(mapto, mapto.getPortal(0));
-                            break;
-                        case ds_tuto_0_2:
-                            c.getSession().write(CField.showEffect("demonSlayer/text1"));
-                            break;
-                        case ds_tuto_0_1:
-                            c.getSession().write(UIPacket.getDirectionInfo(3, 2));
-                            break;
-                        case ds_tuto_0_3:
-                            c.getSession().write(CField.showEffect("demonSlayer/text2"));
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(1, 4000));
-                                    c.getSession().write(CField.showEffect("demonSlayer/text3"));
-                                }
-                            }, 2000);
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(1, 500));
-                                    c.getSession().write(CField.showEffect("demonSlayer/text4"));
-                                }
-                            }, 6000);
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(1, 4000));
-                                    c.getSession().write(CField.showEffect("demonSlayer/text5"));
-                                }
-                            }, 6500);
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(1, 500));
-                                    c.getSession().write(CField.showEffect("demonSlayer/text6"));
-                                }
-                            }, 10500);
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(1, 4000));
-                                    c.getSession().write(CField.showEffect("demonSlayer/text7"));
-                                }
-                            }, 11000);
-                            TimerManager.getInstance().schedule(new Runnable() {
-
-                                public void run() {
-                                    c.getSession().write(UIPacket.getDirectionInfo(4, 2159307));
-                                    NPCScriptManager.getInstance().dispose(c);
-                                    NPCScriptManager.getInstance().start(c, 2159307);
-                                }
-                            }, 15000);
-                            break;
-                    }
-                }
-            }
-            c.getSession().write(UIPacket.getDirectionInfo(1, 2000));
-            chr.setDirection(chr.getDirection() + 1);
-            if (chr.getMap().getDirectionInfo(chr.getDirection()) == null) {
-                chr.setDirection(-1);
-            }
-        } else if (start) {
-            switch (chr.getMapId()) {
-                //hack
-                case 931050300:
-                    while (chr.getLevel() < 10) {
-                        chr.levelUp();
-                    }
-                    final MapleMap mapto = c.getChannelServer().getMapFactory().getMap(931050000);
-                    chr.changeMap(mapto, mapto.getPortal(0));
-                    break;
-            }
-        }
     }
 }

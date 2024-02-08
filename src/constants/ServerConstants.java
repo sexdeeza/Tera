@@ -45,6 +45,16 @@ public class ServerConstants {
         return 0;
     }
 
+    public static int flag = 0;
+    public static int userLimit = 100;
+    public static int maxCharacters = 6;
+    public static boolean monsterSpawn = false;
+    public static boolean DEBUG = false;
+
+    public static String ip = "127.0.0.1";
+    public static String host = "127.0.0.1";
+    public static int channelcount = 2;
+
     // Start of Poll
     public static final boolean PollEnabled = false;
     public static final String Poll_Question = "Are you there?";
@@ -58,11 +68,12 @@ public class ServerConstants {
     public static final int MTS_BASE = 0; // +amount to everything, GMS = 500, MSEA = 1000
     public static final int MTS_TAX = 5; // +% to everything, GMS = 10
     public static final int MTS_MESO = 10000; // mesos needed, GMS = 5000
+    public static boolean ENFORCE_MOB_LEVEL_RANGE = true;
     public static final String SQL_USER = "root", SQL_PASSWORD = "";
     // master login is only used in GMS: fake account for localhost only
     // master and master2 is to bypass all accounts passwords only if you are under
     // the IPs below
-
+    public static final boolean AUTO_REGISTER = true;
     public static byte[] getServerIP() {
         byte[] bip = null;
 

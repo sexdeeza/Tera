@@ -43,7 +43,7 @@ import java.util.Map;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import server.Randomizer;
-import server.TimerManager;
+import server.Timer;
 import server.movement.LifeMovementFragment;
 import server.life.MapleMonster;
 import server.maps.MapleDragon;
@@ -77,7 +77,7 @@ public class SummonHandler {
                 if (clones[i].get() != null) {
                     final MapleMap map = chr.getMap();
                     final MapleCharacter clone = clones[i].get();
-                    TimerManager.getInstance().schedule(new Runnable() {
+                    Timer.CloneTimer.getInstance().schedule(new Runnable() {
 
                         public void run() {
                             try {
@@ -97,6 +97,23 @@ public class SummonHandler {
                 }
             }
         }
+    }
+
+    public static void DragonFly(LittleEndianAccessor slea, MapleCharacter chr) {
+        if (chr == null || chr.getMap() == null || chr.getDragon() == null) {
+            return;
+        }
+        /*
+         * 1902040 - 第1階段龍 - (無描述)
+         * 1902041 - 第2階段龍 - (無描述)
+         * 1902042 - 第3階段龍 - (無描述)
+         * 1912033 - 第1階段龍鞍 - (無描述)
+         * 1912034 - 第2階段龍鞍 - (無描述)
+         * 1912035 - 第3階段龍鞍 - (無描述)
+         */
+        int type = slea.readInt();
+        int mountId = type == 0 ? slea.readInt() : 0;
+        chr.getMap().broadcastMessage(chr, CField.showDragonFly(chr.getId(), type, mountId), chr.getTruePosition());
     }
 
     public static final void MoveSummon(final LittleEndianAccessor slea, final MapleCharacter chr) {
