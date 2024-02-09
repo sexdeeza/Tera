@@ -1,9 +1,9 @@
 function enter(pi) {
-	var returnMap = pi.getSavedLocation("MULUNG_TC");
+	var returnMap = pi.getSavedLocation("FREE_MARKET");
 	if (returnMap < 0) {
-		returnMap = 100000000; // to fix people who entered the fm trough an unconventional way
+		returnMap = 100000200; // to fix people who entered the fm trough an unconventional way
 	}
-	pi.clearSavedLocation("MULUNG_TC");
-	pi.warp(returnMap, "unityPortal2"); 
+	pi.clearSavedLocation("FREE_MARKET");
+	pi.warp(100000200, 0);
 	return true;
 }

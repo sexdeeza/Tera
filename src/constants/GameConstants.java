@@ -2847,7 +2847,7 @@ public class GameConstants {
         switch (id) {
             case 5062000, 5050000, 5062001 -> {
                 //cube
-                return "This item may only be purchased at the PlayerNPC in FM.";
+                return "This item may only be purchased from Lucia";
             }
         }
         return "This item is blocked from the Cash Shop.";

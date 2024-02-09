@@ -3029,7 +3029,7 @@ public final class MapleMap {
                 }
             }
         } else {
-            final int numShouldSpawn = (GameConstants.isForceRespawn(mapid) ? monsterSpawn.size() : maxRegularSpawn) - spawnedMonstersOnMap.get();
+            final int numShouldSpawn = (GameConstants.isForceRespawn(mapid) ? monsterSpawn.size() : maxRegularSpawn * 2) - spawnedMonstersOnMap.get();
             if (numShouldSpawn > 0) {
                 int spawned = 0;
 
@@ -3040,7 +3040,7 @@ public final class MapleMap {
                     if (!isSpawns && spawnPoint.getMobTime() > 0) {
                         continue;
                     }
-                    if (spawnPoint.shouldSpawn(lastSpawnTime) || GameConstants.isForceRespawn(mapid) || (monsterSpawn.size() < 10 && maxRegularSpawn > monsterSpawn.size() && partyBonusRate > 0)) {
+                    if (spawnPoint.shouldSpawn(lastSpawnTime) || GameConstants.isForceRespawn(mapid) || (monsterSpawn.size() < 15 && maxRegularSpawn > monsterSpawn.size() && partyBonusRate > 0)) {
                         spawnPoint.spawnMonster(this);
                         spawned++;
                     }

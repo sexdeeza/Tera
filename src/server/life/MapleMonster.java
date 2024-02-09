@@ -22,13 +22,7 @@ package server.life;
 
 import client.inventory.Equip;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import constants.GameConstants;
@@ -419,6 +413,13 @@ public class MapleMonster extends AbstractLoadedMapleLife {
             attacker.gainExpMonster(exp, true, highestDamage, pty, Class_Bonus_EXP, Equipment_Bonus_EXP, Premium_Bonus_EXP, stats.isPartyBonus(), stats.getPartyBonusRate());
         }
         attacker.mobKilled(getId(), lastskillID);
+        if ((int) (Math.random() * 100) < 15) {
+            Random random = new Random();
+            int nxGained = random.nextInt(216) + 35; // Calculate the amount of NX gained
+                attacker.modifyCSPoints(1, Math.toIntExact(nxGained));
+                attacker.dropMessage(-1, "You have gained " + nxGained + " NX");
+
+        }
     }
 
     public final int killBy(final MapleCharacter killer, final int lastSkill) {
