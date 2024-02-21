@@ -1,35 +1,18 @@
 /*
-	This file is part of the ZeroFusion MapleStory Server
-    Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc> 
-                       Matthias Butz <matze@odinms.de>
-                       Jan Christian Meyer <vimes@odinms.de>
-    ZeroFusion organized by "RMZero213" <RMZero213@hotmail.com>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License version 3
-    as published by the Free Software Foundation. You may not use, modify
-    or distribute this program under any other version of the
-    GNU Affero General Public License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	名字:	菇菇王國
+	地圖:	最後城塔
+	描述:	106021402
 */
 
-var dungeonid = 106021600;
-var dungeons = 10;
-
 function enter(pi) {
-	    for(var i = 0; i < dungeons; i++) {
-		if (pi.getMap(dungeonid + i).getCharactersSize() == 0) {
-		    		pi.warp(dungeonid + i, 0);
-		    return true;
+	if (pi.getPlayer().getQuestNAdd(Packages.server.quest.MapleQuest.getInstance(2333)).getStatus() > 1) {
+		pi.getPlayer().changeMap(pi.getMap(106021700), pi.getMap(106021700).getPortal(1));
+		return false;
 		}
-	    }
-	    pi.playerMessage(5, "All of the Mini-Dungeons are in use right now, please try again later.");
+	if (pi.getPlayer().itemQuantity(4032388)) {
+		pi.openNpc(1300013);
+		return true;
+		}
+		pi.getClient().getSession().write(Packages.tools.packet.CWvsContext.serverNotice(6, "The door seems to be locked and a key is needed to open it"));
 		return false;
 }
