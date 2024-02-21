@@ -1,52 +1,26 @@
 /*
-	Red Balloon - LudiPQ 1st stage NPC
-**/
-
-var status;
+	名字:	紅氣球
+	地圖:	遺棄之塔&amp;lt;第1階段&gt;
+	描述:	922010100
+*/
 
 function start() {
-    status = -1;
-    action(1, 0, 0);
-}
-
-function action(mode, type, selection) {
-    var eim = cm.getEventInstance();
-    var stage1status = eim.getProperty("stage1status");
-
-    if (stage1status == null) {
-	if (cm.isLeader()) { // Leader
-	    var stage1leader = eim.getProperty("stage1leader");
-	    if (stage1leader == "done") {
-
-		if (cm.getMap().getAllMonstersThreadsafe().size() == 0) { // Clear stage
-		    cm.sendNext("Congratulations! You've passed the 1st stage. Hurry on now, to the 2nd stage.");
-		    cm.removeAll(4001022);
-		    clear(1, eim, cm);
-		    cm.givePartyExp(2100, eim.getPlayers());
-		    cm.dispose();
-		} else { // Not done yet
-		    cm.sendNext("Are you sure you've killed all the Ratz?");
-		}
+	var eim = cm.getPlayer().getEventInstance();
+	if (eim.getProperty("stage1") == null) {
+	if (cm.getPlayer().itemQuantity(4001022) < 20) {
+		cm.sendOk("Welcome to the Abandoned Tower <Phase 1>, please search nearby. The entire team needs to collect 20 #b#t4001022##k and give them to me.");
+        cm.dispose();
+        return;
+        }
+        cm.sendOk("The first stage has been successfully passed, and the entrance to the next area has been opened.");
+        cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("gate", 2));
+        cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+        cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+        cm.getPlayer().removeAll(4001022);
+        eim.setProperty("stage1", 1); //Give conditions
+        cm.dispose();
+        return;
+        }
+        cm.sendOk("Successfully passed the level, the entrance to the <Second Stage> has been opened.");
 		cm.dispose();
-	    } else {
-		cm.sendOk("Welcome to the 1st stage. Go around, and collect #rPasses of Dimension#k from the #bRatz#k and #bBlack Ratz#k in this map. Once you're done, get your party members to hand all the #rPasses#k to you, then talk to me again.");
-		eim.setProperty("stage1leader","done");
-		cm.dispose();
-	    }
-	} else { // Members
-	    cm.sendNext("Welcome to the 1st stage. Go around, and collect #rPasses of Dimension#k from the #bRatz#k and #bBlack Ratz#k in this map. Once you're done, hand all the #rPasses#k to your party leader.");
-	    cm.dispose();
-	}
-    } else {
-	cm.sendNext("Congratulations! You've passed the 1st stage. Hurry on now, to the 2nd stage.");
-	cm.dispose();
-    }
-}
-
-function clear(stage, eim, cm) {
-    eim.setProperty("stage" + stage.toString() + "status","clear");
-    
-    cm.showEffect(true, "quest/party/clear");
-    cm.playSound(true, "Party1/Clear");
-    cm.environmentChange(true, "gate");
 }

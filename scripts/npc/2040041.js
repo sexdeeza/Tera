@@ -1,11 +1,10 @@
 /*
-	Aqua Balloon - LudiPQ 6th stage NPC
+	名字:	海藍氣球
+	地圖:	遺棄之塔&amp;lt;第3階段&gt;
+	描述:	922010600
 */
 
 function start() {
-    cm.sendNext("Hello, and welcome to the 3rd stage of the Ludibrium Party Quest. Look here, and you'll see a number of boxes. All you have to do, is find the right combination, and press up on it to teleport up. But, if you get it wrong, you will be teleported back down to the bottom. Good luck!");
-}
-
-function action(mode, type, selection) {
-    cm.dispose();
+	cm.sendOk("Please stand on the box with numbers, press the Up Arrow key, and try to find the correct combination of numbers to reach the top.");
+	cm.dispose();
 }

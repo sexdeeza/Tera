@@ -1,27 +1,24 @@
 /*
-	NPC Name: 		Sgt. Anderson
-	Map(s): 		Ludibrium PQ Maps
-	Description: 		Warps you out from Ludi PQ
+	名字:	士兵安德森
+	地圖:	遺棄之塔&amp;lt;冒險的終結&gt;
+	描述:	922010000
 */
 
-function start() {
-    if (cm.getMapId() != 922010000) {
-	cm.sendYesNo("Are you sure you want to leave the #rParty Quest#k? You'll have to start over if you change your mind.");
-    } else {
-	if (cm.haveItem(4001022)) {
-	    cm.removeAll(4001022);
-	}
-	if (cm.haveItem(4001023)) {
-	    cm.removeAll(4001023);
-	}
-	cm.warp(221023300, 0);
-	cm.dispose();
-    }
-}
+var item = [4001022, 4001023];
 
-function action(mode, type, selection) {
-    if (mode == 1) {
-	cm.warp(922010000, 0);
-    }
-    cm.dispose();
+function start() {
+	if (cm.getPlayer().getMap().getId() == 922010000)
+		cm.sendYesNo("Are you ready to leave #b#m" + cm.getPlayer().getMap().getId() + "##k?");
+        else
+        cm.sendYesNo("Are you sure you want to leave #b#m" + cm.getPlayer().getMap().getId() + "##k?");
+        }
+
+        function action(mode, type, selection) {
+        if (mode > 0) {
+        for (var i = 0; i < item.length; i++)
+        cm.removeAll(item[i]);
+        map = cm.getPlayer().getMap().getId() == 922010000 ? 221023300 : 922010000;
+        cm.getPlayer().changeMap(cm.getMap(map), cm.getMap(map).getPortal(0));
+        }
+		cm.dispose();
 }

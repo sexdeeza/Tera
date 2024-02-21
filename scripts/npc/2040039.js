@@ -1,46 +1,26 @@
 /*
-	Lime Balloon - LudiPQ 4th stage NPC
+	名字:	黃綠氣球
+	地圖:	遺棄之塔&amp;lt;第2階段&gt;
+	描述:	922010400
 */
 
-var exp = 3360;
-
-function action(mode, type, selection) {
-    var eim = cm.getEventInstance();
-    var stage4status = eim.getProperty("stage4status");
-
-    if (stage4status == null) {
-	if (cm.isLeader()) { // Leader
-	    var stage4leader = eim.getProperty("stage4leader");
-	    if (stage4leader == "done") {
-
-		if (cm.getMap(922010401).getAllMonstersThreadsafe().size() == 0 && cm.getMap(922010402).getAllMonstersThreadsafe().size() == 0 && cm.getMap(922010403).getAllMonstersThreadsafe().size() == 0 && cm.getMap(922010404).getAllMonstersThreadsafe().size() == 0 && cm.getMap(922010405).getAllMonstersThreadsafe().size() == 0) { // Clear stage
-		    cm.sendNext("Congratulations! You've passed the 2nd stage. Hurry on now, to the 3rd stage.");
-		    cm.removeAll(4001022);
-		    clear(4,eim,cm);
-		    cm.givePartyExp(exp);
-		} else { // Not done yet
-		    cm.sendNext("Are you sure you've killed all the monsters? Please check again.");
-		}
-		cm.safeDispose();
-	    } else {
-		cm.sendOk("Welcome to the 2nd stage. Go around, and collect #rPasses of Dimension#k from the monsters in the dark maps. Once you're done, get your party members to hand all the #rPasses#k to you, then talk to me again.");
-		eim.setProperty("stage4leader","done");
-		cm.safeDispose();
-	    }
-	} else { // Members
-	    cm.sendNext("Welcome to the 2nd stage. Go around, and collect #rPasses of Dimension#k from the monsters in the dark maps. Once you're done, hand all the #rPasses#k to your party leader.");
-	    cm.safeDispose();
-	}
-    } else {
-	cm.sendNext("Congratulations! You've passed the 2nd stage. Hurry on now, to the 3rd stage.");
-	cm.safeDispose();
-    }
-}
-
-function clear(stage, eim, cm) {
-    eim.setProperty("stage" + stage.toString() + "status","clear");
-
-    cm.showEffect(true, "quest/party/clear");
-    cm.playSound(true, "Party1/Clear");
-    cm.environmentChange(true, "gate");
+function start() {
+	var eim = cm.getPlayer().getEventInstance();
+	if (eim.getProperty("stage2") == null) {
+	if (cm.getPlayer().itemQuantity(4001022) < 14) {
+		cm.sendOk("Welcome to the Abandoned Tower <Phase 2>, please search nearby. The entire team needs to collect 14 #b#t4001022##k and give it to me.");
+        cm.dispose();
+        return;
+        }
+        cm.sendOk("The second stage has been successfully passed, and the entrance to the next area has been opened.");
+        cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("gate", 2));
+        cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+        cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+        cm.getPlayer().removeAll(4001022);
+        eim.setProperty("stage2", 1); //Give conditions
+        cm.dispose();
+        return;
+        }
+        cm.sendOk("Successfully passed the level, the entrance to the <third stage> has been opened。");
+		cm.dispose();
 }

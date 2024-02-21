@@ -1,11 +1,10 @@
 /*
-	Pink Balloon - LudiPQ Bonus stage NPC
+	名字:	粉紅氣球
+	地圖:	遺棄之塔&amp;lt;Bonus&gt
+	描述:	922011000
 */
 
 function start() {
-    cm.sendNext("This is the #rBonus Stage#k. Breaking the boxes will give you some rare equips and use items - you only have a minute, so what're you waiting for? Go break the boxes!");
-}
-
-function action(mode, type, selection) {
-    cm.dispose();
+	cm.sendOk("This is the land of rewards, please break the boxes to get unexpected gifts.");
+	cm.dispose();
 }

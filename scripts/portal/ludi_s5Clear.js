@@ -1,3 +1,8 @@
+/*
+	名字:	隱藏地圖
+	地圖:	遺棄之塔&amp;lt;第5階段&gt;
+	描述:	922010800
+*/
 
 function enter(pi) {
 	var eim = pi.getPlayer().getEventInstance();

@@ -1,72 +1,46 @@
 /*
-	Red Sign - 101st Floor Eos Tower (221024500)
+	名字:	標示牌
+	地圖:	愛奧斯塔101樓
+	描述:	221023300
 */
 
-var status = -1;
-var minLevel = 20; // 35
-var maxLevel = 255; // 65
-
-var minPartySize = 1; //CHANGE after BB
-var maxPartySize = 6;
+function start() {
+	cm.sendSimple("#e<Team Mission: Dimensional Rift>#n \r\n\r\nA time rift has appeared in the Toy City area, and we need brave adventurers to defeat the invading monsters. Please, please find a few reliable friends to help us save the toy city. You need to go in to challenge monsters, solve mysteries, and ultimately challenge the powerful #o9300012#. \r\n\r\n Number of players: 3~6 \r\n Level range: 20~69 \r\n Time limit: 20 minutes\r\n#L0##bEnter the mission map#l");
+}
 
 function action(mode, type, selection) {
-    if (mode == 1) {
-	status++;
-    } else {
-	if (status == 0) {
-	    cm.dispose();
-	    return;
-	}
-	status--;
-    }
-	cm.removeAll(4001022);
-	cm.removeAll(4001023);
-	if (cm.getParty() == null) { // No Party
-	    cm.sendOk("How about you and your party members collectively beating a quest? Here you'll find obstacles and problems where you won't be able to beat it unless with great teamwork. If you want to try it, please tell the #bleader of your party#k to talk to me.\r\n\r\n#rRequirements: " + minPartySize + " Party Members, all between level " + minLevel + " and level " + maxLevel + ".#b");
-	} else if (!cm.isLeader()) { // Not Party Leader
-	    cm.sendOk("If you want to try the quest, please tell the #bleader of your party#k to talk to me.");
-	} else {
-	    // Check if all party members are within PQ levels
-	    var party = cm.getParty().getMembers();
-	    var mapId = cm.getMapId();
-	    var next = true;
-	    var levelValid = 0;
-	    var inMap = 0;
-	    var it = party.iterator();
-
-	    while (it.hasNext()) {
-		var cPlayer = it.next();
-		if ((cPlayer.getLevel() >= minLevel) && (cPlayer.getLevel() <= maxLevel)) {
-		    levelValid += 1;
-		} else {
-		    next = false;
-		}
-		if (cPlayer.getMapid() == mapId) {
-		    inMap += (cPlayer.getJobId() == 900 ? 6 : 1);
-		}
-	    }
-	    if (party.size() > maxPartySize || inMap < minPartySize) {
-		next = false;
-	    }
-	    if (next) {
-		var em = cm.getEventManager("LudiPQ");
-		if (em == null) {
-		    cm.sendOk("The Ludibrium PQ has encountered an error. Please report this on the forums, with a screenshot.");
-		} else {
-		    var prop = em.getProperty("state");
-		    if (prop.equals("0") || prop == null) {
-			em.startInstance(cm.getParty(), cm.getMap(), 70);
-			cm.removeAll(4001022);
-			cm.removeAll(4001023);
+	if (mode > 0) {
+		if (cm.getPlayer().getParty() == null) {
+			cm.sendOk("I'm sorry, the monsters inside are dangerous, and I can't let you take the risk alone.");
 			cm.dispose();
 			return;
-		    } else {
-			cm.sendOk("Another party has already entered the #rParty Quest#k in this channel. Please try another channel, or wait for the current party to finish.");
-		    }
-		}
-	    } else {
-		cm.sendOk("Your party is invalid. Please adhere to the following requirements:\r\n\r\n#rRequirements: " + minPartySize + " Party Members, all between level " + minLevel + " and level " + maxLevel + ".");
-	    }
-	}
-	cm.dispose();
+			}
+		if (cm.getPlayer().getParty().getLeader().getId() != cm.getPlayer().getId()) {
+			cm.sendOk("If you want to perform this mission, please tell your team leader to talk to me.");
+			cm.dispose();
+			return;
+			}
+			var chat = "Sorry, because your group size is not within the entry requirements, some group members are not eligible to attempt this mission, or they are not in this map.\r\n\r\nNumber of players: 3~6 \r\nLevel range: 20~69 \r\n\r\n";
+			var chenhui = 0;
+			var party = cm.getPlayer().getParty().getMembers();
+			for (var i = 0; i < party.size(); i++)
+		if (party.get(i).getLevel() < 20 || party.get(i).getLevel() > 69 || party.get(i).getMapid() != 221023300 || party.size() < 3) {
+			chat += "#bName: " + party.get(i).getName() + " / (Level: " + party.get(i).getLevel() + ") / Map: #m" + party.get(i).getMapid() + "#\r\n";
+			chenhui++;
+			}
+		if (chenhui != 0) {
+			cm.sendOk(chat);
+			cm.dispose();
+			return;
+			}
+			var em = cm.getEventManager("LudiPQ");
+			var prop = em.getProperty("state");
+		if (prop == null || prop == 0) {
+			em.startInstance(cm.getPlayer().getParty(), cm.getPlayer().getMap(), 200);
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("The Dimensional Rift mission is in progress, please try other channels.");
+			}
+			cm.dispose();
 }

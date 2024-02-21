@@ -1,56 +1,27 @@
 /*
-	Violet Balloon - LudiPQ Crack on the Wall NPC
-**/
+	名字:	紫氣球
+	地圖:	時空的裂縫
+	描述:	922010900
+*/
 
-var status;
-			
 function start() {
-    status = -1;
-    action(1, 0, 0);
-}
-
-function action(mode, type, selection) {
-    if (status == -1 && cm.isLeader()) {
-	var eim = cm.getEventInstance();
-
-	if (eim.getProperty("crackLeaderPreamble") == null) {
-	    eim.setProperty("crackLeaderPreamble", "done");
-	    cm.sendNext("This is the final stage; it'll be a final test of your strength. Give the #rKey of Dimension#k that he drops to me, and you will have succeeded. Good luck!");
-	    cm.dispose();
-	} else {
-	    if (cm.haveItem(4001023)) {
-		status = 0;
-		cm.sendNext("Congratulations! You have defeated the boss, #bAlishar#k. Would you like to go to the reward stage now?");
-	    } else {
-		cm.sendNext("Please bring me the #bKeys of Dimension#k by defeating #bAlishar#k.");
+	var eim = cm.getPlayer().getEventInstance();
+	if (eim.getProperty("stage9") == null) {
+	if (!cm.getPlayer().itemQuantity(4001023)) {
+		cm.sendOk("Welcome to the rift in time and space, please destroy the giant fighter and collect #v4001023# and give it to me");
+                   cm.dispose();
+                   return;
+                   }
+                   cm.sendOk("Congratulations on completing all challenges, please wait to be teleported to the Abandoned Tower <Bonus>.");
+                   cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CWvsContext.serverNotice(6, "Congratulations on completing all challenges, please wait to be transferred to the Abandoned Tower <Bonus>"));
+                   cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+                   cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+                   cm.getEventInstance().startEventTimer(1 * 10000);
+                   cm.getPlayer().removeAll(4001023);
+                   eim.setProperty("stage9", 1); //Give conditions
+                   cm.dispose();
+                   return;
+                   }
+                   cm.sendOk("Please wait patiently, you will enter the Abandoned Tower <Bonus> after the countdown.");
 		cm.dispose();
-	    }
-	}
-    } else if (status == -1 && !cm.isLeader()) {
-	cm.sendNext("Get the leader of your party to hand the #rKey of Dimension#k that #bAlishar#k drops to me, and you will have succeeded. Good luck!");
-	cm.dispose();
-    } else if (status == 0 && cm.isLeader()) {
-	var eim = cm.getEventInstance();
-	clear(9,eim,cm);
-	cm.gainItem(4001023,-1);
-
-	var players = eim.getPlayers();
-	cm.givePartyExp_PQ(70, 1.0, players);
-	eim.setProperty("cleared", "true"); //set determine
-	eim.restartEventTimer(60000);
-	var bonusmap = cm.getMap(922011100);
-	for (var i = 0; i < players.size(); i++) {
-	    players.get(i).changeMap(bonusmap, bonusmap.getPortal(0));
-	}
-	cm.dispose();
-    } else {
-	cm.dispose();
-    }
-}
-
-function clear(stage, eim) {
-    eim.setProperty("stage" + stage.toString() + "status","clear");
-
-    cm.showEffect(true, "quest/party/clear");
-    cm.playSound(true, "Party1/Clear");
 }

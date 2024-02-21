@@ -1,3 +1,9 @@
+/*
+	名字:	隱藏地圖
+	地圖:	遺棄之塔&amp;lt;第2階段&gt;
+	描述:	922010400
+*/
+
 function enter(pi) {
 	var eim = pi.getPlayer().getEventInstance();
 	if (eim.getProperty("stage2") == null) {

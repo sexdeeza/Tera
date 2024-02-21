@@ -1,6 +1,9 @@
-/**
-	Ludibrium PQ (101st Eos Tower)
+/*
+	名字:	玩具城
+	地圖:	愛奧斯塔101樓
+	描述:	221023300
 */
+
 function init() {//服務端讀取
 	em.setProperty("state", 0);
 }
@@ -37,6 +40,7 @@ function playerEntry(eim, player) {//傳送進事件地圖
 
 function monsterValue(eim, mobId) {//殺怪後觸發
 	if (mobId == 9300012) {
+		eim.getMapInstance(922010900).broadcastMessage(Packages.tools.packet.CWvsContext.serverNotice(6, "The giant fighter was defeated"));
 		}
 		return 1;
 }
