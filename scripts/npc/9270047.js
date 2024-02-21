@@ -11,8 +11,8 @@ function start() {
 			cm.dispose();
 			return;
 		}
-		if (cm.getPlayer().getClient().getChannel() != 6 && cm.getPlayer().getClient().getChannel() != 7 && cm.getPlayer().getClient().getChannel() != 8 && cm.getPlayer().getClient().getChannel() != 9) {
-			cm.sendOk("Scarlion/Targa may only be attempted on channel 6,7,8,9.");
+		if (cm.getPlayer().getClient().getChannel() != 1 && cm.getPlayer().getClient().getChannel() != 7 && cm.getPlayer().getClient().getChannel() != 8 && cm.getPlayer().getClient().getChannel() != 9) {
+			cm.sendOk("Scarlion/Targa may only be attempted on channel 1,7,8,9.");
 			cm.dispose();
 			return;
 		}

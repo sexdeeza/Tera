@@ -11,8 +11,8 @@ function start() {
 			cm.dispose();
 			return;
 		}
-		if (cm.getPlayer().getClient().getChannel() != 13) {
-			cm.sendOk("Cygnus may only be attempted on channel 13.");
+		if (cm.getPlayer().getClient().getChannel() != 1) {
+			cm.sendOk("Cygnus may only be attempted on channel 1.");
 			cm.dispose();
 			return;
 		}

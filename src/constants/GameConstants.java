@@ -30,11 +30,8 @@ import client.inventory.MapleWeaponType;
 import client.status.MonsterStatus;
 import handling.channel.ChannelServer;
 import java.awt.Point;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
+
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import server.Randomizer;
@@ -2048,6 +2045,19 @@ public class GameConstants {
             }
         return 0;
     }
+
+    public static int[] excludedMaps = {610040210, 610040230};
+
+    // Method to check if a map ID is excluded
+    public static boolean isMapExcluded(int mapid) {
+        for (int excludedMap : excludedMaps) {
+            if (excludedMap == mapid) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int[] blockedMaps = {180000001, 180000002, 109050000, 280030000, 240060200, 280090000, 280030001, 240060201, 950101100, 950101010};
     //If you can think of more maps that could be exploitable via npc,block nao pliz!
 
@@ -3440,4 +3450,5 @@ public class GameConstants {
         //9101001
         return broadcastableSkillInParty.contains(skillId);
     }
+
 }

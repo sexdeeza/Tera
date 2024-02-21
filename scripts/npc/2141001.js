@@ -11,8 +11,8 @@ function start() {
 			cm.dispose();
 			return;
 		}
-		if (cm.getPlayer().getClient().getChannel() != 5) {
-			cm.sendOk("Pink Bean may only be attempted on channel 5.");
+		if (cm.getPlayer().getClient().getChannel() != 1) {
+			cm.sendOk("Pink Bean may only be attempted on channel 1.");
 			cm.dispose();
 			return;
 		}

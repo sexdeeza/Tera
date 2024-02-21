@@ -7,8 +7,8 @@ var status = -1;
 
 function start() {
     if (cm.getMapId() == 802000110) {
-		if (cm.getPlayer().getClient().getChannel() != 6) {
-			cm.sendOk("This boss may only be attempted on channel 6.");
+		if (cm.getPlayer().getClient().getChannel() != 1) {
+			cm.sendOk("This boss may only be attempted on channel 1.");
 			cm.dispose();
 			return;
 		}

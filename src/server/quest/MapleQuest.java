@@ -37,7 +37,6 @@ public class MapleQuest implements Serializable {
     protected String name = "";
 
     protected MapleQuest(final int id) {
-
         this.id = id;
     }
 
@@ -57,27 +56,19 @@ public class MapleQuest implements Serializable {
         while (rse.next()) {
             final MapleQuestRequirementType type = MapleQuestRequirementType.getByWZName(rse.getString("name"));
             final MapleQuestRequirement req = new MapleQuestRequirement(ret, type, rse);
-            switch (type) {
-                case interval:
-                    ret.repeatable = true;
-                    break;
-                case normalAutoStart:
-                    ret.repeatable = true;
-                    ret.autoStart = true;
-                    break;
-                case startscript:
-                    ret.scriptedStart = true;
-                    break;
-                case endscript:
-                    ret.customend = true;
-                    break;
-                case mob:
-                    req.getDataStore().parallelStream().forEach(mob -> { //If parallel throws problems, just delete the method in the line.
-                        ret.relevantMobs.put(mob.left, mob.right);
-                    });
-                    break;
-                default:
-                    break;
+            if (type.equals(MapleQuestRequirementType.interval)) {
+                ret.repeatable = true;
+            } else if (type.equals(MapleQuestRequirementType.normalAutoStart)) {
+                ret.repeatable = true;
+                ret.autoStart = true;
+            } else if (type.equals(MapleQuestRequirementType.startscript)) {
+                ret.scriptedStart = true;
+            } else if (type.equals(MapleQuestRequirementType.endscript)) {
+                ret.customend = true;
+            } else if (type.equals(MapleQuestRequirementType.mob)) {
+                for (Pair<Integer, Integer> mob : req.getDataStore()) {
+                    ret.relevantMobs.put(mob.left, mob.right);
+                }
             }
             if (rse.getInt("type") == 0) {
                 ret.startReqs.add(req);
@@ -138,8 +129,7 @@ public class MapleQuest implements Serializable {
     }
 
     public static void initQuests() {
-        ThreadManager.getInstance().newTask(() -> {
-            long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
             try {
                 Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement("SELECT * FROM wz_questdata");
@@ -164,11 +154,10 @@ public class MapleQuest implements Serializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println("Maple Quests loaded in " + (System.currentTimeMillis() - start) + "ms.");
+        System.out.println("Maple Quests loaded in " + (System.currentTimeMillis() - start) + "ms.");
 
-        });
-      
-    }
+    };
+
 
     public static MapleQuest getInstance(int id) {
         MapleQuest ret = quests.get(id);
@@ -184,6 +173,12 @@ public class MapleQuest implements Serializable {
     }
 
     public boolean canStart(MapleCharacter c, Integer npcid) {
+        final int[] ss = {3170, 4576};//每日任務ID
+        for (int i : ss) {
+            if (this.id == i){
+                repeatable = true;
+            }
+        }
         if (c.getQuest(this).getStatus() != 0 && !(c.getQuest(this).getStatus() == 2 && repeatable)) {
             return false;
         }
@@ -194,10 +189,10 @@ public class MapleQuest implements Serializable {
         //    return true; //need script
         //}
         for (MapleQuestRequirement r : startReqs) {
-            if (r.getType() == MapleQuestRequirementType.dayByDay && npcid != null) { //everyday. we don't want ok
-                forceComplete(c, npcid);
-                return false;
-            }
+            //if (r.getType() == MapleQuestRequirementType.dayByDay && npcid != null) { //everyday. we don't want ok
+            //    forceComplete(c, npcid);
+            //    return false;
+            // }
             if (!r.check(c, npcid)) {
                 return false;
             }
@@ -205,11 +200,12 @@ public class MapleQuest implements Serializable {
         return true;
     }
 
+
     public boolean canComplete(MapleCharacter c, Integer npcid) {
         if (c.getQuest(this).getStatus() != 1) {
             return false;
         }
-        if (blocked && !c.isGM()) {
+        if (blocked && !c.isGM() && this.id != 23205) {//惡魔任務-除掉警備兵！
             return false;
         }
         if (autoComplete && npcid != null && viewMedalItem <= 0) {
@@ -257,29 +253,29 @@ public class MapleQuest implements Serializable {
         complete(c, npc, null);
     }
 
-    public void complete(MapleCharacter c, int npc, Integer selection) {
-        if (c.getMap() != null && (autoPreComplete || checkNPCOnMap(c, npc)) && canComplete(c, npc)) {
-            for (MapleQuestAction a : completeActs) {
-                if (!a.checkEnd(c, selection)) {
-                    return;
-                }
+    public void complete(MapleCharacter c, int npc, Integer selection) {// 修復部分非腳本任務不能完成問題
+        //if (c.getMap() != null && (autoPreComplete || checkNPCOnMap(c, npc)) && canComplete(c, npc)) {
+        for (MapleQuestAction a : completeActs) {
+            if (!a.checkEnd(c, selection)) {
+                return;
             }
-            forceComplete(c, npc);
-            for (MapleQuestAction a : completeActs) {
-                a.runEnd(c, selection);
-            }
-            // we save forfeits only for logging purposes, they shouldn't matter anymore
-            // completion time is set by the constructor
-
-            c.getClient().getSession().write(EffectPacket.showForeignEffect(12)); // Quest completion
-            c.getMap().broadcastMessage(c, EffectPacket.showForeignEffect(c.getId(), 12), false);
         }
+        forceComplete(c, npc);
+        for (MapleQuestAction a : completeActs) {
+            a.runEnd(c, selection);
+        }
+        // we save forfeits only for logging purposes, they shouldn't matter anymore
+        // completion time is set by the constructor
+
+        c.getClient().getSession().write(EffectPacket.showForeignEffect(12)); // Quest completion
+        c.getMap().broadcastMessage(c, EffectPacket.showForeignEffect(c.getId(), 12), false);
+        //}
     }
 
     public void forfeit(MapleCharacter c) {
-        if (c.getQuest(this).getStatus() != (byte) 1) {
+        /*if (c.getQuest(this).getStatus() != (byte) 1) {
             return;
-        }
+        }*///外星基地任務暫時注釋
         final MapleQuestStatus oldStatus = c.getQuest(this);
         final MapleQuestStatus newStatus = new MapleQuestStatus(this, (byte) 0);
         newStatus.setForfeited(oldStatus.getForfeited() + 1);
@@ -311,7 +307,7 @@ public class MapleQuest implements Serializable {
 
     private boolean checkNPCOnMap(MapleCharacter player, int npcid) {
         //mir = 1013000
-        return (GameConstants.isEvan(player.getJob()) && npcid == 1013000) || npcid == 9000040 || npcid == 9000066 || (player.getMap() != null && player.getMap().containsNPC(npcid));
+        return ((GameConstants.isEvan(player.getJob())) && (npcid == 1013000)) || ((GameConstants.isDemon(player.getJob())) && (npcid == 0)) || ((GameConstants.isMercedes(player.getJob())) && (npcid == 0)) || (npcid == 2151009) || (npcid == 9010000) || ((npcid >= 2161000) && (npcid <= 2161011)) || (npcid == 9000040) || (npcid == 9000066) || (npcid == 0) || ((player.getMap() != null) && (player.getMap().containsNPC(npcid)));
     }
 
     public int getMedalItem() {

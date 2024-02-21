@@ -37,8 +37,6 @@ public class MapleQuestStatus implements Serializable {
     private transient MapleQuest quest;
     private byte status;
     private Map<Integer, Integer> killedMobs = null;
-
-    private final List<Integer> medalProgress = new LinkedList<>();
     private int npc;
     private long completionTime;
     private int forfeited = 0;
@@ -69,7 +67,7 @@ public class MapleQuestStatus implements Serializable {
     }
 
     public final void setQuest(int qid) {
-	this.quest = MapleQuest.getInstance(qid);
+        this.quest = MapleQuest.getInstance(qid);
     }
 
     public final MapleQuest getQuest() {
@@ -94,7 +92,7 @@ public class MapleQuestStatus implements Serializable {
 
 
     public boolean isCustom() {
-	return GameConstants.isCustomQuest(quest.getId());
+        return GameConstants.isCustomQuest(quest.getId());
     }
 
     private final void registerMobs() {
@@ -139,22 +137,6 @@ public class MapleQuestStatus implements Serializable {
             }
         } //i doubt this
         return false;
-    }
-
-    public boolean addMedalMap(int mapid) {
-        if (medalProgress.contains(mapid)) {
-            return false;
-        }
-        medalProgress.add(mapid);
-        return true;
-    }
-
-    public int getMedalProgress() {
-        return medalProgress.size();
-    }
-
-    public List<Integer> getMedalMaps() {
-        return medalProgress;
     }
 
     private final boolean questCount(final int mo, final int id) {
