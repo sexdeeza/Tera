@@ -5,7 +5,7 @@
 */
 
 function start() {
-	cm.sendSimple("#e<Team Mission: Dimensional Rift>#n \r\n\r\nA time rift has appeared in the Toy City area, and we need brave adventurers to defeat the invading monsters. Please, please find a few reliable friends to help us save the toy city. You need to go in to challenge monsters, solve mysteries, and ultimately challenge the powerful #o9300012#. \r\n\r\n Number of players: 3~6 \r\n Level range: 20~69 \r\n Time limit: 20 minutes\r\n#L0##bEnter the mission map#l");
+	cm.sendSimple("#e<Party Quest: Dimensional Crack>#n \r\n\r\nA dimensional crack has appeared in Ludibrium, and we need brave adventurers to defeat the invading monsters. Please, please find a few reliable friends to help us save the toy city. You need to go in to challenge monsters, solve mysteries, and ultimately challenge the powerful #o9300012#. \r\n\r\n Number of players: 3 ~ 6 \r\n Level range: 35 ~ 69 \r\n Time limit: 20 minutes\r\n#L0##bEnter the mission map#l");
 }
 
 function action(mode, type, selection) {
@@ -20,11 +20,11 @@ function action(mode, type, selection) {
 			cm.dispose();
 			return;
 			}
-			var chat = "Sorry, because your group size is not within the entry requirements, some group members are not eligible to attempt this mission, or they are not in this map.\r\n\r\nNumber of players: 3~6 \r\nLevel range: 20~69 \r\n\r\n";
+			var chat = "Sorry, because your group size is not within the entry requirements, some group members are not eligible to attempt this mission, or they are not in this map.\r\n\r\nNumber of players: 3 ~ 6 \r\nLevel range: 35 ~ 69 \r\n\r\n";
 			var chenhui = 0;
 			var party = cm.getPlayer().getParty().getMembers();
 			for (var i = 0; i < party.size(); i++)
-		if (party.get(i).getLevel() < 20 || party.get(i).getLevel() > 69 || party.get(i).getMapid() != 221023300 || party.size() < 3) {
+		if (party.get(i).getLevel() < 35 || party.get(i).getLevel() > 69 || party.get(i).getMapid() != 221023300 || party.size() < 3) {
 			chat += "#bName: " + party.get(i).getName() + " / (Level: " + party.get(i).getLevel() + ") / Map: #m" + party.get(i).getMapid() + "#\r\n";
 			chenhui++;
 			}
