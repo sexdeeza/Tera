@@ -24,7 +24,7 @@ function end(mode, type, selection) {
 			qm.dispose();
 			return;
 			}
-			qm.sendAcceptDecline("我…我怕…請一定要幫助我呀…\r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0# \r\n\r\n#fUI/UIWindow.img/QuestIcon/8/0# 1000 exp");
+			qm.sendAcceptDecline("I...I'm afraid...Please help me...\r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0# \r\n\r\n#fUI/UIWindow.img/QuestIcon/ 8/0# 1000exp");
 			break;
 	case 1:
 		Packages.server.quest.MapleQuest.getInstance(2325).forceComplete(qm.getPlayer(), qm.getNpc());
