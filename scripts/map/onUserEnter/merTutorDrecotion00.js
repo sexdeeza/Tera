@@ -59,7 +59,7 @@ function action(mode, type, selection) {
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction5.img/effect/mercedesInIce/merBalloon/5", 1500, 0, -100, 1));
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(3, 0));
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.IntroEnableUI(0));
-		ms.getClient().getSession().write(Packages.tools.packet.CWvsContext.getMidMsg("Press the keyboard arrow keys [←] and [→] to move.", false, 0));
+		ms.getClient().getSession().write(Packages.tools.packet.CWvsContext.getMidMsg("Press the keyboard arrow keys Left and Right to move.", false, 0));
 		ms.dispose();
 }
 }

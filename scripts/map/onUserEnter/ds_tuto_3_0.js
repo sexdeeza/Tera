@@ -41,28 +41,28 @@ function action(mode, type, selection) {
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
 		break;
 	case 5:
-		ms.sendNextS("#b(……好像……聽到了什麼聲音……)#k", 3, 2159311);
-		break;
-	case 6:
-		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg0/15", 2000, 130, 50, 1));
-		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
-		break;
-	case 7:
-		ms.sendNextS("#b(這是哪裡……我還活著嗎？)#k", 3, 2159311);
-		break;
-	case 8:
-		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg0/16", 2000, 130, 50, 1));
-		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
-		break;
-	case 9:
-		ms.sendNextS("#b(呃……力量在消失……好像有什麼在吸走我的力量……)#k", 3, 2159311);
-		break;
-	case 10:
-		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg0/17", 2000, 130, 50, 1));
-		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
-		break;
-	case 11:
-		ms.sendNextS("#b(它們在吸走我的力量……？快從這裡出去！)#k", 3, 2159311);
+		ms.sendNextS("#b(...It seems...I heard something...)#k", 3, 2159311);
+        break;
+        case 6:
+        ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg0/15", 2000, 130, 50, 1));
+        ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
+        break;
+        case 7:
+        ms.sendNextS("#b(Where is this...am I still alive?)#k", 3, 2159311);
+        break;
+        case 8:
+        ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg0/16", 2000, 130, 50, 1));
+        ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
+        break;
+        case 9:
+        ms.sendNextS("#b(Uh...the power is disappearing...it seems like something is sucking away my power...)#k", 3, 2159311);
+        break;
+        case 10:
+        ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg0/17", 2000, 130, 50, 1));
+        ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 2000));
+        break;
+        case 11:
+        ms.sendNextS("#b(They are sucking my power...? Get out of here!)#k", 3, 2159311);
 		break;
 	case 12:
 		ms.getClient().getSession().write(Packages.tools.packet.CField.environmentChange("demonSlayer/punch", 4));

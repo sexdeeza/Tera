@@ -1,33 +1,14 @@
+var map =[910340100, 910340200, 910340300, 910340400];
+var stage =[1, 2, 3, 4];
+
 function enter(pi) {
-    var eim = pi.getPlayer().getEventInstance();
-    switch(pi.getMapId()) {
-	case 910340100:
-    	    if (eim.getProperty("1stageclear") == null) { // do nothing; send message to player
-		pi.playerMessage(5, "The portal is blocked.");
-    	    } else {
- 		pi.warp(910340200, 0);
-            }
-	    break;
-	case 910340200:
-    	    if (eim.getProperty("2stageclear") == null) { // do nothing; send message to player
-		pi.playerMessage(5, "The portal is blocked.");
-    	    } else {
- 		pi.warp(910340300, 0);
-            }
-	    break;
-	case 910340300:
-    	    if (eim.getProperty("3stageclear") == null) { // do nothing; send message to player
-		pi.playerMessage(5, "The portal is blocked.");
-    	    } else {
- 		pi.warp(910340400, 0);
-            }
-	    break;
-	case 910340400:
-    	    if (eim.getProperty("4stageclear") == null) { // do nothing; send message to player
-		pi.playerMessage(5, "The portal is blocked.");
-    	    } else {
- 		pi.warp(910340500, 0);
-            }
-	    break;
-    }
+	var eim = pi.getPlayer().getEventInstance();
+	for (var i = 0; i < map.length; i++)
+	if (pi.getPlayer().getMap().getId() == map[i]) {
+		x = i;
+		}
+	if (pi.getPlayer().getMap().getId() == map[x] && eim.getProperty("stage" + stage[x]) != null) {
+		pi.getPlayer().changeMap(pi.getMap(pi.getPlayer().getMap().getId() + 100), pi.getMap(pi.getPlayer().getMap().getId() + 100).getPortal(0));
+		}
+		return false;
 }

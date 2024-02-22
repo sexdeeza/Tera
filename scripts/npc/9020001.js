@@ -1,23 +1,18 @@
 /**
 	Cloto - Hidden Street : 1st Accompaniment
 **/
-importPackage(java.awt);
 
-var status;
-var curMap;
-var playerStatus;
-var chatState;
-var questions = Array("Here's the question. Collect the same number of coupons as the minimum level required to make the first job advancement as warrior.",
-    "Here's the question. Collect the same number of coupons as the minimum amount of STR needed to make the first job advancement as a warrior.",
-    "Here's the question. Collect the same number of coupons as the minimum amount of INT needed to make the first job advancement as a magician.",
-    "Here's the question. Collect the same number of coupons as the minimum amount of DEX needed to make the first job advancement as a bowman.",
-    "Here's the question. Collect the same number of coupons as the minimum amount of DEX needed to make the first job advancement as a thief.",
-    "Here's the question. Collect the same number of coupons as the minimum level required to advance to 2nd job.");
-var qanswers = Array(10, 35, 20, 25, 25, 30);
-var party;
-var preamble;
-var stage2combos = Array(Array(0,0,1,1),Array(1,0,0,1),Array(1,1,0,0),Array(1,0,1,0),Array(0,1,0,1), Array(0,1,1,0));
-var stage3combos = Array(Array(1,1,0,0,0),Array(1,0,1,0,0),Array(1,0,0,1,0),Array(1,0,0,0,1),Array(0,1,1,0,0),Array(0,1,0,1,0),Array(0,1,0,0,1),Array(0,0,1,0,1),Array(0,0,1,1,0),Array(0,0,0,1,1));
+var stage1Questions = Array(
+	"Please listen to the question: What is the minimum level required for a warrior to job advance? Please collect the number of passes that answer the question and give it to me.",
+    "Please listen to the question: What is the minimum str required for a warrior to turn around? Please collect the number of passes required for the answer and give them to me.",
+    "Please listen to the question: What is the minimum int required to become a mage? Please collect the number of passes required for the answer and give it to me.",
+    "Please listen to the question: What is the minimum dex required for an archer to turn around? Please collect the number of passes for the answer and give them to me.",
+    "Please listen to the question: What is the minimum dex required for a thief to become a thief? Please collect the number of passes required for the answer and give them to me.",
+    "Please listen to the question: What is the level required for the second job advancement? Please collect the number of passes that answer the question and give it to me.",
+    "Please listen to the question: What is the minimum level required to become a mage? Please collect the number of passes required for the answer and give them to me.");
+
+var stage1Answers = Array(10, 35, 20, 25, 25, 30, 8);
+
 var prizeIdScroll = Array(2040502, 2040505,					// Overall DEX and DEF
     2040802,										// Gloves for DEX
     2040002, 2040402, 2040602);						// Helmet, Topwear and Bottomwear for DEF
@@ -41,343 +36,230 @@ var prizeQtyEtc = Array(15, 15, 15, 15,
     3, 3, 30);
 
 function start() {
-    status = -1;
-    mapId = cm.getMapId();
-    if (mapId == 910340100)
-	curMap = 1;
-    else if (mapId == 910340200)
-	curMap = 2;
-    else if (mapId == 910340300)
-	curMap = 3;
-    else if (mapId == 910340400)
-	curMap = 4;
-    else if (mapId == 910340500)
-	curMap = 5;
-    playerStatus = cm.isLeader();
-    preamble = null;
-    action(1, 0, 0);
-}
-
-function action(mode, type, selection) {
-    if (mode == 0 && status == 0) {
-	cm.dispose();
-	return;
-    }
-    if (mode == 1)
-	status++;
-    else
-	status--;
-    
-    if (curMap == 1) { // First Stage.
-	if (playerStatus) { // Check if player is leader
-	    if (status == 0) {
-		var eim = cm.getEventInstance();
-		party = eim.getPlayers();
-		preamble = eim.getProperty("leader1stpreamble");
-
-		if (preamble == null) {
-		    cm.sendNext("Hello. Welcome to the first stage. Look around and you'll see Ligators wandering around. When you defeat them, they will cough up a #bcoupon#k. Every member of the party other than the leader should talk to me, geta  question, and gather up the same number of #bcoupons#k as the answer to the question I'll give to them.\r\nIf you gather up the right amount of #bcoupons#k, I'll give the #bpass#k to that player. Once all the party members other than the leader gather up the #bpasses#k and give them to the leader, the leader will hand over the #bpasses#k to me, clearing the stage in the process. The faster you take care of the stages, the more stages you'll be able to challenge. So I suggest you take care of things quickly and swiftly. Well then, best of luck to you.");
-		    eim.setProperty("leader1stpreamble", "done");
-		    cm.dispose();
-		} else { // Check how many they have compared to number of party members
-		    // Check for stage completed
-		    var complete = eim.getProperty(curMap.toString() + "stageclear");
-		    if (complete != null) {
-			cm.sendNext("Please hurry on to the next stage, the portal opened!");
+	var eim = cm.getPlayer().getEventInstance();
+	switch(cm.getPlayer().getMap().getId()) {
+	case 910340100:
+		if (eim.getProperty("stage1") == null) {
+		if (cm.getPlayer().getParty().getLeader().getId() == cm.getPlayer().getId()) {
+			var numpasses = eim.getPlayerCount() - 1; // minus leader
+			var stage2 = cm.getPlayer().getParty().getMembers().size() -1 ; //需要繳納的通行證數量
+		if (cm.getPlayer().itemQuantity(4001008) == numpasses) {
+			cm.sendNext("You collected " + numpasses + " passes, congratulations on passing this level. The portal to the next area has opened, there is a time limit to get there, so hurry.");
+			eim.setProperty("stage1", 1);
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("gate", 2));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+			cm.removeAll(4001008);
 			cm.dispose();
-		    } else {
-			var numpasses = party.size() - 1;
-			var strpasses = "#b" + numpasses.toString() + " passes#k";
-			if (!cm.haveItem(4001008, numpasses)) {
-			    cm.sendNext("I'm sorry, but you are short on the number of passes. You need to give me the right number of passes; it should be the number of members of your party minus the leader, " + strpasses + " to clear the stage. Tell your party members to solve the questions, gather up the passes, and give them to you.");
-			    cm.dispose();
-			} else {
-			    cm.sendNext("You gathered up " + strpasses + "! Congratulations on clearing the stage! I'll make the portal that sends you to the next stage. There's a time limit on getting there, so please hurry. Best of luck to you all!");
-			    clear(1,eim,cm);
-			    cm.givePartyExp(100, party);
-			    cm.gainItem(4001008, -numpasses);
-			    cm.dispose();
-			// TODO: Make the shiny thing flash
+			return;
 			}
-		    }
-		}
-	    }
-	} else { // Not leader
-	    var eim = cm.getChar().getEventInstance();
-	    pstring = "member1stpreamble" + cm.getChar().getId().toString();
-	    preamble = eim.getProperty(pstring);
-	    if (status == 0 && preamble == null) {
-		var qstring = "member1st" + cm.getChar().getId().toString();
-		var question = eim.getProperty(qstring);
-		if (question == null) {
-		    // Select a random question to ask the player.
-		    var questionNum = Math.floor(Math.random() * questions.length);
-		    eim.setProperty(qstring, questionNum.toString());
-		}
-		cm.sendNext("Here, you need to collect #bcoupons#k by defeating the same number of Ligators as the answer to the questions asked individually.");
-	    } else if (status == 0) { // Otherwise, check for stage completed
-		var complete = eim.getProperty(curMap.toString() + "stageclear");
-		if (complete != null) {
-		    cm.sendNext("Please hurry on to the next stage, the portal opened!");
-		    cm.dispose();
-		} else {
-		    // Reply to player correct/incorrect response to the question they have been asked
-		    var qstring = "member1st" + cm.getChar().getId().toString();
-		    var numcoupons = qanswers[parseInt(eim.getProperty(qstring))];
-		    var qcorr = cm.haveItem(4001007,(numcoupons+1));
-		    var enough = false;
-		    if (!qcorr) { // Not too many
-			qcorr = cm.haveItem(4001007,numcoupons);
-			if (qcorr) { // Just right
-			    cm.sendNext("That's the right answer! For that you have just received a #bpass#k. Please hand it to the leader of the party.");
-			    cm.gainItem(4001007, -numcoupons);
-			    cm.gainItem(4001008, 1);
-			    enough = true;
-			}
-		    }
-		    if (!enough) {
-			cm.sendNext("I'm sorry, but that is not the right answer! Please have the correct number of coupons in your inventory.");
-		    }
-		    cm.dispose();
-		}
-	    } else if (status == 1) {
-		if (preamble == null) {
-		    var qstring = "member1st" + cm.getChar().getId().toString();
-		    var question = parseInt(eim.getProperty(qstring));
-		    cm.sendNextPrev(questions[question]);
-		} else { // Shouldn't happen, if it does then just dispose
-		    cm.dispose();
-		}
-	    } else if (status == 2) { // Preamble completed
-		eim.setProperty(pstring,"done");
-		cm.dispose();
-	    } else { // Shouldn't happen, but still...
-		eim.setProperty(pstring,"done"); // Just to be sure
-		cm.dispose();
-	    }
-	} // End first map scripts
-    } else if (2 <= curMap && 3 >= curMap) {
-	rectanglestages(cm);
-    } else if (curMap == 4) {
-	var eim = cm.getChar().getEventInstance();
-	var stage5done = eim.getProperty("4stageclear");
-	if (stage5done == null) {
-	    if (playerStatus) { // Leader
-		var passes = cm.getMap().getAllMonstersThreadsafe().size() == 0;
-		if (passes) {
-		    // Clear stage
-		    cm.sendNext("Here's the portal. Take care...");
-		    party = eim.getPlayers();
-		    clear(4,eim,cm);
-		    cm.givePartyExp(700, party);
-		    cm.dispose();
-		} else { // Not done yet
-		    cm.sendNext("Hello. Welcome to the 4th stage. Walk around the map and you'll be able to find some monsters. Defeat all of them, gather up #bthe passes#k, and please get them to me. Once you earn your pass, the leader of your party will collect them, and then get them to me once the #bpasses#k are gathered up. The monsters may be familiar to you, but they may be much stronger than you think, so please be careful. Good luck!");
-		}
-		cm.dispose();
-	    } else { // Members
-		cm.sendNext("Welcome to the 4th stage.  Walk around the map and you will be able to find some monsters.  Defeat them all, gather up the #bpasses#k, and give them to your leader.  Once you are done, return to me to collect your reward.");
-		cm.dispose();
-	    }
-	} else { // Give rewards and warp to bonus
-	    cm.sendNext("The portal is open!");
-	    cm.dispose();
-	}
-    } else if (curMap == 5) { // Final stage
-	var eim = cm.getChar().getEventInstance();
-	if (eim == null) {
-	    cm.dispose();
-	    return;
-	}
-	var stage5done = eim.getProperty("5stageclear");
-	if (stage5done == null) {
-	    if (playerStatus) { // Leader
-		var passes = cm.haveItem(4001008,1);
-		if (passes) {
-		    // Clear stage
-		    cm.sendNext("Congratulations on clearing all the stages. Take care...");
-		    party = eim.getPlayers();
-		    cm.gainItem(4001008, -1);
-		    clear(5,eim,cm);
-		    cm.addPartyTrait("will", 8);
-		    cm.dispose();
-		} else { // Not done yet
-		    cm.sendNext("Hello. Welcome to the 5th and final stage. Walk around the map and you'll be able to find some Boss monsters. Defeat all of them, gather up #bthe passes#k, and please get them to me. Once you earn your pass, the leader of your party will collect them, and then get them to me once the #bpasses#k are gathered up. The monsters may be familiar to you, but they may be much stronger than you think, so please be careful. Good luck!");
-		}
-		cm.dispose();
-	    } else { // Members
-		cm.sendNext("Welcome to the 5th and final stage.  Walk around the map and you will be able to find some Boss monsters.  Defeat them all, gather up the #bpasses#k, and give them to your leader.  Once you are done, return to me to collect your reward.");
-		cm.dispose();
-	    }
-	} else { // Give rewards and warp to bonus
-	    if (status == 0) {
-		cm.sendNext("Incredible! You cleared all the stages to get to this point. Here's a small prize for your job well done. Before you accept it, however, please make sure your use and etc. inventories have empty slots available.\r\n#bYou will not receive a prize if you have no free slots!#k");
-	    }
-	    if (status == 1) {
-		getPrize(eim,cm);
-		cm.dispose();
-	    }
-	}
-    } else { // No map found
-	cm.sendNext("Invalid map, this means the stage is incomplete.");
-	cm.dispose();
-    }
-}
-
-function clear(stage, eim, cm) {
-    eim.setProperty(stage.toString() + "stageclear","true");
-
-    cm.showEffect(true, "quest/party/clear");
-    cm.playSound(true, "Party1/Clear");
-    cm.environmentChange(true, "gate");
-
-    var mf = eim.getMapFactory();
-    map = mf.getMap(910340100 + (stage * 100));
-    var nextStage = eim.getMapFactory().getMap(910340100 + (stage * 100));
-    var portal = nextStage.getPortal("next00");
-    if (portal != null) {
-	portal.setScriptName("kpq" + (stage+1).toString());
-    }
-}
-
-function failstage(eim, cm) {
-    cm.showEffect(true, "quest/party/wrong_kor");
-    cm.playSound(true, "Party1/Failed");
-}
-
-function rectanglestages(cm) {
-    // Debug makes these stages clear without being correct
-    var eim = cm.getChar().getEventInstance();
-    if (curMap == 2) {
-	var nthtext = "2nd";
-	var nthobj = "ropes";
-	var nthverb = "hang";
-	var nthpos = "hang on the ropes too low";
-	var curcombo = stage2combos;
-	var objset = [0,0,0,0];
-    } else if (curMap == 3) {
-	var nthtext = "3rd";
-	var nthobj = "platforms";
-	var nthverb = "stand";
-	var nthpos = "stand too close to the edges";
-	var curcombo = stage3combos;
-	var objset = [0,0,0,0,0];
-    }
-    if (playerStatus) { // Check if player is leader
-	if (status == 0) {
-	    // Check for preamble
-	    party = eim.getPlayers();
-	    preamble = eim.getProperty("leader" + nthtext + "preamble");
-	    if (preamble == null) {
-		cm.sendNext("Hi. Welcome to the " + nthtext + " stage. Next to me, you'll see a number of " + nthobj + ". Out of these " + nthobj + ", #b3 are connected to the portal that sends you to the next stage#k. All you need to do is have #b3 party members OR 3 items find the correct " + nthobj + " and " + nthverb + " on them.#k\r\nBUT, it doesn't count as an answer if you " + nthpos + "; please be near the middle of the " + nthobj + " to be counted as a correct answer. Also, only 3 members of your party are allowed on the " + nthobj + ". Once they are " + nthverb + "ing on them, the leader of the party must #bdouble-click me to check and see if the answer's correct or not#k. Now, find the right " + nthobj + " to " + nthverb + " on!");
-		eim.setProperty("leader" + nthtext + "preamble","done");
-		var sequenceNum = Math.floor(Math.random() * curcombo.length);
-		eim.setProperty("stage" + nthtext + "combo",sequenceNum.toString());
-		cm.dispose();
-	    } else {
-		// Otherwise, check for stage completed
-		var complete = eim.getProperty(curMap.toString() + "stageclear");
-		if (complete != null) {
-		    var mapClear = curMap.toString() + "stageclear";
-		    eim.setProperty(mapClear,"true"); // Just to be sure
-		    cm.sendNext("Please hurry on to the next stage, the portal opened!");
-		} else { // Check for people on ropes and their positions
-		    var totplayers = 0;
-		    for (i = 0; i < objset.length; i++) {
-			var present = cm.getMap().getNumPlayersItemsInArea(i);
-			if (present != 0) {
-			    objset[i] = objset[i] + 1;
-			    totplayers = totplayers + 1;
-			}
-		    }
-		    // Compare to correct positions
-		    // First, are there 3 players on the correct positions?
-		    if (totplayers == 2) {
-			var combo = curcombo[parseInt(eim.getProperty("stage" + nthtext + "combo"))];
-			// Debug
-			// Combo = curtestcombo;
-			var testcombo = true;
-			for (i = 0; i < objset.length; i++) {
-			    if (combo[i] != objset[i])
-				testcombo = false;
-			}
-			if (testcombo) {
-			    // Do clear
-			    clear(curMap,eim,cm);
-			    var exp = (Math.pow(2,curMap) * 50);
-			    cm.givePartyExp(exp, party);
-			    cm.dispose();
-			} else { // Wrong
-			    // Do wrong
-			    failstage(eim,cm);
-			    cm.dispose();
-			}
-		    } else {
-			cm.sendNext("It looks like you haven't found the 2 " + nthobj + " just yet. Please think of a different combination of " + nthobj + ". Only 2 are allowed to " + nthverb + " on " + nthobj + ", and if you " + nthpos + " it may not count as an answer, so please keep that in mind. Keep going!");
+			cm.sendNext("Welcome to the first trip <No. 1 Pass>. At this stage, the team leader needs to collect " + numpasses + " passes from the team members and give them to me before they can enter the next area. Please let each team member Only by completing the tasks assigned by me can you obtain the pass.");
 			cm.dispose();
-		    }
-		}
-	    }
-	} else {
-	    var complete = eim.getProperty(curMap.toString() + "stageclear");
-	    if (complete != null) {
-		var target = eim.getMapInstance(910340100 + (curMap * 100));
-		var targetPortal = target.getPortal("st00");
-		cm.getChar().changeMap(target, targetPortal);
-	    }
-	    cm.dispose();
-	}
-    } else { // Not leader
-	if (status == 0) {
-	    var complete = eim.getProperty(curMap.toString() + "stageclear");
-	    if (complete != null) {
-		cm.sendNext("Please hurry on to the next stage, the portal opened!");
-	    } else {
-		cm.sendNext("Please have the party leader talk to me.");
-		cm.dispose();
-	    }
-	} else {
-	    var complete = eim.getProperty(curMap.toString() + "stageclear");
-	    if (complete != null) {
-		var target = eim.getMapInstance(910340100 + (curMap * 100));
-		var targetPortal = target.getPortal("st00");
-		cm.getChar().changeMap(target, targetPortal);
-	    }
-	    cm.dispose();
-	}
-    }
-}
+			return;
+			}
+		if (cm.getPlayer().getParty().getLeader().getId() != cm.getPlayer().getId()) {
+			var data = eim.getProperty(cm.getPlayer().getName()); //加入隊員名稱判斷
 
-function getPrize(eim,cm) {
-    var itemSetSel = Math.random();
-    var itemSet;
-    var itemSetQty;
-    var hasQty = false;
-    if (itemSetSel < 0.3)
-	itemSet = prizeIdScroll;
-    else if (itemSetSel < 0.6)
-	itemSet = prizeIdEquip;
-    else if (itemSetSel < 0.9) {
-	itemSet = prizeIdUse;
-	itemSetQty = prizeQtyUse;
-	hasQty = true;
-    } else {
-	itemSet = prizeIdEtc;
-	itemSetQty = prizeQtyEtc;
-	hasQty = true;
+		if (data == 0) {
+			cm.sendNext("Thank you for bringing me the pass. Please give this #v4001008# to your team leader.");
+			cm.dispose();
+			return;
+			}
+		if (data == null) {
+			data = Math.floor(Math.random() * stage1Questions.length) + 1;   //data will be counted from 1
+			eim.setProperty(cm.getPlayer().getName(), data); //給與隊員問題判斷
+			var question = stage1Questions[data - 1];
+			cm.sendNext("Welcome to your first trip <No. 1 Pass>. In this stage, you must hunt nearby monsters, obtain the correct answers to my questions, and give me the corresponding number of passes.\r\n\r\n" + question);
+			cm.dispose();
+			return;
+			}
+			var answer = stage1Answers[data - 1];
+
+		if (cm.getPlayer().itemQuantity(4001007) == answer) {
+			cm.sendNext("The answer is correct. Therefore, you have just received a pass. Please give this #v4001008# to your team leader.");
+			cm.gainItem(4001007, -answer);
+			cm.gainItem(4001008, 1);
+			eim.setProperty(cm.getPlayer().getName(), 0); //給與隊員答題判斷
+			cm.dispose();
+			return;
+			}
+			var question = stage1Questions[eim.getProperty(cm.getPlayer().getName()) - 1]; //問題識別判斷
+			cm.sendNext("Sorry, the number of passes you brought is inconsistent with the correct answer to the question. You currently hold: #b#c4001007##k passes\r\n" + question);
+			cm.dispose();
+			return;
+			}
+			}
+			cm.sendOk("The entrance to the next area has been opened.");
+			cm.dispose();
+			break;
+	case 910340200:
+		if (eim.getProperty("stage2") == null) {
+        if (cm.getPlayer().getParty().getLeader().getId() != cm.getPlayer().getId()) {
+            cm.sendOk("Welcome to our first trip <Pass No. 2>, please follow the instructions of the team leader to challenge this level.");
+            cm.dispose();
+            return;
+        }
+        if (eim.getProperty("stage2a") == null) {
+            cm.sendOk("Welcome to your first trip <Level 2>. You will find some ropes, two of which are connected to the portal leading to the next level. What you need to do is to let two team members# bClimb up the correct rope #k. When the team members have climbed to the correct position, please ask the captain to talk to me.\r\n\r\nNote that if you climb too low, you will not get the correct answer. If you have the correct combination , the portal will open.");
+            eim.setProperty("stage2a", 1);
+            cm.dispose();
+            return;
+        }
+		if (eim.getProperty("stage2b") == null) {
+			eim.setProperty("stage2b", (Math.random() < 0.3) ? "0101" : (Math.random() < 0.5) ? "0011" : "1001");
+			}
+			var chenhui = 0;
+			for (var i = 0; i < 4; i++)
+			if (cm.getPlayer().getMap().getNumPlayersItemsInArea(i) > 0) {
+			chenhui++;
+			}
+		if (chenhui != 2) {
+			cm.sendOk("It seems that you haven't found the right method yet. You need to have two team members #b climb on top of the rope #k to form different combinations.");
+			cm.dispose();
+			return;
+			}
+			var x = "";
+			for (var i = 0; i < 4; i++)
+			x += cm.getPlayer().getMap().getNumPlayersItemsInArea(i);
+			y = x;
+		if (y == eim.getProperty("stage2b")) {
+			eim.setProperty("stage2", 1);
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("gate", 2));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+			cm.sendOk("With the correct combination, the entrance to the next area has been opened.");
+			cm.dispose();
+			return;
+			}
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/wrong_kor", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Failed", 4));
+			cm.sendNext("The combination is wrong. It seems that you haven't found the correct 2 ropes yet. Please continue to adjust the position.");
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("The entrance to the next area has been opened.");
+			cm.dispose();
+			break;
+	case 910340300:
+		if (eim.getProperty("stage3") == null) {
+		if (cm.getPlayer().getParty().getLeader().getId() != cm.getPlayer().getId()) {
+			cm.sendOk("Welcome to your first trip to <Pass No. 3>. Please follow the instructions of the team leader to challenge this level.");
+			cm.dispose();
+			return;
+			}
+		if (eim.getProperty("stage3a") == null) {
+			cm.sendOk("Welcome to your first trip <Level 3>. You will find some platforms, two of which are connected to the portal leading to the next level. What you need to do is to let the two team members #b stand on the correct #k on the platform. When you have taken your position, ask the captain to talk to me. \r\n\r\nNote that if you stand too close to the edge, you will not get the correct answer. If you have the correct combination, the portal will open.");
+			eim.setProperty("stage3a", 1);
+			cm.dispose();
+			return;
+			}
+		if (eim.getProperty("stage3b") == null) {
+			eim.setProperty("stage3b", (Math.random() < 0.3) ? "00101" : (Math.random() < 0.5) ? "00011" : "10001");
+			}
+			var chenhui = 0;
+			for (var i = 0; i < 5; i++)
+			if (cm.getPlayer().getMap().getNumPlayersItemsInArea(i) > 0) {
+			chenhui++;
+			}
+		if (chenhui != 2) {
+			cm.sendOk("It seems that you haven't found the right method yet. You need to have two team members #b stand on the platform #k to form different combinations.");
+			cm.dispose();
+			return;
+			}
+			var x = "";
+			for (var i = 0; i < 5; i++)
+			x += cm.getPlayer().getMap().getNumPlayersItemsInArea(i);
+			y = x;
+		if (y == eim.getProperty("stage3b")) {
+			eim.setProperty("stage3", 1);
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("gate", 2));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+			cm.sendOk("With the correct combination, the entrance to the next area has been opened.");
+			cm.dispose();
+			return;
+			}
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/wrong_kor", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Failed", 4));
+			cm.sendNext("The combination is wrong. It seems that you have not found the correct 2 platforms. Please continue to adjust the positions.");
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("The entrance to the next area has been opened.");
+			cm.dispose();
+			break;
+	case 910340400:
+		if (eim.getProperty("stage4") == null) {
+		if (cm.getPlayer().itemQuantity(4001008) > 18) {
+			cm.sendOk("Everyone behaved very well, and the entrance to the next area has been opened.");
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("gate", 2));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+			eim.setProperty("stage4", 1);
+			cm.gainItem(4001008, -19);
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("Hello, welcome to your first trip <Pass No. 4>. Walk around the map and you will be able to find some monsters. Defeat all the monsters. After collecting all the passes, hand them over to me.");
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("The entrance to the next area has been opened.");
+			cm.dispose();
+			break;
+	case 910340500:
+		if (eim.getProperty("stage5") == null) {
+		if (cm.getMap(910340500).getAllMonstersThreadsafe().size() < 1) {
+			cm.sendNext("Congratulations on completing all challenges, please wait to be transferred to the final bonus level. The monsters inside are easier to defeat than ordinary ones. You will have a period of time to hunt as much as possible, and you can also end the conversation with NPC early. ");
+            cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CWvsContext.serverNotice(6, "Congratulations on completing all challenges. Please wait to be transferred to the final bonus level. The monsters inside are easier to defeat than ordinary ones. , you will have a period of time to hunt as much as possible, or you can end the conversation early with the NPC"));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("quest/party/clear", 3));
+			cm.getPlayer().getMap().broadcastMessage(Packages.tools.packet.CField.environmentChange("Party1/Clear", 4));
+			cm.getEventInstance().startEventTimer(1 * 10000);
+			eim.setProperty("stage5", 1);
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("Hello, welcome to the first journey <The Last Pass>, which is also the last stage. Please destroy #o9300003# in the map to enter the bonus stage.");
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("Please wait patiently, you will enter the final bonus level after the countdown.");
+			getPrize(eim,cm);
+			cm.dispose();
     }
-    var sel = Math.floor(Math.random()*itemSet.length);
-    var qty = 1;
-    if (hasQty)
-	qty = itemSetQty[sel];
-    cm.gainItem(itemSet[sel], qty);
-	if (cm.isGMS()) { //TODO JUMP
-		cm.gainItem(4001531, 1);
-	}
-    cm.gainNX(1000);
-	cm.gainExp_PQ(70, 1.5);
-    cm.removeAll(4001007);
-    cm.removeAll(4001008);
-    cm.getPlayer().endPartyQuest(1201);
-    cm.warp(cm.isGMS() ? 910340600 : 910340700, 0);
-}
+  }
+
+  function getPrize(eim,cm) {
+      var itemSetSel = Math.random();
+      var itemSet;
+      var itemSetQty;
+      var hasQty = false;
+      if (itemSetSel < 0.3)
+  	itemSet = prizeIdScroll;
+      else if (itemSetSel < 0.6)
+  	itemSet = prizeIdEquip;
+      else if (itemSetSel < 0.9) {
+  	itemSet = prizeIdUse;
+  	itemSetQty = prizeQtyUse;
+  	hasQty = true;
+      } else {
+  	itemSet = prizeIdEtc;
+  	itemSetQty = prizeQtyEtc;
+  	hasQty = true;
+      }
+      var sel = Math.floor(Math.random()*itemSet.length);
+      var qty = 1;
+      if (hasQty)
+  	qty = itemSetQty[sel];
+      cm.gainItem(itemSet[sel], qty);
+  	if (cm.isGMS()) { //TODO JUMP
+  		cm.gainItem(4001531, 1);
+  	}
+      cm.gainNX(1000);
+  	  cm.gainExp_PQ(35, 1.5);
+      cm.removeAll(4001007);
+      cm.removeAll(4001008);
+      cm.getPlayer().endPartyQuest(1201);
+      cm.warp(cm.isGMS() ? 910340600 : 910340700, 0);
+
+  }

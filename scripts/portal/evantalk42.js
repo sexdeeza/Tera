@@ -1,8 +1,9 @@
+
 function enter(pi) {
-	if (pi.getEvanIntroState("mo30=o;mo40=o;mo41=o;mo42=o")) {
+	if (pi.getPlayer().getInfoQuest(22013).indexOf("mo42=o") != -1) {
 		return false;
-	}
-	pi.updateEvanIntroState("mo30=o;mo40=o;mo41=o;mo42=o");
-    pi.ShowWZEffect("Effect/OnUserEff.img/guideEffect/evanTutorial/evanBalloon42");
-	return true;
+		}
+		pi.getPlayer().updateInfoQuest(22013, pi.getPlayer().getInfoQuest(22013) + ";mo42=o");
+		pi.getClient().getSession().write(Packages.tools.packet.CField.EffectPacket.AranTutInstructionalBalloon("Effect/OnUserEff.img/guideEffect/evanTutorial/evanBalloon42"));
+		return true;
 }

@@ -3,74 +3,51 @@
 **/
 
 function start() {
-    cm.removeAll(4001007);
-    cm.removeAll(4001008);
-    if (cm.getPlayer().getMapId() != 910340700) {
-	cm.sendYesNo("Would you like to move to the Party Quest map?");
-	return;
-    }
-    if (cm.getParty() == null) { // No Party
-	cm.sendSimple("How about you and your party members collectively beating a quest? Here you'll find obstacles and problems where you won't be able to beat it without great teamwork.  If you want to try it, please tell the #bleader of your party#k to talk to me.#b\r\n#L0#I want the Fluffy Shoes.#l");
-    } else if (!cm.isLeader()) { // Not Party Leader
-	cm.sendSimple("If you want to try the quest, please tell the #bleader of your party#k to talk to me.#b\r\n#L0#I want the Fluffy Shoes.#l");
-    } else {
-	// Check if all party members are within Levels 21-30
-	var party = cm.getParty().getMembers();
-	var mapId = cm.getMapId();
-	var next = true;
-	var levelValid = 0;
-	var inMap = 0;
-
-	var it = party.iterator();
-	while (it.hasNext()) {
-	    var cPlayer = it.next();
-	    if ((cPlayer.getLevel() >= 20 && cPlayer.getLevel() <= 255) || cPlayer.getJobId() == 900) {
-		levelValid += 1;
-	    } else {
-		next = false;
-	    }
-	    if (cPlayer.getMapid() == mapId) {
-		inMap += (cPlayer.getJobId() == 900 ? 4 : 1);
-	    }
-	}
-	if (party.size() > 4 || inMap < 2) {
-	    next = false;
-	}
-	if (next) {
-	    var em = cm.getEventManager("KerningPQ");
-	    if (em == null) {
-		cm.sendSimple("This PQ is not currently available.#b\r\n#L0#I want the Fluffy Shoes.#l");
-	    } else {
-		var prop = em.getProperty("state");
-		if (prop == null || prop.equals("0")) {
-		    em.startInstance(cm.getParty(),cm.getMap(), 70);
-			cm.dispose();
-		} else {
-		    cm.sendSimple("Someone is already attempting on the quest.#b\r\n#L0#I want the Fluffy Shoes.#l");
-		}
-		cm.removeAll(4001008);
-		cm.removeAll(4001007);
-	    }
-	} else {
-	    cm.sendSimple("Your party is not a party of two or more. Please make sure all your members are present and qualified to participate in this quest. I see #b" + levelValid.toString() + "#k members are in the right level range, and #b" + inMap.toString() + "#k are in Kerning. If this seems wrong, #blog out and log back in,#k or reform the party.#b\r\n#L0#I want the Fluffy Shoes.#l");
-	}
-    }
-    
+	if (cm.getPlayer().getMap().getId() == 103000000)
+		cm.sendSimple("Traveler! Have you heard of the Party Quest <First Time Together>? This is a mission that requires facing many puzzles and difficulties. You can invite your friends to accompany you. \r\n#L0##bEnter #m910340700##l");
+	else
+		cm.sendSimple("#e<Party Quest: First Time Together>#n\r\n\r\nIs there any brave adventurer who wants to participate in this event? Work with your friends to complete all the tasks and finally defeat #o9300003#, you can get generous rewards! If you want to challenge, please ask the team leader to talk to me. \r\n\r\n Number of players: 3 ~ 6 \r\n Level range: 20 ~ 30 \r\n Time limit: 20 minutes\r\n#L0##bEnter the party quest#l");
 }
 
 function action(mode, type, selection) {
-    if (cm.getPlayer().getMapId() != 910340700) {
-	    cm.saveLocation("MULUNG_TC");
-	    cm.warp(910340700,0);
-	} else {
-	if (!cm.canHold(1072533,1)) {
-	    cm.sendOk("Make room for these shoes.");
-	} else if (cm.haveItem(4001531,10)) {
-	    cm.gainItem(4001531,-10); //should handle automatically for "have"
-	    cm.gainItem(1072533,1);
-	} else {
-	    cm.sendOk("Come back when you have 10 Smooshy Liquid.");
-	}
-	}
-	    cm.dispose();
+	if (mode > 0) {
+		if (cm.getPlayer().getMap().getId() == 103000000) {
+			cm.getPlayer().saveLocation(Packages.server.maps.SavedLocationType.fromString("MULUNG_TC"));
+			cm.getPlayer().changeMap(cm.getMap(910340700), cm.getMap(910340700).getPortal(1));
+			cm.dispose();
+			return;
+			}
+		if (cm.getPlayer().getParty() == null) {
+			cm.sendOk("I'm sorry, the monsters inside are dangerous, and I can't let you take the risk alone.");
+			cm.dispose();
+			return;
+			}
+		if (cm.getPlayer().getParty().getLeader().getId() != cm.getPlayer().getId()) {
+			cm.sendOk("If you want to perform this mission, please tell your team leader to talk to me.");
+			cm.dispose();
+			return;
+			}
+			var chat = "Sorry, because your group size is not within the entry requirements, some group members are not eligible to attempt this mission, or they are not in this map.\r\n\r\nNumber of players: 3 ~ 6 \r\nLevel range: 20 ~ 30 \r\n\r\n";
+			var chenhui = 0;
+			var party = cm.getPlayer().getParty().getMembers();
+			for (var i = 0; i < party.size(); i++)
+		if (party.get(i).getLevel() < 20 || party.get(i).getLevel() > 30 || party.get(i).getMapid() != 910340700 || party.size() < 2) {
+			chat += "#bName: " + party.get(i).getName() + " / (Level: " + party.get(i).getLevel() + ") / Map: #m" + party.get(i).getMapid() + "#\r\n";
+			chenhui++;
+			}
+		if (chenhui != 0) {
+			cm.sendOk(chat);
+			cm.dispose();
+			return;
+			}
+			var em = cm.getEventManager("KerningPQ");
+			var prop = em.getProperty("state");
+		if (prop == null || prop == 0) {
+			em.startInstance(cm.getPlayer().getParty(), cm.getPlayer().getMap(), 200);
+			cm.dispose();
+			return;
+			}
+			cm.sendOk("The Party Quest is in progress, please try other channels.");
+			}
+			cm.dispose();
 }

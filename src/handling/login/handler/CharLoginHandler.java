@@ -193,10 +193,6 @@ public class CharLoginHandler {
         final boolean resistance = (jobType == jobType.Resistance);
         final int face = slea.readInt();
         final int hair = slea.readInt();
-        if (mercedes || demon || jobType == null) { //remove this if you want these jobs available
-            c.getSession().write(CWvsContext.serverMessage(0, c.getChannel(), "This class is not available.", false));
-            return;
-        }
         if (!mercedes && !demon) { //mercedes/demon dont need hair color since its already in the hair
             hairColor = slea.readInt();
             skinColor = (byte) slea.readInt();
@@ -292,37 +288,9 @@ public class CharLoginHandler {
                 break;
             case Mercedes: // Mercedes
                 newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161079, (byte) 0, (short) 1, (byte) 0));
-				final Map<Skill, SkillEntry> ss3 = new HashMap<>();
-				ss3.put(SkillFactory.getSkill(20021000), new SkillEntry((byte) 0, (byte) 0, -1));
-				ss3.put(SkillFactory.getSkill(20021001), new SkillEntry((byte) 0, (byte) 0, -1));
-				ss3.put(SkillFactory.getSkill(20020002), new SkillEntry((byte) 0, (byte) 0, -1));
-				ss3.put(SkillFactory.getSkill(20020022), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss3.put(SkillFactory.getSkill(20020109), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss3.put(SkillFactory.getSkill(20021110), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss3.put(SkillFactory.getSkill(20020111), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss3.put(SkillFactory.getSkill(20020112), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss3.put(SkillFactory.getSkill(20021181), new SkillEntry((byte) -1, (byte) 0, -1));
-                ss3.put(SkillFactory.getSkill(20021166), new SkillEntry((byte) -1, (byte) 0, -1));
-				newchar.changeSkillLevel_Skip(ss3, false);
                 break;
             case Demon: //Demon
                 newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161054, (byte) 0, (short) 1, (byte) 0));
-				final Map<Skill, SkillEntry> ss2 = new HashMap<>();
-				ss2.put(SkillFactory.getSkill(30011000), new SkillEntry((byte) 0, (byte) 0, -1));
-				ss2.put(SkillFactory.getSkill(30011001), new SkillEntry((byte) 0, (byte) 0, -1));
-				ss2.put(SkillFactory.getSkill(30010002), new SkillEntry((byte) 0, (byte) 0, -1));
-				ss2.put(SkillFactory.getSkill(30010185), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss2.put(SkillFactory.getSkill(30010112), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss2.put(SkillFactory.getSkill(30010111), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss2.put(SkillFactory.getSkill(30010110), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss2.put(SkillFactory.getSkill(30010022), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss2.put(SkillFactory.getSkill(30011109), new SkillEntry((byte) 1, (byte) 1, -1));
-				ss2.put(SkillFactory.getSkill(30011170), new SkillEntry((byte) 1, (byte) 1, -1));
-                ss2.put(SkillFactory.getSkill(30011169), new SkillEntry((byte) 1, (byte) 1, -1));
-                ss2.put(SkillFactory.getSkill(30011168), new SkillEntry((byte) 1, (byte) 1, -1));
-                ss2.put(SkillFactory.getSkill(30011167), new SkillEntry((byte) 1, (byte) 1, -1));
-                ss2.put(SkillFactory.getSkill(30010166), new SkillEntry((byte) 1, (byte) 1, -1));
-				newchar.changeSkillLevel_Skip(ss2, false);
                 break;
             case UltimateAdventurer:
                 break;

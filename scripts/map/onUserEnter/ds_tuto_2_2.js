@@ -27,7 +27,7 @@ function action(mode, type, selection) {
 		break;
 	case 1:
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(3, 0));
-		ms.sendNextS("你的實力總是讓我大吃一驚啊…其實這不是個很好的機會嗎？我一直都想和軍團長一決高下。來，比比你的氣場和我的魔法誰更強！", 5, 2159309);
+		ms.sendNextS("Your strength always surprises me... Actually, isn't this a good opportunity? I've always wanted to compete with the Legion Commander. Come, let's see who is stronger, your aura or my magic!", 5, 2159309);
 		break;
 	case 2:
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo("Effect/Direction6.img/effect/tuto/balloonMsg1/9", 2000, 0, -100, 1));
@@ -48,7 +48,7 @@ function action(mode, type, selection) {
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 1000));
 		break;
 	case 5:
-		ms.sendNextS("挺有本事的嘛…有意思，哈哈哈哈！", 5, 2159309);
+		ms.sendNextS("Quite capable...interesting, hahahaha!", 5, 2159309);
 		break;
 	case 6:
 		ms.getClient().getSession().write(Packages.tools.packet.CField.NPCPacket.setNPCSpecialAction(2159309, "resolve"));
@@ -79,10 +79,10 @@ function action(mode, type, selection) {
 		ms.getClient().getSession().write(Packages.tools.packet.CField.UIPacket.getDirectionInfo(1, 1200));
 		break;
 	case 11:
-		ms.sendNextS("…哦哦，黑魔法師大人要親自會會你了。雖然可惜，但今天就到此為止吧。我要去給那些叫英雄的傢夥們露露臉了。", 5, 2159309);
-		break;
-	case 12:
-		ms.sendNextS("我應該不用再見到你了，能被大人親手殺死，這是你的榮耀！哈哈哈哈！", 5, 2159309);
+		ms.sendNextS("...Oh, the black magician is going to meet you personally. It's a pity, but that's it for today. I'm going to show my face to those guys called heroes.", 5, 2159309);
+        break;
+        case 12:
+        ms.sendNextS("I shouldn't have to see you again. It's your honor to be killed by adults! Hahahaha!", 5, 2159309);
 		break;
 	case 13:
 		ms.getClient().getSession().write(Packages.tools.packet.CField.NPCPacket.setNPCSpecialAction(2159309, "teleportation"));
